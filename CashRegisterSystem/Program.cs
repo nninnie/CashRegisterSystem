@@ -4,8 +4,8 @@
     {
         static void Main(string[] args)
         {
-            List<ProductModel> products = ProductSeeder.GetProducts();
-            MenuUI.StartMainMenu(products);
+            List<Product> products = ProductDataSeeder.GetProducts();
+            MainMenuUI.StartMainMenu(products);
         }
     }
 }

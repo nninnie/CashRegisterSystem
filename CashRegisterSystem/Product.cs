@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem
 {
-    public class ProductModel
+    public class Product
     {
         // Beskriver en produkt i kassan
         public required string Id { get; set; }

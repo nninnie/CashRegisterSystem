@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem
 {
-    public static class ProductUI
+    public static class ProductListUI
     {
-        public static void ShowProducts(List<ProductModel> products)
+        public static void ShowProducts(List<Product> products)
         {
             Console.WriteLine("\n=== Frukt & Grönt ===");
 

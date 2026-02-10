@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem
 {
-    public static class CheckoutService
+    public static class CheckoutController
     {
-        public static void StartNewCustomer(List<ProductModel> products)
+        public static void StartNewCustomer(List<Product> products)
         {
 
             Console.Clear();
@@ -23,7 +23,7 @@ namespace CashRegisterSystem
                 Console.WriteLine($"{p.Id} - {p.Name} - {p.Price} {type}");
             }
 
-            List<(ProductModel Product, decimal Quantity)> cart = new();
+            List<(Product Product, decimal Quantity)> cart = new();
 
             while (true)
             {
@@ -37,7 +37,7 @@ namespace CashRegisterSystem
 
                 if (trimmed == "PAY")
                 {
-                    IReceiptWriter receiptWriter = new ReceiptService();
+                    IReceiptWriter receiptWriter = new ReceiptWriter();
                     receiptWriter.WriteReceipt(cart);
                     return;
                 }

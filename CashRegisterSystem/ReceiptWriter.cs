@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem
 {
-    public class ReceiptService : IReceiptWriter
+    public class ReceiptWriter : IReceiptWriter
     {
-        public void WriteReceipt(List<(ProductModel Product, decimal Quantity)> cart)
+        public void WriteReceipt(List<(Product Product, decimal Quantity)> cart)
         {
             // Här skriver du kvittot till fil
         }

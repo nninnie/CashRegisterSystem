@@ -8,7 +8,7 @@ namespace CashRegisterSystem
 {
     public interface IReceiptWriter
     {
-        void WriteReceipt(List<(ProductModel Product, decimal Quantity)> cart);
+        void WriteReceipt(List<(Product Product, decimal Quantity)> cart);
     }
 }
 

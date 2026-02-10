@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem
 {
-    public static class ProductAdminService
+    public static class ProductAdminController
     {
-        public static void ShowAdminMenu(List<ProductModel> products)
+        public static void ShowAdminMenu(List<Product> products)
         {
             int adminMenuOption = 1;
             bool isSelected = false;
@@ -20,7 +20,7 @@ namespace CashRegisterSystem
             while (!isSelected)
             {
                 Console.Clear();
-                Console.WriteLine("=== ADMIN MENY ===)");
+                Console.WriteLine("=== ADMIN MENY ===");
 
                 Console.WriteLine($"{(adminMenuOption == 1 ? highlight : "")}> Ändra produkt\u001b[0m");
                 Console.WriteLine($"{(adminMenuOption == 2 ? highlight : "")}> Lägg till produkt\u001b[0m");
@@ -48,20 +48,20 @@ namespace CashRegisterSystem
             switch (adminMenuOption)
             {
                 case 1:
-                    ProductAdminService.EditProduct(products);
+                    ProductAdminController.EditProduct(products);
                     break;
                 case 2:
-                    ProductAdminService.AddProduct(products);
+                    ProductAdminController.AddProduct(products);
                     break;
                 case 3:
-                    ProductAdminService.DeleteProduct(products);
+                    ProductAdminController.DeleteProduct(products);
                     break;
                 case 4:
                     return;
             }
         }
 
-        public static void EditProduct(List<ProductModel> products)
+        public static void EditProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== ÄNDRA PRODUKT ===\n"); 
@@ -71,14 +71,14 @@ namespace CashRegisterSystem
 
         }
 
-        public static void AddProduct(List<ProductModel> products)
+        public static void AddProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== LÄGG TILL PRODUKT ===\n");
 
         }
 
-        public static void DeleteProduct(List<ProductModel> products)
+        public static void DeleteProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== TA BORT PRODUKT ===\n");
