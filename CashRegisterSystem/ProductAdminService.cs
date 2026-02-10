@@ -11,7 +11,7 @@ namespace CashRegisterSystem
         public static int ShowAdminMenu(List<ProductModel> products)
         {
             Console.Clear();
-            Console.WriteLine("--- ADMIN MENY ---");
+            Console.WriteLine("=== ADMIN MENY ===)");
             Console.WriteLine("1. Ändra produkt");
             Console.WriteLine("2. Lägg till produkt");
             Console.WriteLine("3. Ta bort produkt");

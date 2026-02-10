@@ -13,16 +13,16 @@ namespace CashRegisterSystem
 
             Console.Clear();
 
-            Console.WriteLine("--- SJÄLVSCANNING ---\n");
+            Console.WriteLine("=== SJÄLVSCANNING ===\n");
             Console.WriteLine($"{"PLU",-6} {"Produkt",-20} {"Pris"}");
 
-            foreach (var product in products)
+            foreach (var p in products.OrderBy(p => p.Name))
             {
-                string unit = product.PriceUnit == PriceUnit.PerKilo ? "/kg" : "/st";
-                Console.WriteLine($"{product.Id,-6} {product.Name,-20} {product.Price:C}");
+                string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+                Console.WriteLine($"PLU: {p.Id} - {p.Name} - {p.Price} {type}");
             }
 
-            Console.WriteLine("Vill du scaanna varor, pay, eller cancele? ");
+            Console.WriteLine("\nVill du scaanna varor, pay, eller cancele? ");
 
             List<(ProductModel Product, decimal Quantity)> cart = new();
 

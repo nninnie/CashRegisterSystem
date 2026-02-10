@@ -10,60 +10,57 @@ namespace CashRegisterSystem
     {
         public static void StartMainMenu(List<ProductModel> products)
         {
-            while (true)
+            int menuOption = 1;
+            bool isSelected = false;
+            ConsoleKeyInfo key;
+
+            Console.CursorVisible = false;
+            string highlight = "\u001b[32m"; // Grön färg
+
+            while (!isSelected)
             {
-                int usersMenuInput = MenuUI.ShowMainMenu();
-                if (usersMenuInput == -1)
-                    continue;
-
-                HandleMainMenuChoice(usersMenuInput, products);
-            }
-        }
-
-        public static int ShowMainMenu()
-        { 
-                Console.WriteLine("KASSA");
-            Console.WriteLine("1. Ny kund");
-            Console.WriteLine("2. Visa Produkter");
-            Console.WriteLine("3. Admin");
-            Console.WriteLine("4. Avsluta programmet");
-            Console.Write("\nMenyval: ");
-
-            string? usersMenuInput = Console.ReadLine();
-
-            if (!int.TryParse(usersMenuInput, out int menuChoice))
-                { 
-                Console.WriteLine("Fel menyval, försök igen.");
-                Console.ReadKey();
                 Console.Clear();
-                return -1;
+                Console.WriteLine("===KASSA===");
+
+                Console.WriteLine($"{(menuOption == 1 ? highlight : "")}> Ny kund\u001b[0m");
+                Console.WriteLine($"{(menuOption == 2 ? highlight : "")}> Visa Produkter\u001b[0m");
+                Console.WriteLine($"{(menuOption == 3 ? highlight : "")}> Admin\u001b[0m");
+                Console.WriteLine($"{(menuOption == 4 ? highlight : "")}> Avsluta programmet\u001b[0m");
+
+
+                key = Console.ReadKey(true);
+
+                switch (key.Key)
+                {
+                    case ConsoleKey.DownArrow:
+                        menuOption = menuOption == 4 ? 1 : menuOption + 1;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        menuOption = menuOption == 1 ? 4 : menuOption - 1;
+                        break;
+                    case ConsoleKey.Enter:
+                        isSelected = true;
+                        break;
+                }
             }
-            return menuChoice;
-        }
 
+            Console.CursorVisible = true;
 
-        public static void HandleMainMenuChoice(int usersMenuInput, List<ProductModel> products)
-        {
-
-            switch (usersMenuInput)
+            switch (menuOption)
             {
                 case 1:
                     CheckoutService.StartNewCustomer(products);
                     break;
-
                 case 2:
                     ProductUI.ShowProducts(products);
                     break;
-
                 case 3:
                     ProductAdminService.ShowAdminMenu(products);
                     break;
-
                 case 4:
-                    return;
-
-                default:
-                    Console.WriteLine("Fel menyval, försök igen.");
+                    Console.Clear();
+                    Console.WriteLine("Tack för ditt besök, välkommemn åter!");
+                    Environment.Exit(0);
                     break;
             }
         }

@@ -10,7 +10,7 @@ namespace CashRegisterSystem
     {
         public static void ShowProducts(List<ProductModel> products)
         {
-            Console.WriteLine("\n---Frukt & Grönt---");
+            Console.WriteLine("\n=== Frukt & Grönt ===");
 
 
             //loopar igenom produktlistan, skriver ut varje p = produkt
