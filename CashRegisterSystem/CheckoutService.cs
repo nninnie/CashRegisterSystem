@@ -13,7 +13,7 @@ namespace CashRegisterSystem
 
             Console.Clear();
 
-            Console.WriteLine("=== SJÄLVSCANNING ===\n");
+            Console.WriteLine("=== KASSA ===\n");
             Console.WriteLine($"{"PLU",-6} {"Produkt",-20} {"Pris"}");
 
             foreach (var p in products.OrderBy(p => p.Name))
