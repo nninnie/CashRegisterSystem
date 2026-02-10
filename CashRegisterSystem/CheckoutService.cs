@@ -14,85 +14,69 @@ namespace CashRegisterSystem
             Console.Clear();
 
             Console.WriteLine("=== KASSA ===\n");
-            Console.WriteLine($"{"PLU",-6} {"Produkt",-20} {"Pris"}");
+            Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
+            Console.WriteLine("-----------------------------\n");
 
             foreach (var p in products.OrderBy(p => p.Name))
             {
                 string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-                Console.WriteLine($"PLU: {p.Id} - {p.Name} - {p.Price} {type}");
+                Console.WriteLine($"{p.Id} - {p.Name} - {p.Price} {type}");
             }
-
-            Console.WriteLine("\nVill du scaanna varor, pay, eller cancele? ");
 
             List<(ProductModel Product, decimal Quantity)> cart = new();
 
-
             while (true)
             {
-                Console.WriteLine("PLU: ");
-                
-                string? usersInput = Console.ReadLine();
+                Console.Write("\nPLU och antal/vikt (eller PAY/CANCEL): ");
+                string? inputNewCustomer = Console.ReadLine();
 
-
-                if (string.IsNullOrEmpty(usersInput))
+                if (string.IsNullOrWhiteSpace(inputNewCustomer))
                     continue;
 
+                string trimmed = inputNewCustomer.Trim().ToUpper();
 
-                if (usersInput.Trim().ToUpper() == "PAY")
+                if (trimmed == "PAY")
                 {
-                    WriteReceipt(cart);
+                    IReceiptWriter receiptWriter = new ReceiptService();
+                    receiptWriter.WriteReceipt(cart);
                     return;
                 }
-                if (usersInput.Trim().ToUpper() == "CANCEL")
+                if (trimmed == "CANCEL")
                 {
-                    Console.WriteLine("Transaction cancelled.");
+                    Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
                     return;
                 }
-                var product = products.FirstOrDefault(p => p.Id == usersInput.Trim());  
+
+                string[] parts = inputNewCustomer.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine("Fel format. Skriv in PLU (melanslag) antal/kg");
+                    continue;
+                }
+
+
+                string plu = parts[0];
+                string quantityText = parts[1];
+
+                var product = products.FirstOrDefault(p => p.Id == plu);
 
                 if (product is null)
                 {
                     Console.WriteLine("Produkt hittades inte. Försök igen.");
                     continue;
                 }
-
-
-                if (product.PriceUnit == PriceUnit.PerKilo)
+                if (!decimal.TryParse(quantityText, out decimal quantity) || quantity <= 0)
                 {
-                    Console.WriteLine("Ange vikt i kilo: ");
-                    string? weightInput = Console.ReadLine();
-
-                    if (!decimal.TryParse(weightInput, out decimal weight) || weight <= 0)
-                    {
-                        Console.WriteLine("Ogiltig vikt. Försök igen.");
-                        continue;
-                    }
-
-                    cart.Add((product, weight));
-                    Console.WriteLine($"{weight} kg av {product.Name} tillagd i kundvagnen.");
+                    Console.WriteLine("Ogiltigt antal/vikt.");
                     continue;
                 }
 
-                    Console.Write("Ange antal: ");
-                    string? quantityInput = Console.ReadLine();
-
-                    if (!decimal.TryParse(quantityInput, out decimal quantity) || quantity <= 0)
-                    {
-                        Console.WriteLine("Ogiltigt antal. Försök igen.");
-                        continue;
-                    }
-
                 cart.Add((product, quantity));
-                    Console.WriteLine($"{quantity} st av {product.Name} tillagd i kundvagnen.");
-                }
+
+                string unitText = product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
+                Console.WriteLine($"{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
             }
-       
-
-                
-
-        private static void WriteReceipt(List<(ProductModel Product, decimal Quantity)> cart)
-        {
-            /// KOD
         }
     }
 }
