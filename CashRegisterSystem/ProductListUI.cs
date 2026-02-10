@@ -9,9 +9,9 @@ namespace CashRegisterSystem
     public static class ProductListUI
     {
         public static void ShowProducts(List<Product> products)
-        {
-            Console.WriteLine("\n=== Frukt & Grönt ===");
-
+        {            
+            Console.Clear();
+            Console.WriteLine("=== Frukt & Grönt ===");
 
             //loopar igenom produktlistan, skriver ut varje p = produkt
             // Vi använder .OrderBy(p => p.Name) för att sortera efter namn innan vi loopar
@@ -20,8 +20,6 @@ namespace CashRegisterSystem
                 string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
                 Console.WriteLine($"PLU: {p.Id} - {p.Name} - {p.Price} {type}");
             }
-
-
 
             Console.WriteLine("\nTryck valfri tangent för att återgå till menyn..."); 
             Console.ReadKey();
