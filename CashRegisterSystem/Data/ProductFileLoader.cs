@@ -62,8 +62,7 @@ namespace CashRegisterSystem.Data
             return products;
         }
 
-        // Sparar alla produkter till fil i formatet: 
-        // PLU;Name;Price;PriceUnit
+        // Sparar alla produkter till fil filePath = "products.txt"
         public static void SaveProducts(List<Product> products)
         {
             var lines = products.Select(p =>

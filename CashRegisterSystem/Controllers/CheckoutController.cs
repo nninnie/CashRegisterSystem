@@ -22,7 +22,7 @@ namespace CashRegisterSystem.Controllers
             foreach (var p in products.OrderBy(p => p.Name))
             {
                 string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-                Console.WriteLine($"{p.Id} - {p.Name} - {p.Price} {type}");
+                Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} {type}");
             }
 
             List<(Product Product, decimal Quantity)> cart = new();
@@ -68,6 +68,9 @@ namespace CashRegisterSystem.Controllers
                     Console.WriteLine("Produkt hittades inte. Försök igen.");
                     continue;
                 }
+                // Gör att både 0.5 och 0,5 fungerar
+                quantityText = quantityText.Replace(".", ",");
+
                 if (!decimal.TryParse(quantityText, out decimal quantity) || quantity <= 0)
                 {
                     Console.WriteLine("Ogiltigt antal/vikt.");
