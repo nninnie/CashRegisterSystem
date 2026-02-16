@@ -83,7 +83,8 @@ namespace CashRegisterSystem.UI
 
                     case 4:
                         // Avslutar programmet
-                        Console.WriteLine("\nDu loggas nu ut från kassan. Tack för idag och ha en fortsatt fin dag!\n");
+                        Console.WriteLine("\nDu loggas nu ut från kassan.");
+                        Console.WriteLine("\nTack för idag och ha en fortsatt fin dag!");
                         Environment.Exit(0);
                         break;
                 }
