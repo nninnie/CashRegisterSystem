@@ -1,7 +1,4 @@
-﻿// using-raderna gör att AdminController kan använda:
-// - Core-lagret: modeller som Product och PriceUnit
-// - Data-lagret: filhantering som ProductFileLoader
-using CashRegisterSystem.Core;
+﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 
 namespace CashRegisterSystem.Controllers
@@ -10,45 +7,38 @@ namespace CashRegisterSystem.Controllers
     {
         public static void ShowAdminMenu(List<Product> products)
         {
-            // Håller reda på vilket menyval som är markerat
             int adminMenuOption = 1;
-
-            // Styr när användaren tryckt Enter
             bool isSelected = false;
-
-            // Läser tangenttryckningar utan att visa dem
             ConsoleKeyInfo key;
-
-            // Dölj markören för snyggare meny
             Console.CursorVisible = false;
-
-            // Grön färg för markerat val
             string highlight = "\u001b[32m";
 
-            // Menyloop – visas tills användaren trycker Enter
             while (!isSelected)
             {
                 Console.Clear();
-                Console.WriteLine("=== ADMIN MENY ===");
+                Console.WriteLine("========================================");
+                Console.WriteLine("                ADMINMENY");
+                Console.WriteLine("========================================");
+                Console.WriteLine();
 
-                // Skriver ut menyalternativen och markerar det valda
-                Console.WriteLine($"{(adminMenuOption == 1 ? highlight : "")}> Ändra produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 2 ? highlight : "")}> Lägg till produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 3 ? highlight : "")}> Ta bort produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 4 ? highlight : "")}> Tillbaka\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 1 ? "> " + highlight : "  ")}Ändra produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 2 ? "> " + highlight : "  ")}Lägg till produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 3 ? "> " + highlight : "  ")}Ta bort produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 4 ? "> " + highlight : "  ")}Starta kampanj\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 5 ? "> " + highlight : "  ")}Tillbaka till menyn\u001b[0m");
 
-                // Läs tangent
+                Console.WriteLine();
+
                 key = Console.ReadKey(true);
 
-                // Hantera piltangenter och Enter
                 switch (key.Key)
                 {
                     case ConsoleKey.DownArrow:
-                        adminMenuOption = adminMenuOption == 4 ? 1 : adminMenuOption + 1;
+                        adminMenuOption = adminMenuOption == 5 ? 1 : adminMenuOption + 1;
                         break;
 
                     case ConsoleKey.UpArrow:
-                        adminMenuOption = adminMenuOption == 1 ? 4 : adminMenuOption - 1;
+                        adminMenuOption = adminMenuOption == 1 ? 5 : adminMenuOption - 1;
                         break;
 
                     case ConsoleKey.Enter:
@@ -57,133 +47,193 @@ namespace CashRegisterSystem.Controllers
                 }
             }
 
-            // Visa markören igen
             Console.CursorVisible = true;
 
-            // Kör valt alternativ
             switch (adminMenuOption)
             {
                 case 1:
-                    AdminController.EditProduct(products);
+                    EditProduct(products);
                     break;
 
                 case 2:
-                    AdminController.AddProduct(products);
+                    AddProduct(products);
                     break;
 
                 case 3:
-                    AdminController.DeleteProduct(products);
+                    DeleteProduct(products);
                     break;
 
                 case 4:
+                    //StartCampaign(products);
+                    break;
+
+                case 5:
                     return;
             }
         }
 
+        // ============================
+        // ÄNDRA PRODUKT
+        // ============================
         public static void EditProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== ÄNDRA PRODUKT ===\n");
 
-            // Laddar produkter från fil (säkerställer att listan är uppdaterad)
             var loadedProducts = ProductFileLoader.GetProducts();
 
-            // Visar alla produkter
-            foreach (var p in products)
-            {
+            foreach (var p in loadedProducts)
                 Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} kr");
-            }
 
             Console.Write("\nAnge PLU: ");
             string? plu = Console.ReadLine();
 
-            // Validerar att PLU inte är tomt
             if (string.IsNullOrWhiteSpace(plu))
             {
                 Console.WriteLine("PLU får inte vara tomt.");
+                Console.ReadKey();
                 return;
             }
 
-            // Hittar produkten baserat på PLU
-            var product = products.FirstOrDefault(p => p.PLU == plu);
+            var product = loadedProducts.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)
             {
-                Console.WriteLine("Ingen produkt hittades med det PLU-numret.");
+                Console.WriteLine("Ingen produkt hittades.");
+                Console.ReadKey();
                 return;
             }
 
-            // Visar nuvarande värden
             Console.WriteLine($"\nVald produkt:");
             Console.WriteLine($"1. Namn: {product.Name}");
             Console.WriteLine($"2. Pris: {product.Price}");
             Console.WriteLine($"3. Enhet: {product.PriceUnit}");
             Console.WriteLine("\nTryck Enter för att behålla nuvarande värde.");
 
-            // Ändra namn
             Console.Write("Ändra namn: ");
-            string? newNameProduct = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(newNameProduct))
-            {
-                product.Name = newNameProduct;
-            }
+            string? newName = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(newName))
+                product.Name = newName;
 
-            // Ändra pris
             Console.Write("Ändra pris: ");
-            string? newPriceProduct = Console.ReadLine();
-
-            if (!string.IsNullOrWhiteSpace(newPriceProduct) &&
-                decimal.TryParse(newPriceProduct, out decimal newPrice))
-            {
+            string? newPriceInput = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(newPriceInput) &&
+                decimal.TryParse(newPriceInput, out decimal newPrice))
                 product.Price = newPrice;
-            }
 
-            // Ändra enhet
             Console.WriteLine("Välj ny enhet:");
             Console.WriteLine("1. KG");
             Console.WriteLine("2. STYCK");
-            Console.Write("Val (Enter för att behålla): ");
-
+            Console.Write("Val: ");
             string? unitChoice = Console.ReadLine();
 
-            if (!string.IsNullOrWhiteSpace(unitChoice))
-            {
-                switch (unitChoice)
-                {
-                    case "1":
-                        product.PriceUnit = PriceUnit.PerKilo;
-                        break;
+            if (unitChoice == "1") product.PriceUnit = PriceUnit.PerKilo;
+            if (unitChoice == "2") product.PriceUnit = PriceUnit.Each;
 
-                    case "2":
-                        product.PriceUnit = PriceUnit.Each;
-                        break;
+            ProductFileLoader.SaveProducts(loadedProducts);
 
-                    default:
-                        Console.WriteLine("Ogiltigt val. Enheten ändrades inte.");
-                        break;
-                }
-            }
+            products.Clear();
+            products.AddRange(loadedProducts);
 
-            // Sparar ändringarna till fil
-            ProductFileLoader.SaveProducts(products);
-
-            Console.WriteLine($"\nProdukten har uppdaterats!");
+            Console.WriteLine("\nProdukten har uppdaterats!");
+            Console.ReadKey();
         }
 
+        // ============================
+        // LÄGG TILL PRODUKT
+        // ============================
         public static void AddProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== LÄGG TILL PRODUKT ===\n");
 
-            // (Här kommer du lägga till logik senare)
+            Console.Write("PLU: ");
+            string? plu = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(plu))
+            {
+                Console.WriteLine("PLU får inte vara tomt.");
+                Console.ReadKey();
+                return;
+            }
+
+            if (products.Any(p => p.PLU == plu))
+            {
+                Console.WriteLine("En produkt med detta PLU finns redan.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("Namn: ");
+            string? name = Console.ReadLine();
+
+            Console.Write("Pris: ");
+            string? priceInput = Console.ReadLine();
+
+            if (!decimal.TryParse(priceInput, out decimal price))
+            {
+                Console.WriteLine("Ogiltigt pris.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("Enhet:");
+            Console.WriteLine("1. KG");
+            Console.WriteLine("2. STYCK");
+            Console.Write("Val: ");
+            string? unitChoice = Console.ReadLine();
+
+            PriceUnit unit = unitChoice == "1" ? PriceUnit.PerKilo : PriceUnit.Each;
+
+            var newProduct = new Product
+            {
+                PLU = plu,
+                Name = name!,
+                Price = price,
+                PriceUnit = unit
+            };
+
+            products.Add(newProduct);
+            ProductFileLoader.SaveProducts(products);
+
+            Console.WriteLine("\nProdukten har lagts till!");
+            Console.ReadKey();
         }
 
+        // ============================
+        // TA BORT PRODUKT
+        // ============================
         public static void DeleteProduct(List<Product> products)
         {
             Console.Clear();
             Console.WriteLine("=== TA BORT PRODUKT ===\n");
 
-            // (Här kommer du lägga till logik senare)
+            foreach (var p in products)
+                Console.WriteLine($"{p.PLU} - {p.Name}");
+
+            Console.Write("\nAnge PLU att ta bort: ");
+            string? plu = Console.ReadLine();
+
+            var product = products.FirstOrDefault(p => p.PLU == plu);
+
+            if (product == null)
+            {
+                Console.WriteLine("Ingen produkt hittades.");
+                Console.ReadKey();
+                return;
+            }
+
+            products.Remove(product);
+            ProductFileLoader.SaveProducts(products);
+
+            Console.WriteLine("\nProdukten har tagits bort!");
+            Console.ReadKey();
+        }
+
+        // ============================
+        // STARTA KAMPANJ
+        // ============================
+       
         }
     }
-}
+

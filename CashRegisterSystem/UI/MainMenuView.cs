@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Controllers;
 using CashRegisterSystem.Core;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CashRegisterSystem.UI
 {
@@ -7,86 +8,182 @@ namespace CashRegisterSystem.UI
     {
         public static void StartMainMenu(List<Product> products)
         {
-            // Håller reda på vilket menyval som är markerat (1–4)
             int mainMenuOption = 1;
-
-            // Används för att läsa tangenttryckningar utan att visa dem på skärmen
             ConsoleKeyInfo key;
-
-            // Dölj markören för att menyn ska se snyggare ut
             Console.CursorVisible = false;
-
-            // Grön färg för det markerade menyvalet
             string highlight = "\u001b[32m";
 
-            // Huvudloopen – gör att menyn alltid kommer tillbaka efter ett val
+            bool isLoggedIn = false;   // Kassörstatus
+            bool isAdmin = false;      // Adminstatus
+
             while (true)
             {
-                // Styr när användaren har tryckt Enter
                 bool isSelected = false;
 
-                // Visar menyn tills användaren trycker Enter
                 while (!isSelected)
                 {
                     Console.Clear();
-                    Console.WriteLine("=== HUVUDMENY ===");
+                    Console.WriteLine("========================================");
+                    Console.WriteLine("                 HUVUDMENY");
+                    Console.WriteLine("========================================");
+                    Console.WriteLine();
 
-                    // Skriver ut menyalternativen och markerar det valda med färg
-                    Console.WriteLine($"{(mainMenuOption == 1 ? highlight : "")}> Ny kund\u001b[0m");
-                    Console.WriteLine($"{(mainMenuOption == 2 ? highlight : "")}> Visa Produkter\u001b[0m");
-                    Console.WriteLine($"{(mainMenuOption == 3 ? highlight : "")}> Admin\u001b[0m");
-                    Console.WriteLine($"{(mainMenuOption == 4 ? highlight : "")}> Avsluta\u001b[0m");
+                    // Dynamisk meny beroende på inloggning
+                    if (!isLoggedIn && !isAdmin)
+                    {
+                        Console.WriteLine($"{(mainMenuOption == 1 ? highlight : "")}> Logga in\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 2 ? highlight : "")}> PLU-Lista\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 3 ? highlight : "")}> Admin\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 4 ? highlight : "")}> Avsluta\u001b[0m");
+                    }
+                    else if (isLoggedIn)
+                    {
+                        Console.WriteLine($"{(mainMenuOption == 1 ? highlight : "")}> Starta nytt köp\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 2 ? highlight : "")}> PLU-Lista\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 3 ? highlight : "")}> Logga ut\u001b[0m");
+                    }
+                    else if (isAdmin)
+                    {
+                        Console.WriteLine($"{(mainMenuOption == 1 ? highlight : "")}> Adminpanel\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 2 ? highlight : "")}> PLU-Lista\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 3 ? highlight : "")}> Logga ut\u001b[0m");
+                    }
 
-                    // Läser tangenttryckning utan att visa den
                     key = Console.ReadKey(true);
 
-                    // Hanterar piltangenter och Enter
                     switch (key.Key)
                     {
-                        // Flytta markeringen nedåt (hoppa till toppen om vi är längst ner)
                         case ConsoleKey.DownArrow:
-                            mainMenuOption = mainMenuOption == 4 ? 1 : mainMenuOption + 1;
+                            mainMenuOption++;
                             break;
 
-                        // Flytta markeringen uppåt (hoppa till botten om vi är längst upp)
                         case ConsoleKey.UpArrow:
-                            mainMenuOption = mainMenuOption == 1 ? 4 : mainMenuOption - 1;
+                            mainMenuOption--;
                             break;
 
-                        // Enter – användaren har valt ett alternativ
                         case ConsoleKey.Enter:
                             isSelected = true;
                             break;
                     }
+
+                    // Begränsa val beroende på meny
+                    if (!isLoggedIn && !isAdmin)
+                    {
+                        if (mainMenuOption < 1) mainMenuOption = 4;
+                        if (mainMenuOption > 4) mainMenuOption = 1;
+                    }
+                    else
+                    {
+                        if (mainMenuOption < 1) mainMenuOption = 3;
+                        if (mainMenuOption > 3) mainMenuOption = 1;
+                    }
                 }
 
-                // Visa markören igen när vi lämnar menyn
                 Console.CursorVisible = true;
 
-                // Kör det valda menyalternativet
-                switch (mainMenuOption)
+                // ============================
+                // HUVUDMENY – INTE INLOGGAD
+                // ============================
+                if (!isLoggedIn && !isAdmin)
                 {
-                    case 1:
-                        // Startar kassaflödet för en ny kund
-                        CheckoutController.StartNewCustomer(products);
-                        break;
+                    switch (mainMenuOption)
+                    {
+                        case 1:
+                            Console.Write("\nKassörsnummer: ");
+                            string employeeId = Console.ReadLine()!;
 
-                    case 2:
-                        // Visar alla produkter i systemet
-                        ProductListView.ShowProducts(products);
-                        break;
+                            if (!string.IsNullOrWhiteSpace(employeeId))
+                            {
+                                Console.Write("Ange kassörskod: ");
+                                string? code = Console.ReadLine();
 
-                    case 3:
-                        // Öppnar adminmenyn
-                        AdminController.ShowAdminMenu(products);
-                        break;
+                                if (code == "bajskorv".ToLower()) // enkel inloggning
+                                {
+                                    isLoggedIn = true;
+                                    mainMenuOption = 1;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Tyvärr, det är såklart 'bajskorv'!");
+                                    Console.ReadKey();
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Employee ID får inte vara tomt.");
+                                Console.ReadKey();
+                            }
+                            break;
 
-                    case 4:
-                        // Avslutar programmet
-                        Console.WriteLine("\nDu loggas nu ut från kassan.");
-                        Console.WriteLine("\nTack för idag och ha en fortsatt fin dag!");
-                        Environment.Exit(0);
-                        break;
+                        case 2:
+                            ProductListView.ShowProducts(products);
+                            break;
+
+                        case 3:
+                            Console.Write("\nAdminlösenord: ");
+                            string? adminPass = Console.ReadLine();
+
+                            if (adminPass == "admin".ToLower())
+                            {
+                                isAdmin = true;
+                                mainMenuOption = 1;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Tyvärr, lösenordet är 'admin'.");
+                                Console.ReadKey();
+                            }
+                            break;
+
+                        case 4:
+                            Console.WriteLine("\nTack för idag!");
+                            Environment.Exit(0);
+                            break;
+                    }
+                }
+
+                // ============================
+                // KASSÖR INLOGGAD
+                // ============================
+                else if (isLoggedIn)
+                {
+                    switch (mainMenuOption)
+                    {
+                        case 1:
+                            CheckoutController.StartNewCustomer(products);
+                            break;
+
+                        case 2:
+                            ProductListView.ShowProducts(products);
+                            break;
+
+                        case 3:
+                            isLoggedIn = false;
+                            mainMenuOption = 1;
+                            break;
+                    }
+                }
+
+                // ============================
+                // ADMIN INLOGGAD
+                // ============================
+                else if (isAdmin)
+                {
+                    switch (mainMenuOption)
+                    {
+                        case 1:
+                            AdminController.ShowAdminMenu(products);
+                            break;
+
+                        case 2:
+                            ProductListView.ShowProducts(products);
+                            break;
+
+                        case 3:
+                            isAdmin = false;
+                            mainMenuOption = 1;
+                            break;
+                    }
                 }
             }
         }
