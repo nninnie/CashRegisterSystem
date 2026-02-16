@@ -9,7 +9,7 @@ namespace CashRegisterSystem.Data
 {
     public interface IReceiptWriter
     {
-        void WriteReceipt(List<(Product Product, decimal Quantity)> cart);
+        void WriteReceipt(List<CartItem> cartItems);
     }
 }
 

@@ -11,7 +11,7 @@ namespace CashRegisterSystem.Data
     public class ReceiptFileWriter : IReceiptWriter
     {
         private readonly ReceiptCounter _counter = new ReceiptCounter();
-        public void WriteReceipt(List<(Product Product, decimal Quantity)> cart)
+        public void WriteReceipt(List<CartItem> cartItems)
         {
             int receiptNumber = _counter.GetNextReceiptNumber();
             string fileName = $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt";
@@ -26,7 +26,7 @@ namespace CashRegisterSystem.Data
 
                 decimal total = 0;
 
-                foreach (var product in cart)
+                foreach (var product in cartItems)
                 {
                     decimal lineTotal = product.Product.Price * product.Quantity;
                     total += lineTotal;
