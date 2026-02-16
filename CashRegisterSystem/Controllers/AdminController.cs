@@ -17,15 +17,18 @@ namespace CashRegisterSystem.Controllers
             {
                 Console.Clear();
                 Console.WriteLine("========================================");
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("                ADMINMENY");
+                Console.ResetColor();
                 Console.WriteLine("========================================");
                 Console.WriteLine();
 
-                Console.WriteLine($"{(adminMenuOption == 1 ? "> " + highlight : "  ")}Ändra produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 2 ? "> " + highlight : "  ")}Lägg till produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 3 ? "> " + highlight : "  ")}Ta bort produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 4 ? "> " + highlight : "  ")}Starta kampanj\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 5 ? "> " + highlight : "  ")}Tillbaka till menyn\u001b[0m");
+
+                Console.WriteLine($"{(adminMenuOption == 1 ? "·" + highlight : "")} Ändra produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 2 ? "·" + highlight : "")} Lägg till produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 3 ? "·" + highlight : "")} Ta bort produkt\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 4 ? "·" + highlight : "")} Starta kampanj\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 5 ? "·" + highlight : "")} Tillbaka till menyn\u001b[0m");
 
                 Console.WriteLine();
 
@@ -78,7 +81,11 @@ namespace CashRegisterSystem.Controllers
         public static void EditProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("=== ÄNDRA PRODUKT ===\n");
+            Console.WriteLine("========================================");
+            Console.WriteLine("             ÄNDRA PRODUKT");
+            Console.WriteLine("========================================");
+            Console.WriteLine();
+
 
             var loadedProducts = ProductFileLoader.GetProducts();
 
@@ -145,7 +152,11 @@ namespace CashRegisterSystem.Controllers
         public static void AddProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("=== LÄGG TILL PRODUKT ===\n");
+            Console.WriteLine("========================================");
+            Console.WriteLine("             LÄGG TILL PRODUKT");
+            Console.WriteLine("========================================");
+            Console.WriteLine();
+
 
             Console.Write("PLU: ");
             string? plu = Console.ReadLine();
@@ -206,7 +217,11 @@ namespace CashRegisterSystem.Controllers
         public static void DeleteProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("=== TA BORT PRODUKT ===\n");
+            Console.WriteLine("========================================");
+            Console.WriteLine("             TA BORT PRODUKT");
+            Console.WriteLine("========================================");
+            Console.WriteLine();
+
 
             foreach (var p in products)
                 Console.WriteLine($"{p.PLU} - {p.Name}");
@@ -233,7 +248,20 @@ namespace CashRegisterSystem.Controllers
         // ============================
         // STARTA KAMPANJ
         // ============================
-       
+
+        public static void StartCampaignMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("========================================");
+            Console.WriteLine("             STARTA KAMPANJ");
+            Console.WriteLine("========================================");
+            Console.WriteLine();
+
+            // KOOD
         }
+
+
     }
+}
 

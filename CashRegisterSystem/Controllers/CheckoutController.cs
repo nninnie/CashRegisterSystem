@@ -11,7 +11,13 @@ public static class CheckoutController
         Console.Clear();
 
         // Visar alla produkter i en sorterad lista (alfabetiskt)
-        Console.WriteLine("=== KASSA ===\n");
+        Console.WriteLine("========================================");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("                  KASSA");
+        Console.ResetColor();
+        Console.WriteLine("========================================");
+        Console.WriteLine();
+
         Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
         Console.WriteLine("-----------------------------\n");
 

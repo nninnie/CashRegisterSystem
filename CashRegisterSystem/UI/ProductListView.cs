@@ -7,7 +7,13 @@ namespace CashRegisterSystem.UI
         public static void ShowProducts(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("=== Frukt & Grönt ===");
+            Console.WriteLine("========================================");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("                 PLU-LISTA");
+            Console.ResetColor();
+            Console.WriteLine("========================================");
+            Console.WriteLine();
+
 
             // Loopar igenom produktlistan och skriver ut varje produkt.
             // .OrderBy(p => p.Name) sorterar listan alfabetiskt efter produktnamn.
