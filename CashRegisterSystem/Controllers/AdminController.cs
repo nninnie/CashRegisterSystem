@@ -1,4 +1,5 @@
 ﻿using CashRegisterSystem.Core;
+using CashRegisterSystem.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,10 +66,91 @@ namespace CashRegisterSystem.Controllers
         public static void EditProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("=== ÄNDRA PRODUKT ===\n"); 
-            
-            Console.Write("Ange PLU: "); 
+            Console.WriteLine("=== ÄNDRA PRODUKT ===\n");
+
+            // Ladda produkter från fil
+            var loadedProducts = ProductFileLoader.GetProducts();
+
+            // Visa lista
+            foreach (var p in products) 
+            { 
+                Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} kr"); 
+            }
+
+            Console.Write("\nAnge PLU: "); 
             string? plu = Console.ReadLine();
+
+            // Validera input
+            if(string.IsNullOrWhiteSpace(plu))
+            {
+                Console.WriteLine("PLU får inte vara tomt.");
+                return;
+            }
+
+            //Hitta produkten
+            var product = products.FirstOrDefault(p => p.PLU == plu);
+
+            if (product == null)
+            {
+                Console.WriteLine("Ingen produkt hittades med det PLU-numret."); 
+                return;
+            }
+
+            // Visa nuvarande värden på produkten
+            Console.WriteLine($"\nVald produkt:"); 
+            Console.WriteLine($"1. Namn: {product.Name}"); 
+            Console.WriteLine($"2. Pris: {product.Price}"); 
+            Console.WriteLine($"3. Enhet: {product.PriceUnit}"); 
+            Console.WriteLine("\nTryck Enter för att behålla nuvarande värde.");
+
+            /// Ändra nammn
+            Console.Write("Ändra namn: ");
+            string? newNameProduct = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(newNameProduct))
+            {
+                product.Name = newNameProduct;
+            }
+
+            // Ändra pris
+            Console.Write("Ändra pris: "); 
+            string? newPriceProduct = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(newPriceProduct) && 
+                decimal.TryParse(newPriceProduct, out decimal newPrice))
+            {
+                product.Price = newPrice;
+            }
+
+            // Ändra enhet
+            Console.WriteLine("Välj ny enhet:");
+            Console.WriteLine("1. KG");
+            Console.WriteLine("2. STYCK");
+            Console.Write("Val (Enter för att behålla): ");
+
+            string? unitChoice = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(unitChoice))
+            {
+                switch (unitChoice)
+                {
+                    case "1":
+                        product.PriceUnit = PriceUnit.PerKilo;
+                        break;
+
+                    case "2":
+                        product.PriceUnit = PriceUnit.Each;
+                        break;
+
+                    default:
+                        Console.WriteLine("Ogiltigt val. Enheten ändrades inte.");
+                        break;
+                }
+            }
+
+
+            ProductFileLoader.SaveProducts(products);
+
+            Console.WriteLine($"\nProdukten har uppdateras!");
 
         }
 

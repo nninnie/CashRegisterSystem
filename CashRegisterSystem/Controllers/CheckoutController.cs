@@ -61,7 +61,7 @@ namespace CashRegisterSystem.Controllers
                 string plu = parts[0];
                 string quantityText = parts[1];
 
-                var product = products.FirstOrDefault(p => p.Id == plu);
+                var product = products.FirstOrDefault(p => p.PLU == plu);
 
                 if (product is null)
                 {
