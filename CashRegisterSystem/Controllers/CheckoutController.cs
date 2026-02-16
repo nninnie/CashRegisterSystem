@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CashRegisterSystem.Core;
+using CashRegisterSystem.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem
+namespace CashRegisterSystem.Controllers
 {
     public static class CheckoutController
     {
@@ -37,7 +39,7 @@ namespace CashRegisterSystem
 
                 if (trimmed == "PAY")
                 {
-                    IReceiptWriter receiptWriter = new ReceiptWriter();
+                    IReceiptWriter receiptWriter = new ReceiptFileWriter();
                     receiptWriter.WriteReceipt(cart);
                     return;
                 }

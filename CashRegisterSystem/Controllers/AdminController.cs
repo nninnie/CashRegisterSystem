@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CashRegisterSystem.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem
+namespace CashRegisterSystem.Controllers
 {
-    public static class ProductAdminController
+    public static class AdminController
     {
         public static void ShowAdminMenu(List<Product> products)
         {
@@ -48,13 +49,13 @@ namespace CashRegisterSystem
             switch (adminMenuOption)
             {
                 case 1:
-                    ProductAdminController.EditProduct(products);
+                    AdminController.EditProduct(products);
                     break;
                 case 2:
-                    ProductAdminController.AddProduct(products);
+                    AdminController.AddProduct(products);
                     break;
                 case 3:
-                    ProductAdminController.DeleteProduct(products);
+                    AdminController.DeleteProduct(products);
                     break;
                 case 4:
                     return;

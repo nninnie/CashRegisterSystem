@@ -1,12 +1,14 @@
-﻿using System;
+﻿using CashRegisterSystem.Controllers;
+using CashRegisterSystem.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem
+namespace CashRegisterSystem.UI
 {
-    public static class MainMenuUI
+    public static class MainMenuView
     {
         public static void StartMainMenu(List<Product> products)
         {
@@ -76,12 +78,12 @@ namespace CashRegisterSystem
 
                     case 2:
                         // Visar alla produkter i systemet
-                        ProductListUI.ShowProducts(products);
+                        ProductListView.ShowProducts(products);
                         break;
 
                     case 3:
                         // Öppnar adminmenyn
-                        ProductAdminController.ShowAdminMenu(products);
+                        AdminController.ShowAdminMenu(products);
                         break;
 
                     case 4:

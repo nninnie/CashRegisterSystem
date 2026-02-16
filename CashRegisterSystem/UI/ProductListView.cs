@@ -1,12 +1,13 @@
-﻿using System;
+﻿using CashRegisterSystem.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem
+namespace CashRegisterSystem.UI
 {
-    public static class ProductListUI
+    public static class ProductListView
     {
         public static void ShowProducts(List<Product> products)
         {            

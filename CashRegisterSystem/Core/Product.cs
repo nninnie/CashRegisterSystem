@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem
+namespace CashRegisterSystem.Core
 {
     public class Product
     {
