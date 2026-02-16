@@ -1,10 +1,5 @@
 ﻿using CashRegisterSystem.Controllers;
 using CashRegisterSystem.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CashRegisterSystem.UI
 {
@@ -12,25 +7,25 @@ namespace CashRegisterSystem.UI
     {
         public static void StartMainMenu(List<Product> products)
         {
-            // Håller reda på vilket menyval som är markerat
+            // Håller reda på vilket menyval som är markerat (1–4)
             int mainMenuOption = 1;
 
-            // Används för att läsa tangenttryckningar utan att visa dem
+            // Används för att läsa tangenttryckningar utan att visa dem på skärmen
             ConsoleKeyInfo key;
 
-            // Dölj markören för snyggare meny
+            // Dölj markören för att menyn ska se snyggare ut
             Console.CursorVisible = false;
 
-            // Grön färg för markerat menyval
+            // Grön färg för det markerade menyvalet
             string highlight = "\u001b[32m";
 
-            // Huvudloopen – gör att huvudmenyn alltid kommer tillbaka
+            // Huvudloopen – gör att menyn alltid kommer tillbaka efter ett val
             while (true)
             {
-                // Styr när användaren har valt ett menyval
+                // Styr när användaren har tryckt Enter
                 bool isSelected = false;
 
-                // Menyloopen – visar menyn tills användaren trycker Enter
+                // Visar menyn tills användaren trycker Enter
                 while (!isSelected)
                 {
                     Console.Clear();
@@ -40,7 +35,7 @@ namespace CashRegisterSystem.UI
                     Console.WriteLine($"{(mainMenuOption == 1 ? highlight : "")}> Ny kund\u001b[0m");
                     Console.WriteLine($"{(mainMenuOption == 2 ? highlight : "")}> Visa Produkter\u001b[0m");
                     Console.WriteLine($"{(mainMenuOption == 3 ? highlight : "")}> Admin\u001b[0m");
-                    Console.WriteLine($"{(mainMenuOption == 4 ? highlight : "")}> Avsluta \u001b[0m");
+                    Console.WriteLine($"{(mainMenuOption == 4 ? highlight : "")}> Avsluta\u001b[0m");
 
                     // Läser tangenttryckning utan att visa den
                     key = Console.ReadKey(true);
@@ -48,12 +43,12 @@ namespace CashRegisterSystem.UI
                     // Hanterar piltangenter och Enter
                     switch (key.Key)
                     {
-                        // Flytta markeringen nedåt, hoppa runt vid slutet
+                        // Flytta markeringen nedåt (hoppa till toppen om vi är längst ner)
                         case ConsoleKey.DownArrow:
                             mainMenuOption = mainMenuOption == 4 ? 1 : mainMenuOption + 1;
                             break;
 
-                        // Flytta markeringen uppåt, hoppa runt vid början
+                        // Flytta markeringen uppåt (hoppa till botten om vi är längst upp)
                         case ConsoleKey.UpArrow:
                             mainMenuOption = mainMenuOption == 1 ? 4 : mainMenuOption - 1;
                             break;

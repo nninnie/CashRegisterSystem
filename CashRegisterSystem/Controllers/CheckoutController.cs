@@ -1,6 +1,8 @@
-﻿// Controller som hanterar hela kassaflödet för en kund
-using CashRegisterSystem.Core;
-using CashRegisterSystem.Data;
+﻿// Controller som hanterar hela kassaflödet för en kund.
+// using-raderna nedan gör att vi kan använda klasser från Core- och Data-lagren.
+using CashRegisterSystem.Core;   // Ger tillgång till modeller som Product, Cart och CartItem
+using CashRegisterSystem.Data;   // Ger tillgång till filhantering som ReceiptFileWriter och ReceiptCounter
+
 
 public static class CheckoutController
 {
@@ -8,7 +10,7 @@ public static class CheckoutController
     {
         Console.Clear();
 
-        // Visar alla produkter i sorterad lista
+        // Visar alla produkter i en sorterad lista (alfabetiskt)
         Console.WriteLine("=== KASSA ===\n");
         Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
         Console.WriteLine("-----------------------------\n");
@@ -19,7 +21,7 @@ public static class CheckoutController
             Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} {type}");
         }
 
-        // Skapar en ny varukorg för kunden
+        // Skapar en tom varukorg för kunden
         Cart cart = new Cart();
 
         while (true)
