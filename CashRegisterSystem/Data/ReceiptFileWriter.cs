@@ -14,8 +14,8 @@ namespace CashRegisterSystem.Data
         private readonly ReceiptCounter _counter = new ReceiptCounter();
 
         /// <summary>
-        /// Generates a receipt for the provided cart items, saves it to a file,
-        /// and displays it in the console.
+        /// Generates a formatted receipt for the provided cart items, saves it to a daily receipt file,
+        /// and displays the receipt text in the console.
         /// </summary>
         /// <param name="cartItems">The items included in the customer's purchase.</param>
         public void WriteReceipt(List<CartItem> cartItems)
@@ -33,10 +33,6 @@ namespace CashRegisterSystem.Data
 
             Console.Clear();
             Console.WriteLine(receiptText);
-
-            Console.WriteLine("\nKöp avslutat. Tryck ENTER för ny kund.");
-            Console.ReadKey();
-            Console.Clear();
         }
     }
 }

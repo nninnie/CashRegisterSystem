@@ -44,12 +44,19 @@ public static class CheckoutController
             // PAY – avslutar köpet
             if (trimmed == "PAY")
             {
-                CompletePayment(cart);
+                bool continueShopping = CompletePayment(cart);
+
+                if (!continueShopping)
+                    return; // tillbaka till menyn
+
+                cart.Clear(); // töm kundvagn för nästa kund
+                Console.Clear();
+                PrintProductList(products);
                 continue;
             }
 
-            // CANCEL – avbryter hela köpet
-            if (trimmed == "CANCEL")
+        // CANCEL – avbryter hela köpet
+        if (trimmed == "CANCEL")
             {
                 Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
                 return;
@@ -78,6 +85,8 @@ public static class CheckoutController
                 Console.WriteLine($"Rabatt tillämpad: -{discountAmount:F2} kr");
                 Console.ResetColor();
             }
+
+
         }
     }
 
@@ -176,41 +185,28 @@ public static class CheckoutController
     }
 
     /// <summary>
-    /// Finalizes the payment process for the specified cart, generates a receipt, displays purchase details, and
-    /// prompts for the next action.
+    /// Finalizes the payment by generating and displaying the receipt, and waits for the cashier's
+    /// input to determine whether to start a new customer or return to the main menu.
     /// </summary>
-    /// <remarks>This method writes a receipt for the current cart items, displays a summary of the purchase
-    /// to the console, and prompts the user to proceed to the next customer or return to the menu. The cart is cleared
-    /// if the user chooses to continue to the next customer.</remarks>
-    /// <param name="cart">The cart containing the items to be paid for. Cannot be null.</param>
-    private static void CompletePayment(Cart cart)
+    /// <param name="cart">The cart containing the purchased items.</param>
+    /// <returns>
+    /// True if the cashier chooses to continue with a new customer; false if returning to the main menu.
+    /// </returns>
+    private static bool CompletePayment(Cart cart)
+
     {
         IReceiptWriter receiptWriter = new ReceiptFileWriter();
+
+        // Visa och spara kvittot
         receiptWriter.WriteReceipt(cart.CartItems);
-
-        Console.WriteLine("\n---KVITTO---");
-        foreach (var item in cart.CartItems)
-        {
-            Console.WriteLine($"{item.Product.Name} {item.Quantity} x {item.Product.Price} = {item.TotalPrice} kr");
-        }
-
-        Console.WriteLine($"TOTALT: {cart.TotalPrice} kr");
-        Console.WriteLine("--------------\n");
-
-        Console.WriteLine("Betalning genomförd.");
-        Console.WriteLine("Kvitto skapat. Tack för ditt köp och trevlig dag!");
 
         Console.WriteLine("\nTryck ENTER för nästa kund eller ESC för att gå tillbaka till menyn.");
 
         var key = Console.ReadKey(true);
 
         if (key.Key == ConsoleKey.Escape)
-        {
-            return; 
-        }
+            return false; 
 
-        // fortsätt till nästa kund, töm varukorg
-        cart.Clear();
-
+        return true; // fortsätt till nästa kund
     }
 }
