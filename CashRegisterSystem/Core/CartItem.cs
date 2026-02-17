@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Core
 {
     /// <summary>
     /// Represents an item in a shopping cart, including the selected product, quantity, and pricing details.

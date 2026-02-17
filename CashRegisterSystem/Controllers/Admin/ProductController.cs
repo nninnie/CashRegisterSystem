@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Handles administrative operations related to products in the cash register system.
+    /// </summary>
+    /// <remarks>
+    /// This controller manages user interactions for viewing, creating, editing, and removing products. 
+    /// It communicates with the product repository to load and persist product data, ensuring that 
+    /// changes are applied consistently across the system.
+    /// </remarks>
     public class ProductController
     {
 
@@ -124,6 +132,13 @@ namespace CashRegisterSystem.Controllers.Admin
 
             Console.Write("Namn: ");
             string? name = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Namn får inte vara tomt.");
+                Console.ReadKey();
+                return;
+            }
 
             Console.Write("Pris: ");
             string? priceInput = Console.ReadLine();

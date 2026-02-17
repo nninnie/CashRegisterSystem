@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Core
 {
-    
-        // Enum som visar om priset gäller per styck eller per kilo, en egen lista med val som du använder i din kod.
-        public enum PriceUnit
-        {
-            Each,
-            PerKilo
-        }
+    /// <summary>
+    /// Defines the pricing unit for a product, indicating whether the price 
+    /// is applied per individual item or per kilogram.
+    /// </summary>
+    /// <remarks>
+    /// This enum is used throughout the system to determine how a product's 
+    /// price should be interpreted and calculated during checkout.
+    /// </remarks>
+    public enum PriceUnit
+    {
+        Each,
+        PerKilo
     }
+}

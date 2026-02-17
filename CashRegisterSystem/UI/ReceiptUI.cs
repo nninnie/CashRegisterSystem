@@ -3,25 +3,30 @@ using System.Text;
 
 namespace CashRegisterSystem.Data
 {
+    /// <summary>
+    /// Provides formatting utilities for generating a complete receipt as a text string.
+    /// </summary>
     public static class ReceiptUI
     {
         /// <summary>
-        /// Formats a detailed receipt as a string for the specified receipt number and list of purchased items.
+        /// Formats a detailed receipt string for the specified receipt number and purchased items.
         /// </summary>
-        /// <remarks>The returned receipt string includes store details, a timestamp, an itemized list of
-        /// products with quantities and prices, VAT calculations, and a payment summary. The method assumes all items
-        /// are subject to a 12% VAT rate. The formatting is suitable for display or printing, but does not include any
-        /// graphical elements.</remarks>
-        /// <param name="receiptNumber">The unique number identifying the receipt. Used to label the generated receipt output.</param>
-        /// <param name="items">The list of cart items to include on the receipt. Each item represents a purchased product and its quantity.
-        /// Cannot be null.</param>
-        /// <returns>A formatted string representing the complete receipt, including store information, itemized purchases,
-        /// totals, VAT breakdown, and payment summary.</returns>
+        /// <remarks>
+        /// The receipt includes store information, timestamp, itemized purchases, totals,
+        /// VAT breakdown (12%), and a closing message. The result is suitable for printing
+        /// or console display.
+        /// </remarks>
+        /// <param name="receiptNumber">The unique receipt number.</param>
+        /// <param name="items">The purchased items to include on the receipt.</param>
+        /// <returns>A fully formatted receipt as a string.</returns>
         public static string FormatReceipt(int receiptNumber, List<CartItem> items)
         {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
             var sb = new StringBuilder();
 
-            // --- Butiksinfo ---
+            // --- Header ---
             sb.AppendLine("========================================");
             sb.AppendLine("                 KVITTO");
             sb.AppendLine("          Ammo's Grönsakslivs");
@@ -33,16 +38,18 @@ namespace CashRegisterSystem.Data
             sb.AppendLine($"Datum: {DateTime.Now:yyyy-MM-dd HH:mm}");
             sb.AppendLine();
 
-            // --- Varor ---
+            // --- Items ---
             decimal total = 0;
 
             foreach (var item in items)
             {
+                if (item?.Product == null)
+                    continue; // skyddar mot trasiga objekt
+
                 string unit = item.Product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
                 decimal lineTotal = item.TotalPrice;
                 total += lineTotal;
 
-                // Namn (vänster), mängd + enhet + pris (mitten), total (höger)
                 sb.AppendLine($"{item.Product.Name,-13} {item.Quantity} {unit} á {item.Product.Price,6:F2}   {lineTotal,7:F2} kr");
             }
 
@@ -52,13 +59,10 @@ namespace CashRegisterSystem.Data
             sb.AppendLine();
             sb.AppendLine();
 
-
-            // --- Moms ---
-            decimal vatRate = 0.12m;
+            // --- VAT ---
+            const decimal vatRate = 0.12m;
             decimal vatAmount = total * vatRate / (1 + vatRate);
             decimal exVat = total - vatAmount;
-
-
 
             sb.AppendLine("MOMSREDOVISNING");
             sb.AppendLine("----------------------------------------");
@@ -68,10 +72,10 @@ namespace CashRegisterSystem.Data
             sb.AppendLine($"ATT BETALA:{total,26:F2} kr");
             sb.AppendLine("========================================");
 
-            // --- Avslut ---
+            // --- Footer ---
             sb.AppendLine("           Tack för ditt köp!");
             sb.AppendLine("             Välkommen åter!");
-            sb.AppendLine("           Org.nr: 987654-3210  ");
+            sb.AppendLine("           Org.nr: 987654-3210");
             sb.AppendLine("========================================");
 
             return sb.ToString();

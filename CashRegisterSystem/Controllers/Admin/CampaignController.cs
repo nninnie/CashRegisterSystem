@@ -3,6 +3,14 @@ using CashRegisterSystem.Data;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Handles user interactions and operations related to campaigns in the cash register system.
+    /// </summary>
+    /// <remarks>
+    /// This controller provides functionality for viewing, creating, editing, and managing campaigns. 
+    /// It communicates with <see cref="CampaignRepository"/> for data persistence and ensures that 
+    /// campaign-related actions are performed consistently and validated before being saved.
+    /// </remarks>
     public class CampaignController
     {
         /// <summary>

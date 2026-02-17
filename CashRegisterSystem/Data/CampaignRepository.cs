@@ -2,7 +2,15 @@
 
 namespace CashRegisterSystem.Data
 {
-    public class CampaignRepository
+    /// <summary>
+    /// Provides file-based storage and retrieval of campaign data for the cash register system.
+    /// </summary>
+    /// <remarks>
+    /// This repository reads and writes campaign information to a semicolon-delimited text file. 
+    /// It acts as a simple persistence layer, allowing campaigns to be loaded at startup and saved 
+    /// after modifications. Business logic for applying campaigns is handled elsewhere.
+    /// </remarks>
+        public class CampaignRepository
     {
 
         /// <summary>
@@ -19,10 +27,8 @@ namespace CashRegisterSystem.Data
         /// list if the file does not exist or contains no campaigns.</returns>
         public static List<Campaign> GetCampaigns()
         {
-            var campaigns = new List<Campaign>();
-
             if (!File.Exists(CampaignFilePath))
-                return campaigns;
+                return new List<Campaign>();
 
             // Lista som ska fyllas med Campaign-objekt
             var campaignListFromFile = new List<Campaign>();

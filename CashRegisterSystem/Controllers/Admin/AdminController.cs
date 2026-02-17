@@ -3,15 +3,27 @@ using CashRegisterSystem.Data;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Provides administrative functionality for managing products, campaigns, 
+    /// and other system data within the cash register application.
+    /// </summary>
+    /// <remarks>
+    /// This controller handles menu navigation and user interactions related to 
+    /// administrative tasks. It communicates with the appropriate repositories 
+    /// to load, modify, and save data, ensuring that changes are consistently 
+    /// applied across the system.
+    /// </remarks>
     public static class AdminController
     {
         /// <summary>
-        /// Displays the administrative menu for managing products and processes the user's menu selection.
+        /// Displays the administrative menu for managing products and campaigns, allowing the user to select and
+        /// perform administrative actions.
         /// </summary>
-        /// <remarks>The menu allows administrators to edit, add, or delete products, start a campaign, or
-        /// return to the main menu. The method interacts with the console and requires user input to navigate and
-        /// select options.</remarks>
-        /// <param name="products">The list of products to be managed through the administrative menu. Cannot be null.</param>
+        /// <remarks>The menu is displayed in the console and requires user interaction via keyboard to
+        /// navigate and select options. The method blocks until the user selects an action or chooses to return to the
+        /// previous menu.</remarks>
+        /// <param name="products">The list of products to be managed. This list is used for editing, adding, or removing products within the
+        /// administrative menu.</param>
         public static void ShowAdminMenu(List<Product> products)
         {
             int adminMenuOption = 1;
@@ -81,9 +93,6 @@ namespace CashRegisterSystem.Controllers.Admin
                     return;
             }
         }
-
-
-
 
     }
 }

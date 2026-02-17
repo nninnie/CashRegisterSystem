@@ -2,34 +2,37 @@
 
 namespace CashRegisterSystem.Data
 {
+    /// <summary>
+    /// Writes receipts to a text file and displays them in the console.
+    /// </summary>
+    /// <remarks>
+    /// Each receipt is appended to a daily receipt file inside the Receipts folder.
+    /// Receipt numbers are generated through <see cref="ReceiptCounter"/>.
+    /// </remarks>
     public class ReceiptFileWriter : IReceiptWriter
     {
         private readonly ReceiptCounter _counter = new ReceiptCounter();
 
+        /// <summary>
+        /// Generates a receipt for the provided cart items, saves it to a file,
+        /// and displays it in the console.
+        /// </summary>
+        /// <param name="cartItems">The items included in the customer's purchase.</param>
         public void WriteReceipt(List<CartItem> cartItems)
         {
             int receiptNumber = _counter.GetNextReceiptNumber();
 
-            // Skapa kvittot som text via FormatReceipt
-            string showTextStringReceipt = ReceiptUI.FormatReceipt(receiptNumber, cartItems);
+            string receiptText = ReceiptUI.FormatReceipt(receiptNumber, cartItems);
 
-            // Mapp för kvitton
-            string createFolder = Path.Combine(AppContext.BaseDirectory, "Receipts");
-            Directory.CreateDirectory(createFolder);
+            string receiptFolder = Path.Combine(AppContext.BaseDirectory, "Receipts");
+            Directory.CreateDirectory(receiptFolder);
 
-            // Filnamn baserat på dagens datum
-            string fileNameInFolder = Path.Combine(createFolder, $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
+            string filePath = Path.Combine(receiptFolder, $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
 
-            // Skriv kvittot till fil
-            // append: true: varje nytt kvitto läggs längst ner i samma fil så inte nya kvitton raderar den gamla
-            using (var receiptWriterToFile = new StreamWriter(fileNameInFolder, append: true))
-            {
-                receiptWriterToFile.WriteLine(showTextStringReceipt);
-            }
+            File.AppendAllText(filePath, receiptText + Environment.NewLine);
 
-            // Visa kvittot i konsolen
             Console.Clear();
-            Console.WriteLine(showTextStringReceipt);
+            Console.WriteLine(receiptText);
 
             Console.WriteLine("\nKöp avslutat. Tryck ENTER för ny kund.");
             Console.ReadKey();

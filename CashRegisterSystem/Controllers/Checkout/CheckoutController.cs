@@ -1,6 +1,16 @@
-﻿using CashRegisterSystem.Core;
+﻿namespace CashRegisterSystem.Controllers;
+
+using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 
+/// <summary>
+/// Manages the checkout flow for customer transactions in the cash register system.
+/// </summary>
+/// <remarks>
+/// This controller handles scanning of products, applying discounts, managing the shopping cart,
+/// and completing payments. It interacts with the console to guide the cashier through each step
+/// of the transaction and coordinates receipt generation and cart clearing after payment.
+/// </remarks>
 public static class CheckoutController
 {
     /// <summary>
@@ -108,7 +118,6 @@ public static class CheckoutController
         return (product, quantity);
     }
 
-
     /// <summary>
     /// Calculates the discount amount for a product based on the specified quantity and applicable campaigns.
     /// </summary>
@@ -128,11 +137,19 @@ public static class CheckoutController
         if (!validCampaigns.Any())
             return 0;
 
-        var campaign = validCampaigns.First();
+        // Hitta kampanj för just denna produkt
+        var campaign = validCampaigns
+            .FirstOrDefault(c => c.Name == product.Name);
+
+        // Ingen kampanj för produkten
+        if (campaign == null)
+            return 0;
+
         decimal totalPrice = product.Price * quantity;
 
         return totalPrice * (campaign.Discount / 100);
     }
+
 
     /// <summary>
     /// Writes a formatted list of products to the console, displaying each product's PLU, name, price, and price unit.
@@ -158,14 +175,14 @@ public static class CheckoutController
         }
     }
 
-
     /// <summary>
-    /// Finalizes the payment process for the specified cart, generates a receipt, displays the purchase summary, and
-    /// clears the cart.
+    /// Finalizes the payment process for the specified cart, generates a receipt, displays purchase details, and
+    /// prompts for the next action.
     /// </summary>
-    /// <remarks>This method writes a receipt for the current cart items, outputs a summary of the purchase to
-    /// the console, and then clears the cart. After calling this method, the cart will be empty.</remarks>
-    /// <param name="cart">The cart containing the items to be purchased. Cannot be null and must contain at least one item.</param>
+    /// <remarks>This method writes a receipt for the current cart items, displays a summary of the purchase
+    /// to the console, and prompts the user to proceed to the next customer or return to the menu. The cart is cleared
+    /// if the user chooses to continue to the next customer.</remarks>
+    /// <param name="cart">The cart containing the items to be paid for. Cannot be null.</param>
     private static void CompletePayment(Cart cart)
     {
         IReceiptWriter receiptWriter = new ReceiptFileWriter();
@@ -183,6 +200,17 @@ public static class CheckoutController
         Console.WriteLine("Betalning genomförd.");
         Console.WriteLine("Kvitto skapat. Tack för ditt köp och trevlig dag!");
 
+        Console.WriteLine("\nTryck ENTER för nästa kund eller ESC för att gå tillbaka till menyn.");
+
+        var key = Console.ReadKey(true);
+
+        if (key.Key == ConsoleKey.Escape)
+        {
+            return; 
+        }
+
+        // fortsätt till nästa kund, töm varukorg
         cart.Clear();
+
     }
 }

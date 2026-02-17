@@ -1,5 +1,12 @@
 ﻿namespace CashRegisterSystem.Core
 {
+    /// <summary>
+    /// Represents a shopping cart that manages a collection of items selected for purchase, including their quantities
+    /// and discounts.
+    /// </summary>
+    /// <remarks>The Cart class provides methods to add products with optional discounts, calculate the total
+    /// price, and clear all items. Items are grouped by product; adding the same product increases its quantity and
+    /// discount rather than creating a duplicate entry.</remarks>
     public class Cart
     {
         public List<CartItem> CartItems { get; } = new();
@@ -42,9 +49,8 @@
         {
             AddItem(product, quantity, 0);
         }
+        public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice); // Total price after discounts
 
-        public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice);
-
-        public void Clear() => CartItems.Clear();
+        public void Clear() => CartItems.Clear(); // Tömmer kundvagnen
     }
 }

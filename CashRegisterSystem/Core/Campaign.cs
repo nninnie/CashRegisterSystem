@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Core
 {
+    /// <summary>
+    /// Represents a marketing campaign with associated discount, status, and scheduling information.
+    /// </summary>
     public class Campaign
     {
         public int Id { get; set;  }

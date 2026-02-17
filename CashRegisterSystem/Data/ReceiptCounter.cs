@@ -1,41 +1,42 @@
 ﻿namespace CashRegisterSystem.Data
 {
+    /// <summary>
+    /// Handles generation of sequential receipt numbers and ensures that the 
+    /// current receipt number is persisted between program runs.
+    /// </summary>
+    /// <remarks>
+    /// Receipt numbers are stored in a text file inside the Receipts folder. 
+    /// If the file does not exist, numbering starts at 1.
+    /// </remarks>
     public class ReceiptCounter
     {
-        // Mapp där alla kvittofiler ska ligga
         private static readonly string ReceiptFolderPath =
             Path.Combine(AppContext.BaseDirectory, "Receipts");
 
-        // Filen som sparar senaste kvittonumret
         private static readonly string ReceiptNumberFilePath =
             Path.Combine(ReceiptFolderPath, "receipt_number.txt");
 
+        /// <summary>
+        /// Retrieves the next available receipt number and updates the stored value.
+        /// </summary>
+        /// <returns>The next sequential receipt number.</returns>
         public int GetNextReceiptNumber()
         {
-            // Skapa mappen om den inte finns
             Directory.CreateDirectory(ReceiptFolderPath);
 
-            int nextReceiptNumber = 1; // Starta på 1 om filen inte finns
+            int nextReceiptNumber = 1;
 
-            // Om filen finns → läs senaste kvittonumret
             if (File.Exists(ReceiptNumberFilePath))
             {
-                using (var readReceiptNumberFromFile = new StreamReader(ReceiptNumberFilePath))
-                {
-                    string receiptNumberFromFile = readReceiptNumberFromFile.ReadToEnd();
+                string? content = File.ReadAllText(ReceiptNumberFilePath);
 
-                    if (int.TryParse(receiptNumberFromFile, out int lastReceiptNumber))
-                    {
-                        nextReceiptNumber = lastReceiptNumber + 1;
-                    }
+                if (int.TryParse(content, out int lastNumber) && lastNumber > 0)
+                {
+                    nextReceiptNumber = lastNumber + 1;
                 }
             }
 
-            // Skriv det nya kvittonumret tillbaka till filen
-            using (var writeReceiptNumberToFile = new StreamWriter(ReceiptNumberFilePath, false))
-            {
-                writeReceiptNumberToFile.Write(nextReceiptNumber);
-            }
+            File.WriteAllText(ReceiptNumberFilePath, nextReceiptNumber.ToString());
 
             return nextReceiptNumber;
         }
