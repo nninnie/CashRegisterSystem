@@ -114,7 +114,7 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 2:
-                            ProductListView.ShowProducts(products);
+                            ProductListView.ShowProductList(products);
                             break;
 
                         case 3:
@@ -150,7 +150,7 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 2:
-                            ProductListView.ShowProducts(products);
+                            ProductListView.ShowProductList(products);
                             break;
 
                         case 3:

@@ -28,7 +28,7 @@ namespace CashRegisterSystem.Data
             new Product { PLU = "3131", Name = "Kiwi", Price = 9.90m, PriceUnit = PriceUnit.Each },
             new Product { PLU = "3174", Name = "Apelsin", Price = 19.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "3220", Name = "Päron", Price = 28.90m, PriceUnit = PriceUnit.PerKilo },
-            new Product { PLU = "4252", Name = "Jordgubbar", Price = 35.09m, PriceUnit = PriceUnit.Each }, // FIX: unik PLU
+            new Product { PLU = "4252", Name = "Jordgubbar", Price = 35.09m, PriceUnit = PriceUnit.Each }, 
             new Product { PLU = "4521", Name = "Sparris", Price = 46.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4666", Name = "Lök gul", Price = 9.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4182", Name = "Lök röd", Price = 12.90m, PriceUnit = PriceUnit.PerKilo },
@@ -38,7 +38,7 @@ namespace CashRegisterSystem.Data
             new Product { PLU = "4833", Name = "Potatis fast", Price = 12.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4863", Name = "Potatis mjölig", Price = 12.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4806", Name = "Tomat kvist", Price = 26.90m, PriceUnit = PriceUnit.PerKilo },
-            new Product { PLU = "4253", Name = "Sallad isberg", Price = 24.40m, PriceUnit = PriceUnit.Each }, // FIX: unik PLU
+            new Product { PLU = "4253", Name = "Sallad isberg", Price = 24.40m, PriceUnit = PriceUnit.Each }, 
             new Product { PLU = "4645", Name = "Svamp champinjon", Price = 19.90m, PriceUnit = PriceUnit.Each },
             new Product { PLU = "3264", Name = "Vitlök", Price = 16.90m, PriceUnit = PriceUnit.Each },
         };

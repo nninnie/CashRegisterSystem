@@ -28,13 +28,14 @@ public static class CheckoutController
         var campaigns = CampaignRepository.GetCampaigns();
 
         Console.Clear();
-        PrintProductList(products);
+        PLUDisplayUI.PrintPLUList(products);
 
         Cart cart = new Cart();
 
         while (true)
         {
-            Console.Write("\nPLU och antal/vikt (eller PAY/CANCEL): ");
+            Console.WriteLine("---------------------------------------------------------------");
+            Console.Write("\nPLU [mellanslag] antal/vikt    |    (PAY / CANCEL) : ");
             string? inputNewCustomer = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(inputNewCustomer))
@@ -52,7 +53,7 @@ public static class CheckoutController
 
                 cart.Clear(); // töm kundvagn för nästa kund
                 Console.Clear();
-                PrintProductList(products);
+                PLUDisplayUI.PrintPLUList(products);
                 continue;
             }
 
@@ -158,27 +159,6 @@ public static class CheckoutController
         decimal totalPrice = product.Price * quantity;
 
         return totalPrice * (campaign.Discount / 100);
-    }
-
-
-    /// <summary>
-    /// Writes a formatted list of products to the console, displaying each product's PLU, name, price, and price unit.
-    /// </summary>
-    /// <remarks>Products are displayed in alphabetical order by name. The output includes headers and uses
-    /// color formatting for emphasis.</remarks>
-    /// <param name="products">The collection of products to display. The list must not be null.</param>
-    private static void PrintProductList(List<Product> products)
-    {
-        BannerUI.PrintFruitHeader("KASSA");
-
-        Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
-        Console.WriteLine("-----------------------------\n");
-
-        foreach (var p in products.OrderBy(p => p.Name))
-        {
-            string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-            Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} {type}");
-        }
     }
 
     /// <summary>

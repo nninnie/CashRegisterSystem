@@ -3,31 +3,34 @@
 namespace CashRegisterSystem.UI
 {
     /// <summary>
-    /// Displays a formatted list of all products, including PLU, name, price and unit.
+    /// Displays a formatted product list in a receipt‑style layout,
+    /// including PLU, product name and price information.
     /// </summary>
     public static class ProductListView
     {
         /// <summary>
-        /// Shows the product list in alphabetical order and waits for user input before returning.
+        /// Shows all products in a clean, aligned table.
+        /// Products are sorted alphabetically for easier scanning.
         /// </summary>
-        /// <param name="products">The list of products to display.</param>
-        public static void ShowProducts(List<Product> products)
+        public static void ShowProductList(List<Product> products)
         {
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
+            BannerUI.PrintFruitHeader("PRODUKTLISTA");
 
-            Console.Clear();
-            BannerUI.PrintFruitHeader("PLU");
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine($" {"PLU",-6} {"Produkt",-20} {"Pris"}");
+            Console.WriteLine("-----------------------------------------");
 
             foreach (var p in products.OrderBy(p => p.Name))
             {
                 string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-                Console.WriteLine($"PLU: {p.PLU} - {p.Name} - {p.Price} {type}");
+                string price = $"{p.Price} {type}";
+
+                Console.WriteLine($" {p.PLU,-6} {p.Name,-20} {price}");
             }
 
+            Console.WriteLine("-----------------------------------------");
             Console.WriteLine("\nTryck valfri tangent för att återgå till menyn...");
             Console.ReadKey();
-            Console.Clear();
         }
     }
 }
