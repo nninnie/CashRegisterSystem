@@ -1,4 +1,4 @@
-﻿using CashRegisterSystem.Controllers;
+﻿using CashRegisterSystem.Controllers.Admin;
 using CashRegisterSystem.Core;
 
 namespace CashRegisterSystem.UI

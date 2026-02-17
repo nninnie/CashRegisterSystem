@@ -1,7 +1,7 @@
 ﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 
-namespace CashRegisterSystem.Controllers
+namespace CashRegisterSystem.Controllers.Admin
 {
     public static class AdminController
     {
