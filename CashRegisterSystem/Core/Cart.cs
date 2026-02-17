@@ -49,8 +49,19 @@
         {
             AddItem(product, quantity, 0);
         }
-        public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice); // Total price after discounts
+        public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice); 
 
-        public void Clear() => CartItems.Clear(); // Tömmer kundvagnen
+        public void Clear() => CartItems.Clear(); 
+        public bool RemoveItem(string plu)
+        {
+            var item = CartItems.FirstOrDefault(i => i.Product.PLU == plu);
+
+            if (item == null)
+                return false;
+
+            CartItems.Remove(item);
+            return true;
+        }
+
     }
 }

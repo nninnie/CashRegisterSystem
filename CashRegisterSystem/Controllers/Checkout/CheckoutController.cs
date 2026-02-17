@@ -4,25 +4,8 @@ using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
 
-/// <summary>
-/// Manages the checkout flow for customer transactions in the cash register system.
-/// </summary>
-/// <remarks>
-/// This controller handles scanning of products, applying discounts, managing the shopping cart,
-/// and completing payments. It interacts with the console to guide the cashier through each step
-/// of the transaction and coordinates receipt generation and cart clearing after payment.
-/// </remarks>
 public static class CheckoutController
 {
-    /// <summary>
-    /// Starts a new customer transaction, allowing products to be added to a cart and handling payment or cancellation
-    /// commands.
-    /// </summary>
-    /// <remarks>This method interacts with the console to receive input for product selection, quantity, and
-    /// transaction commands. The transaction continues until the user enters the PAY or CANCEL command. Discounts are
-    /// applied automatically based on active campaigns. This method is intended for use in interactive console
-    /// applications and blocks until the transaction is completed or cancelled.</remarks>
-    /// <param name="products">The list of available products that can be selected and added to the customer's cart. Cannot be null.</param>
     public static void StartNewCustomer(List<Product> products)
     {
         var campaigns = CampaignRepository.GetCampaigns();
@@ -49,19 +32,46 @@ public static class CheckoutController
                 bool continueShopping = CompletePayment(cart);
 
                 if (!continueShopping)
-                    return; // tillbaka till menyn
+                    return;
 
-                cart.Clear(); // töm kundvagn för nästa kund
+                cart.Clear();
                 Console.Clear();
                 PLUDisplayUI.PrintPLUList(products);
                 continue;
             }
 
-        // CANCEL – avbryter hela köpet
-        if (trimmed == "CANCEL")
+            // CANCEL – avbryter hela köpet
+            if (trimmed == "CANCEL")
             {
                 Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
                 return;
+            }
+
+            // REMOVE – ta bort vara från kundvagnen 
+            if (trimmed.StartsWith("DELETE") || trimmed.StartsWith("DEL"))
+            {
+                var parts = trimmed.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2)
+                {
+                    Console.WriteLine("Fel format. Skriv: DEL [PLU] för att ta bort en vara.");
+                    continue;
+                }
+
+                string pluToRemove = parts[1];
+
+                bool removed = cart.RemoveItem(pluToRemove);
+
+                if (removed)
+                    Console.WriteLine($"\nVara med PLU {pluToRemove} borttagen från kundvagnen.");
+                else
+                    Console.WriteLine($"\nIngen vara med PLU {pluToRemove} hittades i kundvagnen.");
+
+                Thread.Sleep(1000);
+                Console.Clear();
+                PLUDisplayUI.PrintPLUList(products);
+                ShowCart(cart);
+                continue;
             }
 
             // Försöker tolka PLU + mängd
@@ -71,13 +81,10 @@ public static class CheckoutController
 
             var (product, quantity) = parsed.Value;
 
-            // Beräknar rabatt baserat på aktiva kampanjer
             decimal discountAmount = CalculateDiscount(product, quantity, campaigns);
 
-            // Lägger till varan i kundvagnen
             cart.AddItem(product, quantity, discountAmount);
 
-            // Feedback till kassören
             string unitText = product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
             Console.WriteLine($"\n{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
 
@@ -88,28 +95,14 @@ public static class CheckoutController
                 Console.ResetColor();
             }
 
-            
-
             Thread.Sleep(1200);
             Console.Clear();
 
-            // Visa PLU-listan igen
             PLUDisplayUI.PrintPLUList(products);
-
-            // Visa kundvagnen i kvittotema
             ShowCart(cart);
-
         }
     }
 
-    /// <summary>
-    /// Parses a user input string to extract a product and its associated quantity from a list of available products.
-    /// </summary>
-    /// <param name="input">The input string containing the product PLU code and quantity, separated by a space. The quantity may use either
-    /// a period or comma as the decimal separator.</param>
-    /// <param name="products">The list of available products to search for a matching PLU code.</param>
-    /// <returns>A tuple containing the matching product and the parsed quantity if the input is valid and a matching product is
-    /// found; otherwise, null.</returns>
     private static (Product product, decimal quantity)? ParseInput(string input, List<Product> products)
     {
         string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -139,14 +132,6 @@ public static class CheckoutController
         return (product, quantity);
     }
 
-    /// <summary>
-    /// Calculates the discount amount for a product based on the specified quantity and applicable campaigns.
-    /// </summary>
-    /// <param name="product">The product for which the discount is to be calculated. Must not be null.</param>
-    /// <param name="quantity">The quantity of the product to be considered when calculating the discount. Must be a non-negative value.</param>
-    /// <param name="campaigns">A list of campaigns to evaluate for discount eligibility. Only active campaigns within their valid date range
-    /// are considered.</param>
-    /// <returns>The calculated discount amount as a decimal value. Returns 0 if no applicable campaign is found.</returns>
     private static decimal CalculateDiscount(Product product, decimal quantity, List<Campaign> campaigns)
     {
         var validCampaigns = campaigns
@@ -158,11 +143,9 @@ public static class CheckoutController
         if (!validCampaigns.Any())
             return 0;
 
-        // Hitta kampanj för just denna produkt
         var campaign = validCampaigns
             .FirstOrDefault(c => c.Name == product.Name);
 
-        // Ingen kampanj för produkten
         if (campaign == null)
             return 0;
 
@@ -171,20 +154,10 @@ public static class CheckoutController
         return totalPrice * (campaign.Discount / 100);
     }
 
-    /// <summary>
-    /// Finalizes the payment by generating and displaying the receipt, and waits for the cashier's
-    /// input to determine whether to start a new customer or return to the main menu.
-    /// </summary>
-    /// <param name="cart">The cart containing the purchased items.</param>
-    /// <returns>
-    /// True if the cashier chooses to continue with a new customer; false if returning to the main menu.
-    /// </returns>
     private static bool CompletePayment(Cart cart)
-
     {
         IReceiptWriter receiptWriter = new ReceiptFileWriter();
 
-        // Visa och spara kvittot
         receiptWriter.WriteReceipt(cart.CartItems);
 
         Console.WriteLine("\nTryck ENTER för nästa kund eller ESC för att gå tillbaka till menyn.");
@@ -192,16 +165,16 @@ public static class CheckoutController
         var key = Console.ReadKey(true);
 
         if (key.Key == ConsoleKey.Escape)
-            return false; 
+            return false;
 
-        return true; // fortsätt till nästa kund
+        return true;
     }
 
     private static void ShowCart(Cart cart)
     {
-        Console.WriteLine("\n---------------------- KUNDVAGN ----------------------");
+        Console.WriteLine("------------------------------KUNDVAGN--------------------------------\n");
 
-        decimal totalSum = 0; 
+        decimal totalSum = 0;
 
         foreach (var item in cart.CartItems)
         {
@@ -210,19 +183,16 @@ public static class CheckoutController
             decimal total = item.Product.Price * item.Quantity - item.DiscountAmount;
             totalSum += total;
 
-            Console.WriteLine($"- {item.Product.Name,-15} {item.Quantity} {unit,-3} {total,8:F2} kr");
+            Console.WriteLine($"{item.Product.Name,-25} á {item.Quantity,5} {unit,-3} {total,25:F2} kr");
         }
-
-        Console.WriteLine("------------------------------------------------------");
-        Console.WriteLine($"{"",30}Total : {totalSum:F2} kr");
-
+        Console.WriteLine("----------------------------------------------------------------------");
+        Console.WriteLine($"{"",47}Total : {totalSum,8:F2} kr");
     }
+
     private static void ShowPluInputPrompt()
     {
-        Console.WriteLine("---------------------------------------------------------------");
-        Console.WriteLine("   PLU [mellanslag] antal/vikt(kg)    |    (PAY / CANCEL) ");
-        Console.WriteLine("---------------------------------------------------------------\n");
+        Console.WriteLine("----------------------------------------------------------------------");
+        Console.WriteLine(" PLU [mellanslag] antal/vikt(kg)    |    (PAY / CANCEL / DELETE PLU) ");
+        Console.WriteLine("----------------------------------------------------------------------\n");
     }
-
 }
-

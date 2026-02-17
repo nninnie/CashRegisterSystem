@@ -37,6 +37,7 @@ namespace CashRegisterSystem.Data
             sb.AppendLine($"Kvitto #{receiptNumber}");
             sb.AppendLine($"Datum: {DateTime.Now:yyyy-MM-dd HH:mm}");
             sb.AppendLine();
+            sb.AppendLine();
 
             // --- Items ---
             decimal total = 0;
@@ -55,7 +56,6 @@ namespace CashRegisterSystem.Data
 
             sb.AppendLine("----------------------------------------");
             sb.AppendLine($"SUMMA VAROR: {total,24:F2} kr");
-            sb.AppendLine();
             sb.AppendLine();
             sb.AppendLine();
 

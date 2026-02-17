@@ -91,7 +91,7 @@ namespace CashRegisterSystem.UI
                             Console.Clear(); 
                             BannerUI.ShowLogo(); 
 
-                            Console.Write("\nAnställningsnummer: ");
+                            Console.Write("Anställningsnummer: ");
                             string? employeeId = Console.ReadLine();
 
                             if (string.IsNullOrWhiteSpace(employeeId))
