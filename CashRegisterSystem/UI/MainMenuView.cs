@@ -88,7 +88,10 @@ namespace CashRegisterSystem.UI
                     switch (mainMenuOption)
                     {
                         case 1:
-                            Console.WriteLine("\nAnställningsnummer: ");
+                            Console.Clear(); 
+                            BannerUI.ShowLogo(); 
+
+                            Console.Write("\nAnställningsnummer: ");
                             string? employeeId = Console.ReadLine();
 
                             if (string.IsNullOrWhiteSpace(employeeId))
@@ -145,7 +148,7 @@ namespace CashRegisterSystem.UI
                         case 4:
                             Console.WriteLine("\n\n\t\t\tLoggar ut...");
                             Thread.Sleep(1200); 
-                            Console.WriteLine("\t\t    Ha en fantastisk dag ❤️\n\n");
+                            Console.WriteLine("\t\t    Ha en fantastisk dag ❤️\n");
                             Thread.Sleep(1200);
                             Environment.Exit(0);
                             break;

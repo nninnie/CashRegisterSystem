@@ -34,8 +34,8 @@ public static class CheckoutController
 
         while (true)
         {
-            Console.WriteLine("---------------------------------------------------------------");
-            Console.Write("\nPLU [mellanslag] antal/vikt    |    (PAY / CANCEL) : ");
+            ShowPluInputPrompt();
+
             string? inputNewCustomer = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(inputNewCustomer))
@@ -79,7 +79,7 @@ public static class CheckoutController
 
             // Feedback till kassören
             string unitText = product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
-            Console.WriteLine($"{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
+            Console.WriteLine($"\n{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
 
             if (discountAmount > 0)
             {
@@ -88,6 +88,16 @@ public static class CheckoutController
                 Console.ResetColor();
             }
 
+            
+
+            Thread.Sleep(1200);
+            Console.Clear();
+
+            // Visa PLU-listan igen
+            PLUDisplayUI.PrintPLUList(products);
+
+            // Visa kundvagnen i kvittotema
+            ShowCart(cart);
 
         }
     }
@@ -186,4 +196,33 @@ public static class CheckoutController
 
         return true; // fortsätt till nästa kund
     }
+
+    private static void ShowCart(Cart cart)
+    {
+        Console.WriteLine("\n---------------------- KUNDVAGN ----------------------");
+
+        decimal totalSum = 0; 
+
+        foreach (var item in cart.CartItems)
+        {
+            string unit = item.Product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
+
+            decimal total = item.Product.Price * item.Quantity - item.DiscountAmount;
+            totalSum += total;
+
+            Console.WriteLine($"- {item.Product.Name,-15} {item.Quantity} {unit,-3} {total,8:F2} kr");
+        }
+
+        Console.WriteLine("------------------------------------------------------");
+        Console.WriteLine($"{"",30}Total : {totalSum:F2} kr");
+
+    }
+    private static void ShowPluInputPrompt()
+    {
+        Console.WriteLine("---------------------------------------------------------------");
+        Console.WriteLine("   PLU [mellanslag] antal/vikt(kg)    |    (PAY / CANCEL) ");
+        Console.WriteLine("---------------------------------------------------------------\n");
+    }
+
 }
+
