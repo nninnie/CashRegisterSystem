@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
@@ -35,13 +36,7 @@ namespace CashRegisterSystem.Controllers.Admin
             while (!isSelected)
             {
                 Console.Clear();
-                Console.WriteLine("========================================");
-                Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                Console.WriteLine("                ADMINMENY");
-                Console.ResetColor();
-                Console.WriteLine("========================================");
-                Console.WriteLine();
-
+                BannerUI.PrintFruitHeader("ADMIN MENY");
 
                 Console.WriteLine($"{(adminMenuOption == 1 ? "·" + highlight : "")} Ändra produkt\u001b[0m");
                 Console.WriteLine($"{(adminMenuOption == 2 ? "·" + highlight : "")} Lägg till produkt\u001b[0m");

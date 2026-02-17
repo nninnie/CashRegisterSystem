@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void EditProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("             ÄNDRA PRODUKT");
-            Console.WriteLine("========================================");
-            Console.WriteLine();
+            BannerUI.PrintFruitHeader("ÄNDRA PRODUKT");
 
             // Ladda alltid senaste versionen från filen direkt in i listan
             products.Clear();
@@ -107,11 +105,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void AddProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("             LÄGG TILL PRODUKT");
-            Console.WriteLine("========================================");
-            Console.WriteLine();
-
+            BannerUI.PrintFruitHeader("LÄGG TILL PRODUKT");
 
             Console.Write("PLU: ");
             string? plu = Console.ReadLine();
@@ -183,11 +177,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void DeleteProduct(List<Product> products)
         {
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("             TA BORT PRODUKT");
-            Console.WriteLine("========================================");
-            Console.WriteLine();
-
+            BannerUI.PrintFruitHeader("TA BORT PRODUKT");
 
             PrintProducts(products);
 

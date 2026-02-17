@@ -17,11 +17,7 @@ namespace CashRegisterSystem.UI
                 throw new ArgumentNullException(nameof(products));
 
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("                 PLU-LISTA");
-            Console.ResetColor();
-            Console.WriteLine("========================================\n");
+            BannerUI.PrintFruitHeader("PLU");
 
             foreach (var p in products.OrderBy(p => p.Name))
             {

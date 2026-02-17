@@ -2,6 +2,7 @@
 
 using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.UI;
 
 /// <summary>
 /// Manages the checkout flow for customer transactions in the cash register system.
@@ -168,11 +169,7 @@ public static class CheckoutController
     /// <param name="products">The collection of products to display. The list must not be null.</param>
     private static void PrintProductList(List<Product> products)
     {
-        Console.WriteLine("========================================");
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("                  KASSA");
-        Console.ResetColor();
-        Console.WriteLine("========================================\n");
+        BannerUI.PrintFruitHeader("KASSA");
 
         Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
         Console.WriteLine("-----------------------------\n");

@@ -29,7 +29,7 @@ namespace CashRegisterSystem.Data
             // --- Header ---
             sb.AppendLine("========================================");
             sb.AppendLine("                 KVITTO");
-            sb.AppendLine("            Gott Token Livs");
+            sb.AppendLine("              FruktTorget");
             sb.AppendLine("          Öppet 08:00 - 23:00");
             sb.AppendLine("          Tel: 073-570 43 68");
             sb.AppendLine("========================================");

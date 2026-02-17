@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
@@ -31,12 +32,7 @@ namespace CashRegisterSystem.Controllers.Admin
             while (!isSelected)
             {
                 Console.Clear();
-                Console.WriteLine("========================================");
-                Console.ForegroundColor = ConsoleColor.DarkBlue;
-                Console.WriteLine("            KAMPANJ-MENY");
-                Console.ResetColor();
-                Console.WriteLine("========================================");
-                Console.WriteLine();
+                BannerUI.PrintFruitHeader("KAMPANJ-MENY");
 
                 Console.WriteLine($"{(menuOption == 1 ? "·" + highlight : "")} Skapa kampanj\u001b[0m");
                 Console.WriteLine($"{(menuOption == 2 ? "·" + highlight : "")} Visa kampanjer\u001b[0m");
@@ -90,11 +86,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void StartCampaignMenu()
         {
             Console.Clear();
-
-            Console.WriteLine("========================================");
-            Console.WriteLine("             STARTA KAMPANJ");
-            Console.WriteLine("========================================");
-            Console.WriteLine();
+            BannerUI.PrintFruitHeader("STARTA KAMPANJER");
 
             // Ladda produkter och spara i listan products
             var productList = ProductFileLoader.GetProducts();
@@ -204,10 +196,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void ViewCampaigns()
         {
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("           VISA KAMPANJER");
-            Console.WriteLine("========================================\n");
-            Console.WriteLine();
+            BannerUI.PrintFruitHeader("STARTA KAMPANJER");
 
             var campaigns = CampaignRepository.GetCampaigns();
 
@@ -253,10 +242,7 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void EndCampaigns()
         {
             Console.Clear();
-            Console.WriteLine("========================================");
-            Console.WriteLine("          AVSLUTA KAMPANJER");
-            Console.WriteLine("========================================\n");
-            Console.WriteLine();
+            BannerUI.PrintFruitHeader("AVSLUTA KAMPANJER");
 
             var campaign = CampaignRepository.GetCampaigns();
 

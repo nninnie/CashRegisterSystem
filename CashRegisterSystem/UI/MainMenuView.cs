@@ -35,13 +35,7 @@ namespace CashRegisterSystem.UI
                 while (!isSelected)
                 {
                     Console.Clear();
-
-                    Console.WriteLine("========================================");
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine("                 HUVUDMENY");
-                    Console.ResetColor();
-                    Console.WriteLine("========================================");
-                    Console.WriteLine();
+                    BannerUI.ShowLogo();
 
                     if (!isLoggedIn)
                     {
@@ -99,7 +93,7 @@ namespace CashRegisterSystem.UI
 
                             if (string.IsNullOrWhiteSpace(employeeId))
                             {
-                                Console.WriteLine("Employee ID får inte vara tomt.");
+                                Console.WriteLine("Anställningsnummer får inte vara tomt.");
                                 Console.ReadKey();
                                 break;
                             }
@@ -107,7 +101,7 @@ namespace CashRegisterSystem.UI
                             Console.Write("Ange kassörskod: ");
                             string? code = Console.ReadLine();
 
-                            if (code?.ToLower() == "bajskorv")
+                            if (code?.ToLower() == "" )
                             {
                                 isLoggedIn = true;
                                 mainMenuOption = 1;
@@ -127,7 +121,7 @@ namespace CashRegisterSystem.UI
                             Console.Write("\nAdminlösenord: ");
                             string? adminPass = Console.ReadLine();
 
-                            if (adminPass?.ToLower() == "admin")
+                            if (adminPass?.ToLower() == "")
                             {
                                 AdminController.ShowAdminMenu(products);
                                 mainMenuOption = 1;
