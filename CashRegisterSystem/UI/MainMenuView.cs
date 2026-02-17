@@ -40,14 +40,14 @@ namespace CashRegisterSystem.UI
                     if (!isLoggedIn)
                     {
                         Console.WriteLine($"{(mainMenuOption == 1 ? "·" + highlight : "")} Logga in\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU-Lista\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU\u001b[0m");
                         Console.WriteLine($"{(mainMenuOption == 3 ? "·" + highlight : "")} Admin\u001b[0m");
                         Console.WriteLine($"{(mainMenuOption == 4 ? "·" + highlight : "")} Avsluta\u001b[0m");
                     }
                     else
                     {
-                        Console.WriteLine($"{(mainMenuOption == 1 ? "·" + highlight : "")} Starta nytt köp\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU-Lista\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 1 ? "·" + highlight : "")} Ny kund\u001b[0m");
+                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU\u001b[0m");
                         Console.WriteLine($"{(mainMenuOption == 3 ? "·" + highlight : "")} Logga ut\u001b[0m");
                     }
 
@@ -88,7 +88,7 @@ namespace CashRegisterSystem.UI
                     switch (mainMenuOption)
                     {
                         case 1:
-                            Console.Write("\nKassörsnummer: ");
+                            Console.WriteLine("\nAnställningsnummer: ");
                             string? employeeId = Console.ReadLine();
 
                             if (string.IsNullOrWhiteSpace(employeeId))
@@ -98,7 +98,7 @@ namespace CashRegisterSystem.UI
                                 break;
                             }
 
-                            Console.Write("Ange kassörskod: ");
+                            Console.Write("Lösenord: ");
                             string? code = Console.ReadLine();
 
                             if (code?.ToLower() == "" )
@@ -118,6 +118,15 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 3:
+                            Console.Write("Admin ID: ");
+                                string? adminId = Console.ReadLine();
+                            if(string.IsNullOrWhiteSpace(adminId))
+                            {
+                                Console.WriteLine("Admin ID får inte vara tomt.");
+                                Console.ReadKey();
+                                break;
+                            }
+
                             Console.Write("\nAdminlösenord: ");
                             string? adminPass = Console.ReadLine();
 
@@ -134,7 +143,10 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 4:
-                            Console.WriteLine("\nTack för idag! Ha en fantastisk dag :)");
+                            Console.WriteLine("\n\n\t\t\tLoggar ut...");
+                            Thread.Sleep(1200); 
+                            Console.WriteLine("\t\t    Ha en fantastisk dag ❤️\n\n");
+                            Thread.Sleep(1200);
                             Environment.Exit(0);
                             break;
                     }

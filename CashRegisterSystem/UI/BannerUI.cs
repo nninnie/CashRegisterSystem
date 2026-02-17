@@ -10,8 +10,10 @@
         public static void PrintFruitHeader(string title)
         {
             Console.Clear();
+            Console.WriteLine();
 
-            string fruitsLeft = "🍎🍌🍇🍉";
+
+            string fruitsLeft = "\t  🍎🍌🍇🍉";
             string fruitsRight = "🍓🍍🍒🍑";
 
             // Bygger raden: frukter + mellanslag + titel + mellanslag + frukter
@@ -34,11 +36,11 @@
         public static void ShowLogo()
         {
             Console.Clear();
+            Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-
-            Console.WriteLine("🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
-
+            Console.WriteLine("\t  🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
             Console.ResetColor();
+            Console.WriteLine();
             Console.WriteLine();
         }
 
