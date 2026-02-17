@@ -5,6 +5,18 @@ namespace CashRegisterSystem.Data
 {
     public static class ReceiptUI
     {
+        /// <summary>
+        /// Formats a detailed receipt as a string for the specified receipt number and list of purchased items.
+        /// </summary>
+        /// <remarks>The returned receipt string includes store details, a timestamp, an itemized list of
+        /// products with quantities and prices, VAT calculations, and a payment summary. The method assumes all items
+        /// are subject to a 12% VAT rate. The formatting is suitable for display or printing, but does not include any
+        /// graphical elements.</remarks>
+        /// <param name="receiptNumber">The unique number identifying the receipt. Used to label the generated receipt output.</param>
+        /// <param name="items">The list of cart items to include on the receipt. Each item represents a purchased product and its quantity.
+        /// Cannot be null.</param>
+        /// <returns>A formatted string representing the complete receipt, including store information, itemized purchases,
+        /// totals, VAT breakdown, and payment summary.</returns>
         public static string FormatReceipt(int receiptNumber, List<CartItem> items)
         {
             var sb = new StringBuilder();

@@ -2,26 +2,49 @@
 {
     public class Cart
     {
-        // Listan som håller alla varor kunden lagt i varukorgen.
-        // Varje rad är ett CartItem (produkt + mängd + radpris).
         public List<CartItem> CartItems { get; } = new();
 
-        // Lägger till en ny vara i varukorgen.
-        // Skapar ett CartItem-objekt och stoppar in det i listan.
-        public void AddItem(Product product, decimal quantity)
+        /// <summary>
+        /// Adds a product to the cart with the specified quantity and discount amount. If the product already exists in
+        /// the cart, increases its quantity and discount amount accordingly.
+        /// </summary>
+        /// <remarks>If the specified product is already present in the cart, this method increments its
+        /// quantity and discount amount rather than adding a duplicate entry.</remarks>
+        /// <param name="product">The product to add to the cart. Cannot be null.</param>
+        /// <param name="quantity">The quantity of the product to add. Must be greater than zero.</param>
+        /// <param name="discountAmount">The discount amount to apply to the product. Must be zero or a positive value.</param>
+        public void AddItem(Product product, decimal quantity, decimal discountAmount)
         {
-            CartItems.Add(new CartItem
+            var existingItem = CartItems.FirstOrDefault(i => i.Product.PLU == product.PLU);
+
+            if (existingItem != null)
             {
-                Product = product,
-                Quantity = quantity
-            });
+                existingItem.Quantity += quantity;
+                existingItem.DiscountAmount += discountAmount;
+            }
+            else
+            {
+                CartItems.Add(new CartItem
+                {
+                    Product = product,
+                    Quantity = quantity,
+                    DiscountAmount = discountAmount
+                });
+            }
         }
 
-        // Räknar ut totalpriset för hela varukorgen.
-        // Summerar alla radpriser (CartItem.TotalPrice).
+        /// <summary>
+        /// Adds the specified product and quantity to the collection.
+        /// </summary>
+        /// <param name="product">The product to add. Cannot be null.</param>
+        /// <param name="quantity">The quantity of the product to add. Must be a non-negative value.</param>
+        public void AddItem(Product product, decimal quantity)
+        {
+            AddItem(product, quantity, 0);
+        }
+
         public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice);
 
-        // Tömmer varukorgen, t.ex. efter betalning.
         public void Clear() => CartItems.Clear();
     }
 }

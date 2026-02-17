@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem.Controllers.Admin
+namespace CashRegisterSystem.Core
 {
-    public class CampaignAdminController
+    public class Campaign
     {
         public int Id { get; set;  }
-        public string Name { get; set; }
+        public string Name { get; set; } = ""; // Default värde, tar bort varning null
         public decimal Discount { get; set; }  
         public bool IsActive { get; set; }  = true; // soft delete
         public DateTime StartDate { get; set; }

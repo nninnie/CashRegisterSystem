@@ -1,33 +1,24 @@
-﻿// Controller som hanterar hela kassaflödet för en kund.
-// using-raderna nedan gör att vi kan använda klasser från Core- och Data-lagren.
-using CashRegisterSystem.Core;   // Ger tillgång till modeller som Product, Cart och CartItem
-using CashRegisterSystem.Data;   // Ger tillgång till filhantering som ReceiptFileWriter och ReceiptCounter
-
+﻿using CashRegisterSystem.Core;
+using CashRegisterSystem.Data;
 
 public static class CheckoutController
 {
+    /// <summary>
+    /// Starts a new customer transaction, allowing products to be added to a cart and handling payment or cancellation
+    /// commands.
+    /// </summary>
+    /// <remarks>This method interacts with the console to receive input for product selection, quantity, and
+    /// transaction commands. The transaction continues until the user enters the PAY or CANCEL command. Discounts are
+    /// applied automatically based on active campaigns. This method is intended for use in interactive console
+    /// applications and blocks until the transaction is completed or cancelled.</remarks>
+    /// <param name="products">The list of available products that can be selected and added to the customer's cart. Cannot be null.</param>
     public static void StartNewCustomer(List<Product> products)
     {
+        var campaigns = CampaignRepository.GetCampaigns();
+
         Console.Clear();
+        PrintProductList(products);
 
-        // Visar alla produkter i en sorterad lista (alfabetiskt)
-        Console.WriteLine("========================================");
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("                  KASSA");
-        Console.ResetColor();
-        Console.WriteLine("========================================");
-        Console.WriteLine();
-
-        Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
-        Console.WriteLine("-----------------------------\n");
-
-        foreach (var p in products.OrderBy(p => p.Name))
-        {
-            string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-            Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} {type}");
-        }
-
-        // Skapar en tom varukorg för kunden
         Cart cart = new Cart();
 
         while (true)
@@ -40,81 +31,158 @@ public static class CheckoutController
 
             string trimmed = inputNewCustomer.Trim().ToUpper();
 
-            // ============================
             // PAY – avslutar köpet
-            // ============================
             if (trimmed == "PAY")
             {
-                IReceiptWriter receiptWriter = new ReceiptFileWriter();
-
-                // Skriver kvitto till fil
-                receiptWriter.WriteReceipt(cart.CartItems);
-
-                // Skriver kvitto till skärmen
-                Console.WriteLine("\n---KVITTO---");
-                foreach (var item in cart.CartItems)
-                {
-                    Console.WriteLine($"{item.Product.Name} {item.Quantity} x {item.Product.Price} = {item.TotalPrice} kr");
-                }
-
-                Console.WriteLine($"TOTALT: {cart.TotalPrice} kr");
-                Console.WriteLine("--------------\n");
-
-                Console.WriteLine("Betalning genomförd.");
-                Console.WriteLine("Kvitto skapat. Tack för ditt köp och trevlig dag!");
-
-                // Tömmer varukorgen inför nästa kund
-                cart.Clear();
+                CompletePayment(cart);
                 continue;
             }
 
-            // ============================
             // CANCEL – avbryter hela köpet
-            // ============================
             if (trimmed == "CANCEL")
             {
                 Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
                 return;
             }
 
-            // ============================
-            // Hantering av PLU + mängd
-            // ============================
-            string[] parts = inputNewCustomer.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length != 2)
-            {
-                Console.WriteLine("Fel format. Skriv in PLU (mellanslag) antal/kg");
+            // Försöker tolka PLU + mängd
+            var parsed = ParseInput(inputNewCustomer, products);
+            if (parsed is null)
                 continue;
-            }
 
-            string plu = parts[0];
-            string quantityText = parts[1];
+            var (product, quantity) = parsed.Value;
 
-            // Hittar produkten baserat på PLU
-            var product = products.FirstOrDefault(p => p.PLU == plu);
+            // Beräknar rabatt baserat på aktiva kampanjer
+            decimal discountAmount = CalculateDiscount(product, quantity, campaigns);
 
-            if (product is null)
-            {
-                Console.WriteLine("Produkt hittades inte. Försök igen.");
-                continue;
-            }
+            // Lägger till varan i kundvagnen
+            cart.AddItem(product, quantity, discountAmount);
 
-            // Tillåter både punkt och komma som decimaltecken
-            quantityText = quantityText.Replace(".", ",");
-
-            // Validerar mängden
-            if (!decimal.TryParse(quantityText, out decimal quantity) || quantity <= 0)
-            {
-                Console.WriteLine("Ogiltigt antal/vikt.");
-                continue;
-            }
-
-            // Lägger till varan i varukorgen
-            cart.AddItem(product, quantity);
-
+            // Feedback till kassören
             string unitText = product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
             Console.WriteLine($"{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
+
+            if (discountAmount > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Rabatt tillämpad: -{discountAmount:F2} kr");
+                Console.ResetColor();
+            }
         }
+    }
+
+    /// <summary>
+    /// Parses a user input string to extract a product and its associated quantity from a list of available products.
+    /// </summary>
+    /// <param name="input">The input string containing the product PLU code and quantity, separated by a space. The quantity may use either
+    /// a period or comma as the decimal separator.</param>
+    /// <param name="products">The list of available products to search for a matching PLU code.</param>
+    /// <returns>A tuple containing the matching product and the parsed quantity if the input is valid and a matching product is
+    /// found; otherwise, null.</returns>
+    private static (Product product, decimal quantity)? ParseInput(string input, List<Product> products)
+    {
+        string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length != 2)
+        {
+            Console.WriteLine("Fel format. Skriv in PLU (mellanslag) antal/kg");
+            return null;
+        }
+
+        string plu = parts[0];
+        string quantityText = parts[1].Replace(".", ",");
+
+        var product = products.FirstOrDefault(p => p.PLU == plu);
+        if (product is null)
+        {
+            Console.WriteLine("Produkt hittades inte. Försök igen.");
+            return null;
+        }
+
+        if (!decimal.TryParse(quantityText, out decimal quantity) || quantity <= 0)
+        {
+            Console.WriteLine("Ogiltigt antal/vikt.");
+            return null;
+        }
+
+        return (product, quantity);
+    }
+
+
+    /// <summary>
+    /// Calculates the discount amount for a product based on the specified quantity and applicable campaigns.
+    /// </summary>
+    /// <param name="product">The product for which the discount is to be calculated. Must not be null.</param>
+    /// <param name="quantity">The quantity of the product to be considered when calculating the discount. Must be a non-negative value.</param>
+    /// <param name="campaigns">A list of campaigns to evaluate for discount eligibility. Only active campaigns within their valid date range
+    /// are considered.</param>
+    /// <returns>The calculated discount amount as a decimal value. Returns 0 if no applicable campaign is found.</returns>
+    private static decimal CalculateDiscount(Product product, decimal quantity, List<Campaign> campaigns)
+    {
+        var validCampaigns = campaigns
+            .Where(c => c.IsActive &&
+                        c.StartDate <= DateTime.Today &&
+                        c.EndDate >= DateTime.Today)
+            .ToList();
+
+        if (!validCampaigns.Any())
+            return 0;
+
+        var campaign = validCampaigns.First();
+        decimal totalPrice = product.Price * quantity;
+
+        return totalPrice * (campaign.Discount / 100);
+    }
+
+    /// <summary>
+    /// Writes a formatted list of products to the console, displaying each product's PLU, name, price, and price unit.
+    /// </summary>
+    /// <remarks>Products are displayed in alphabetical order by name. The output includes headers and uses
+    /// color formatting for emphasis.</remarks>
+    /// <param name="products">The collection of products to display. The list must not be null.</param>
+    private static void PrintProductList(List<Product> products)
+    {
+        Console.WriteLine("========================================");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("                  KASSA");
+        Console.ResetColor();
+        Console.WriteLine("========================================\n");
+
+        Console.WriteLine($"{" PLU",-6} {"Produkt",-11} {"Pris"}");
+        Console.WriteLine("-----------------------------\n");
+
+        foreach (var p in products.OrderBy(p => p.Name))
+        {
+            string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+            Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price} {type}");
+        }
+    }
+
+
+    /// <summary>
+    /// Finalizes the payment process for the specified cart, generates a receipt, displays the purchase summary, and
+    /// clears the cart.
+    /// </summary>
+    /// <remarks>This method writes a receipt for the current cart items, outputs a summary of the purchase to
+    /// the console, and then clears the cart. After calling this method, the cart will be empty.</remarks>
+    /// <param name="cart">The cart containing the items to be purchased. Cannot be null and must contain at least one item.</param>
+    private static void CompletePayment(Cart cart)
+    {
+        IReceiptWriter receiptWriter = new ReceiptFileWriter();
+        receiptWriter.WriteReceipt(cart.CartItems);
+
+        Console.WriteLine("\n---KVITTO---");
+        foreach (var item in cart.CartItems)
+        {
+            Console.WriteLine($"{item.Product.Name} {item.Quantity} x {item.Product.Price} = {item.TotalPrice} kr");
+        }
+
+        Console.WriteLine($"TOTALT: {cart.TotalPrice} kr");
+        Console.WriteLine("--------------\n");
+
+        Console.WriteLine("Betalning genomförd.");
+        Console.WriteLine("Kvitto skapat. Tack för ditt köp och trevlig dag!");
+
+        cart.Clear();
     }
 }

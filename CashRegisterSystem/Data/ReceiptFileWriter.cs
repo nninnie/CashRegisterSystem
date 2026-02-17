@@ -11,24 +11,25 @@ namespace CashRegisterSystem.Data
             int receiptNumber = _counter.GetNextReceiptNumber();
 
             // Skapa kvittot som text via FormatReceipt
-            string receiptText = ReceiptUI.FormatReceipt(receiptNumber, cartItems);
+            string showTextStringReceipt = ReceiptUI.FormatReceipt(receiptNumber, cartItems);
 
             // Mapp för kvitton
-            string folder = Path.Combine(AppContext.BaseDirectory, "Receipts");
-            Directory.CreateDirectory(folder);
+            string createFolder = Path.Combine(AppContext.BaseDirectory, "Receipts");
+            Directory.CreateDirectory(createFolder);
 
             // Filnamn baserat på dagens datum
-            string fileName = Path.Combine(folder, $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
+            string fileNameInFolder = Path.Combine(createFolder, $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
 
-            // === 1. Skriv kvittot till fil ===
-            using (var writer = new StreamWriter(fileName, append: true))
+            // Skriv kvittot till fil
+            // append: true: varje nytt kvitto läggs längst ner i samma fil så inte nya kvitton raderar den gamla
+            using (var receiptWriterToFile = new StreamWriter(fileNameInFolder, append: true))
             {
-                writer.WriteLine(receiptText);
+                receiptWriterToFile.WriteLine(showTextStringReceipt);
             }
 
-            // === 2. Visa kvittot i konsolen ===
+            // Visa kvittot i konsolen
             Console.Clear();
-            Console.WriteLine(receiptText);
+            Console.WriteLine(showTextStringReceipt);
 
             Console.WriteLine("\nKöp avslutat. Tryck ENTER för ny kund.");
             Console.ReadKey();

@@ -3,38 +3,38 @@
     public class ReceiptCounter
     {
         // Mapp där alla kvittofiler ska ligga
-        private static readonly string ReceiptFolder =
+        private static readonly string ReceiptFolderPath =
             Path.Combine(AppContext.BaseDirectory, "Receipts");
 
         // Filen som sparar senaste kvittonumret
         private static readonly string ReceiptNumberFilePath =
-            Path.Combine(ReceiptFolder, "receipt_number.txt");
+            Path.Combine(ReceiptFolderPath, "receipt_number.txt");
 
         public int GetNextReceiptNumber()
         {
             // Skapa mappen om den inte finns
-            Directory.CreateDirectory(ReceiptFolder);
+            Directory.CreateDirectory(ReceiptFolderPath);
 
             int nextReceiptNumber = 1; // Starta på 1 om filen inte finns
 
             // Om filen finns → läs senaste kvittonumret
             if (File.Exists(ReceiptNumberFilePath))
             {
-                using (var reader = new StreamReader(ReceiptNumberFilePath))
+                using (var readReceiptNumberFromFile = new StreamReader(ReceiptNumberFilePath))
                 {
-                    string receiptNumberInFile = reader.ReadToEnd();
+                    string receiptNumberFromFile = readReceiptNumberFromFile.ReadToEnd();
 
-                    if (int.TryParse(receiptNumberInFile, out int lastNumber))
+                    if (int.TryParse(receiptNumberFromFile, out int lastReceiptNumber))
                     {
-                        nextReceiptNumber = lastNumber + 1;
+                        nextReceiptNumber = lastReceiptNumber + 1;
                     }
                 }
             }
 
             // Skriv det nya kvittonumret tillbaka till filen
-            using (var writer = new StreamWriter(ReceiptNumberFilePath, false))
+            using (var writeReceiptNumberToFile = new StreamWriter(ReceiptNumberFilePath, false))
             {
-                writer.Write(nextReceiptNumber);
+                writeReceiptNumberToFile.Write(nextReceiptNumber);
             }
 
             return nextReceiptNumber;
