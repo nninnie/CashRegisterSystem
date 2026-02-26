@@ -3,22 +3,9 @@ using System.Text;
 
 namespace CashRegisterSystem.Data
 {
-    /// <summary>
-    /// Provides formatting utilities for generating a complete receipt as a text string.
-    /// </summary>
     public static class ReceiptUI
     {
-        /// <summary>
-        /// Formats a detailed receipt string for the specified receipt number and purchased items.
-        /// </summary>
-        /// <remarks>
-        /// The receipt includes store information, timestamp, itemized purchases, totals,
-        /// VAT breakdown (12%), and a closing message. The result is suitable for printing
-        /// or console display.
-        /// </remarks>
-        /// <param name="receiptNumber">The unique receipt number.</param>
-        /// <param name="items">The purchased items to include on the receipt.</param>
-        /// <returns>A fully formatted receipt as a string.</returns>
+   
         public static string FormatReceipt(int receiptNumber, List<CartItem> items)
         {
             if (items == null)

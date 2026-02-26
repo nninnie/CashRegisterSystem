@@ -1,6 +1,8 @@
 ﻿using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
+using CashRegisterSystem.Controllers.Admin.Campaign;
+
 
 namespace CashRegisterSystem.Controllers.Admin
 {
@@ -81,7 +83,7 @@ namespace CashRegisterSystem.Controllers.Admin
                     break;
 
                 case 4:
-                    CampaignController.StartCampaignMenu();
+                    StartingCampaignMenu.StartCampaignMenu();
                     break;
 
                 case 5:
