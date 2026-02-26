@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
-    public class EndingCampaign
+    public static class EndingCampaign
     {
 
         public static void EndCampaign()
@@ -25,8 +25,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 Console.ReadKey();
                 return;
             }
-
-            var products = ProductFileLoader.GetProducts();
 
             Console.WriteLine("Skriv in PLU på vilken kampanj som ska avslutas: ");
             string endCampaign = Console.ReadLine()!;

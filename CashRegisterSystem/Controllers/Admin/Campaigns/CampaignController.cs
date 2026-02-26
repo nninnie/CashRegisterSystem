@@ -6,6 +6,9 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
     public class CampaignController
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static void ShowCampaignMenu()
         {
             int menuOption = 1; // Startar menyn på första alternativet
@@ -58,10 +61,5 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             }
 
         }
-
-
-      
-
-      
     }
 }

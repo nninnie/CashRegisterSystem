@@ -4,12 +4,6 @@ using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.App
 {
-    /// <summary>
-    //// Entry point of the application. 
-    /// Initializes UTF-8 console support for emoji rendering, 
-    /// loads all products from file storage, and launches the main menu 
-    /// that controls navigation between cashier and admin functionality.
-    /// </summary>
     internal class Program
     {
         static void Main(string[] args)
