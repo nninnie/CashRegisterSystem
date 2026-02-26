@@ -32,7 +32,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             ProductUI.ShowProducts(productList);
 
-            Console.WriteLine("Skriv in PLU för varan du vill skapa kampanj på: ");
+            Console.Write("\nPLU: ");
             string campaignPlu = Console.ReadLine()!;
 
             if (string.IsNullOrWhiteSpace(campaignPlu))
@@ -50,12 +50,12 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.Write("Hur mycket rabatt ska varan ha? ");
+            Console.Write("Rabatt %: ");
             string discountInput = Console.ReadLine()!;
 
             if (string.IsNullOrWhiteSpace(discountInput))
             {
-                Console.WriteLine("Du måste ange rabatt: ");
+                Console.WriteLine("Du måste ange ett tal %: ");
                 return;
             }
 
@@ -70,7 +70,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.WriteLine("Ange startdatum: ");
+            Console.WriteLine("Ange startdatum (yyyy-MM-dd): ");
             string startInput = Console.ReadLine()!;
 
             if (!DateTime.TryParse(startInput, out DateTime startDate))
@@ -79,7 +79,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.WriteLine("Ange slutdatum: ");
+            Console.WriteLine("Ange slutdatum (yyyy-MM-dd): ");
             string endInput = Console.ReadLine()!;
 
             if (!DateTime.TryParse(endInput, out DateTime endDate))

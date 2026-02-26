@@ -65,7 +65,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             // Hitta kampanjen som gäller för denna produkt (kampanjer kopplas via produktnamn)
             var selectedCampaign = campaign.FirstOrDefault(c => c.Name == selectedProduct.Name);
 
-            // Kontrollera att kampanjen finns
             if (selectedCampaign == null)
             {
                 Console.WriteLine("Ingen kampanj hittades för denna produkt");
@@ -74,9 +73,9 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            selectedCampaign.IsActive = false; // Avsluta kampanjen
+            selectedCampaign.IsActive = false; 
 
-            CampaignRepository.SaveCampaigns(campaign); // Spara ändringen
+            CampaignRepository.SaveCampaigns(campaign); 
 
             Console.WriteLine("\nKampanjen har avslutats!");
             Console.ReadKey();

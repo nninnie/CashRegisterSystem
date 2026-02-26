@@ -20,7 +20,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
         public static void ViewCampaigns()
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("STARTA KAMPANJER");
+            BannerUI.PrintFruitHeader("VISA KAMPANJER");
 
             var campaigns = CampaignRepository.GetCampaigns();
 

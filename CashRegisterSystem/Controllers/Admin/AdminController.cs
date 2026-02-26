@@ -31,7 +31,7 @@ namespace CashRegisterSystem.Controllers.Admin
                 Console.WriteLine($"{(adminMenuOption == 1 ? "·" + highlight : "")} Ändra produkt\u001b[0m");
                 Console.WriteLine($"{(adminMenuOption == 2 ? "·" + highlight : "")} Lägg till produkt\u001b[0m");
                 Console.WriteLine($"{(adminMenuOption == 3 ? "·" + highlight : "")} Ta bort produkt\u001b[0m");
-                Console.WriteLine($"{(adminMenuOption == 4 ? "·" + highlight : "")} Starta kampanj\u001b[0m");
+                Console.WriteLine($"{(adminMenuOption == 4 ? "·" + highlight : "")} Kampanj meny\u001b[0m");
                 Console.WriteLine($"{(adminMenuOption == 5 ? "·" + highlight : "")} Tillbaka till menyn\u001b[0m");
 
                 Console.WriteLine();
@@ -71,7 +71,7 @@ namespace CashRegisterSystem.Controllers.Admin
                     break;
 
                 case 4:
-                    StartingCampaignMenu.StartCampaignMenu();
+                    CampaignController.ShowCampaignMenu();
                     break;
 
                 case 5:

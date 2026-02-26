@@ -123,6 +123,9 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 3:
+                            Console.Clear();
+                            BannerUI.ShowLogo();
+
                             Console.Write("Admin ID: ");
                                 string? adminId = Console.ReadLine();
                             if(string.IsNullOrWhiteSpace(adminId))
@@ -132,7 +135,7 @@ namespace CashRegisterSystem.UI
                                 break;
                             }
 
-                            Console.Write("\nAdminlösenord: ");
+                            Console.Write("Lösenord: ");
                             string? adminPass = Console.ReadLine();
 
                             if (adminPass?.ToLower() == "")
