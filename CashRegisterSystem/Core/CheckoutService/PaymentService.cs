@@ -81,6 +81,15 @@ namespace CashRegisterSystem.Core.CheckoutService
             Console.Clear();
             Console.WriteLine(receipt);
 
+            // Spara kvittot i en fil
+            string receiptPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts", "receipt.txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(receiptPath)!);
+
+            if (!File.Exists(receiptPath))
+                File.WriteAllText(receiptPath, ""); // skapa filen
+
+            File.AppendAllText(receiptPath, receipt + "\n\n");
+
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
 
             Console.WriteLine("Tryck ENTER för nästa kund || ESC för att gå tillbaka till menyn.");

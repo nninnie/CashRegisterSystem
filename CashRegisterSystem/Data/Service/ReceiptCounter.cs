@@ -2,15 +2,15 @@
 {
     public class ReceiptCounter
     {
-        private static readonly string ReceiptFolderPath =
-            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts");
+        private static readonly string ReceiptCounterFolderPath =
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "ReceiptCounter");
 
         private static readonly string ReceiptNumberFilePath =
-            Path.Combine(ReceiptFolderPath, "receipt_number.txt");
+            Path.Combine(ReceiptCounterFolderPath, "receipt_number.txt");
 
         public int GetNextReceiptNumber()
         {
-            Directory.CreateDirectory(ReceiptFolderPath);
+            Directory.CreateDirectory(ReceiptCounterFolderPath);
 
             int nextReceiptNumber = 1;
 

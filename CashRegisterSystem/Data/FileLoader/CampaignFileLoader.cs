@@ -14,7 +14,11 @@ namespace CashRegisterSystem.Data
 			Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
 
 			if (!File.Exists(CampaignFilePath))
+			{
+				Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
+				File.WriteAllText(CampaignFilePath, ""); // skapa tom fil
 				return new List<Campaign>();
+			}
 
 
 			var campaignListFromFile = new List<Campaign>();
