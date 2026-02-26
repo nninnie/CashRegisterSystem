@@ -1,5 +1,4 @@
-﻿using CashRegisterSystem.Data;
-using CashRegisterSystem.Models;
+﻿using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
@@ -9,8 +8,6 @@ namespace CashRegisterSystem.UI
         {
             Console.Clear();
             BannerUI.PrintFruitHeader("KASSA");
-
-            var campaigns = CampaignFileLoader.GetCampaigns();
 
             int colWidth = 28;
             int columns = Math.Min(maxColumns, (int)Math.Ceiling(products.Count / 8.0));
@@ -29,19 +26,8 @@ namespace CashRegisterSystem.UI
                     if (r < cols[c].Count)
                     {
                         var p = cols[c][r];
-                        var activeCampaign = campaigns.FirstOrDefault(x => x.Name == p.Name && x.IsActive);
-
-                        decimal priceToShow = ProductUI.GetPrice(p);
-                        string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-
-                        if (activeCampaign != null)
-                        {
-                            line += $"{p.PLU} {p.Name} {priceToShow:0.00} {unit}*".PadRight(colWidth);
-                        }
-                        else
-                        {
-                            line += $"{p.PLU} {p.Name} {p.Price:0.00} {unit}".PadRight(colWidth);
-                        }
+                        // Endast PLU + namn
+                        line += $"{p.PLU} {p.Name}".PadRight(colWidth);
                     }
                     else
                     {
@@ -52,9 +38,7 @@ namespace CashRegisterSystem.UI
                 Console.WriteLine(line);
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\n* Kampanjpris");
-            Console.ResetColor();
+            Console.WriteLine();
         }
     }
 }

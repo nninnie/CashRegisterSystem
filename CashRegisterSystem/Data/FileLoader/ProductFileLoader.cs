@@ -39,7 +39,10 @@ namespace CashRegisterSystem.Data.FileLoader
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
             if (!File.Exists(filePath))
+            {
+                SaveProducts(DefaultProducts);   // Skapa filen
                 return DefaultProducts;
+            }
 
             var products = new List<Product>();
 

@@ -166,7 +166,7 @@ namespace CashRegisterSystem.UI
                     switch (mainMenuOption)
                     {
                         case 1:
-                            new CheckoutFlowController().StartNewCustomer(products);
+                            new CheckoutController().StartNewCustomer(products);
                             break;
 
                         case 2:

@@ -7,7 +7,7 @@ using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers
 {
-    public class CheckoutFlowController
+    public class CheckoutController
     {
         private readonly InputParser _inputParser = new();
         private readonly DiscountService _discountService = new();
