@@ -2,25 +2,10 @@
 using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
 
-namespace CashRegisterSystem.Controllers.Admin
+namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
-    /// <summary>
-    /// Handles user interactions and operations related to campaigns in the cash register system.
-    /// </summary>
-    /// <remarks>
-    /// This controller provides functionality for viewing, creating, editing, and managing campaigns. 
-    /// It communicates with <see cref="CampaignRepository"/> for data persistence and ensures that 
-    /// campaign-related actions are performed consistently and validated before being saved.
-    /// </remarks>
     public class CampaignController
     {
-        /// <summary>
-        /// Displays the campaign menu in the console and handles user interaction for campaign-related actions.
-        /// </summary>
-        /// <remarks>This method presents a menu that allows the user to create, view, or end campaigns,
-        /// or return to the previous menu. The method blocks until the user makes a selection and then invokes the
-        /// corresponding action. The console cursor visibility is managed during menu navigation for a better user
-        /// experience.</remarks>
         public static void ShowCampaignMenu()
         {
             int menuOption = 1; // Startar menyn på första alternativet
@@ -60,13 +45,13 @@ namespace CashRegisterSystem.Controllers.Admin
             switch (menuOption)
             {
                 case 1:
-                    StartCampaignMenu();
+                    StartingCampaignMenu.StartCampaignMenu();
                     break;
                 case 2:
-                    ViewCampaigns();
+                    ViewAllCampaigns.ViewCampaigns();
                     break;
                 case 3:
-                    EndCampaign();
+                    EndingCampaign.EndCampaign();
                     break;
                 case 4:
                     return;

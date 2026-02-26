@@ -1,6 +1,6 @@
 ﻿using CashRegisterSystem.Core;
 
-namespace CashRegisterSystem.Data
+namespace CashRegisterSystem.Data.Interfaces
 {
     /// <summary>
     /// Writes receipts to a text file and displays them in the console.

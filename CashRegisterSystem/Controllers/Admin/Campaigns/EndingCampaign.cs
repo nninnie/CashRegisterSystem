@@ -1,4 +1,5 @@
-﻿using CashRegisterSystem.Data;
+﻿using CashRegisterSystem.Controllers.Admin.Products;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
 using System;
 using System.Collections.Generic;
@@ -6,19 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem.Controllers.Admin.Campaign
+namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
-    public class EndACampaign
+    public class EndingCampaign
     {
 
-        /// <summary>
-        /// Ends an active campaign associated with a product by deactivating it and saving the updated campaign list.
-        /// </summary>
-        /// <remarks>This method prompts the user to enter a product PLU, identifies the corresponding
-        /// campaign, and marks it as inactive. If no campaigns or products are available, or if the specified PLU does
-        /// not match any product or campaign, the method displays an appropriate message and returns. The method
-        /// interacts with the console for user input and feedback, and updates persistent campaign data via the
-        /// repository.</remarks>
         public static void EndCampaign()
         {
             Console.Clear();
@@ -53,8 +46,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaign
                 return;
             }
 
-            ProductController.PrintProducts(productList);
-
+            ProductUI.ShowProducts(productList);
 
             // hämtar en selectedProduct som söker igenom productList och hämtar produkten som matchar det angivna PLU-numret
             var selectedProduct = productList.FirstOrDefault(p => p.PLU == endCampaign);

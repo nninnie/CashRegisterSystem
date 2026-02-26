@@ -1,6 +1,6 @@
 ﻿using CashRegisterSystem.Core;
 
-namespace CashRegisterSystem.Data
+namespace CashRegisterSystem.Data.Interfaces
 {
     /// <summary>
     /// Ansvarar för att skriva ett kvitto till valfritt medium (fil, konsol, etc.)

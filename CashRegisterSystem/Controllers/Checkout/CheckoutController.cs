@@ -2,6 +2,7 @@
 
 using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.Data.Interfaces;
 using CashRegisterSystem.UI;
 
 public static class CheckoutController

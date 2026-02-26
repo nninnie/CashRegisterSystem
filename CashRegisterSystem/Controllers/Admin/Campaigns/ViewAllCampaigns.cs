@@ -6,16 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem.Controllers.Admin.Campaign
+namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
     public class ViewAllCampaigns
     {
-        /// <summary>
-        /// Displays a list of all available campaigns and their details in the console.
-        /// </summary>
-        /// <remarks>The method clears the console and presents each campaign with its name, discount,
-        /// status, date range, original price, and discounted price. If no campaigns are available, a message is shown
-        /// to the user. The method waits for user input before returning to the menu.</remarks>
         public static void ViewCampaigns()
         {
             Console.Clear();

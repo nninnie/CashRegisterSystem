@@ -1,32 +1,14 @@
-﻿using CashRegisterSystem.Core;
+﻿using CashRegisterSystem.Controllers.Admin.Campaigns;
+using CashRegisterSystem.Controllers.Admin.Products;
+using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
-using CashRegisterSystem.Controllers.Admin.Campaign;
 
 
 namespace CashRegisterSystem.Controllers.Admin
 {
-    /// <summary>
-    /// Provides administrative functionality for managing products, campaigns, 
-    /// and other system data within the cash register application.
-    /// </summary>
-    /// <remarks>
-    /// This controller handles menu navigation and user interactions related to 
-    /// administrative tasks. It communicates with the appropriate repositories 
-    /// to load, modify, and save data, ensuring that changes are consistently 
-    /// applied across the system.
-    /// </remarks>
     public static class AdminController
     {
-        /// <summary>
-        /// Displays the administrative menu for managing products and campaigns, allowing the user to select and
-        /// perform administrative actions.
-        /// </summary>
-        /// <remarks>The menu is displayed in the console and requires user interaction via keyboard to
-        /// navigate and select options. The method blocks until the user selects an action or chooses to return to the
-        /// previous menu.</remarks>
-        /// <param name="products">The list of products to be managed. This list is used for editing, adding, or removing products within the
-        /// administrative menu.</param>
         public static void ShowAdminMenu(List<Product> products)
         {
             int adminMenuOption = 1;
@@ -71,15 +53,15 @@ namespace CashRegisterSystem.Controllers.Admin
             switch (adminMenuOption)
             {
                 case 1:
-                    ProductController.EditProduct(products);
+                    ProductController.EditProduct();
                     break;
 
                 case 2:
-                    ProductController.AddProduct(products);
+                    ProductController.AddProduct();
                     break;
 
                 case 3:
-                    ProductController.DeleteProduct(products);
+                    ProductController.DeleteProduct();
                     break;
 
                 case 4:

@@ -1,24 +1,13 @@
-﻿using CashRegisterSystem.Data;
+﻿using CashRegisterSystem.Core;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CashRegisterSystem.Controllers.Admin.Campaigns;
+using CashRegisterSystem.Controllers.Admin.Products;
 
-namespace CashRegisterSystem.Controllers.Admin.Campaign
+namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
     public class StartingCampaignMenu
     {
-        /// <summary>
-        /// Displays an interactive menu for creating a new campaign for a selected product. Prompts the user for
-        /// product selection, discount details, and campaign dates, then saves the new campaign if all inputs are
-        /// valid.
-        /// </summary>
-        /// <remarks>This method is intended for use in a console application and requires user input via
-        /// the console. The method validates all user inputs and provides feedback for invalid entries. Existing
-        /// products and campaigns are loaded from persistent storage, and the new campaign is saved upon successful
-        /// creation.</remarks>
         public static void StartCampaignMenu()
         {
             Console.Clear();
@@ -33,7 +22,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaign
                 return;
             }
 
-            ProductController.PrintProducts(productList);
+            ProductUI.ShowProducts(productList);
 
             Console.WriteLine("Skriv in PLU för varan du vill skapa kampanj på: ");
             string campaignPlu = Console.ReadLine()!;
