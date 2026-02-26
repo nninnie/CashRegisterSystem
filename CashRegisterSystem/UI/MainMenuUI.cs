@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Controllers;
 using CashRegisterSystem.Controllers.Admin;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
@@ -106,6 +107,7 @@ namespace CashRegisterSystem.UI
 
                             if (code?.ToLower() == "" )
                             {
+                                LoginService.CurrentUserName = employeeId;
                                 isLoggedIn = true;
                                 mainMenuOption = 1;
                             }
