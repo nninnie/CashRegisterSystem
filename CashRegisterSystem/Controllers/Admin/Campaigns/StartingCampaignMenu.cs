@@ -3,11 +3,19 @@ using CashRegisterSystem.Data;
 using CashRegisterSystem.UI;
 using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
+    /// <summary>
+    /// Provides the admin workflow for creating new campaigns for selected products.
+    /// </summary>
     public class StartingCampaignMenu
     {
+        /// <summary>
+        /// Guides the admin through selecting a product, entering discount details,
+        /// setting campaign dates, and saving the new campaign.
+        /// </summary>
         public static void StartCampaignMenu()
         {
             Console.Clear();
@@ -110,7 +118,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.WriteLine($"Produkt: {selectedProduct.Name}");
             Console.WriteLine($"Rabatt: {discountPercent}%");
             Console.WriteLine($"Gäller från {startDate:yyyy-MM-dd} till {endDate:yyyy-MM-dd}");
-
         }
     }
 }

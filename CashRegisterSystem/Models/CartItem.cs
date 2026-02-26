@@ -1,4 +1,4 @@
-﻿namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Models
 {
     /// <summary>
     /// Represents an item in a shopping cart, including the selected product, quantity, and pricing details.

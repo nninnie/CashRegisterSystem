@@ -1,4 +1,4 @@
-﻿namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Models
 {
     /// <summary>
     /// Represents a marketing campaign with associated discount, status, and scheduling information.

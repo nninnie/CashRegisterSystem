@@ -1,4 +1,5 @@
-﻿using CashRegisterSystem.UI;
+﻿using CashRegisterSystem.Models;
+using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Core.Services
 {

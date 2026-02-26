@@ -1,4 +1,4 @@
-﻿using CashRegisterSystem.Core;
+﻿using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Data.Interfaces
 {
@@ -7,11 +7,7 @@ namespace CashRegisterSystem.Data.Interfaces
     /// </summary>
     public interface IReceiptWriter
     {
-        /// <summary>
-        /// Skriver ett kvitto baserat på kundens varukorg.
-        /// </summary>
-        /// <param name="cartItems"></param>
-        void WriteReceipt(List<CartItem> cartItems);
+        void WriteReceipt(List<CartItem> items, string cashierName, int registerNumber, string paymentMethod, decimal amountReceived);
     }
 }
 

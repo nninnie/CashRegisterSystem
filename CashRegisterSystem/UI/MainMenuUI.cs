@@ -1,6 +1,6 @@
 ﻿using CashRegisterSystem.Controllers;
 using CashRegisterSystem.Controllers.Admin;
-using CashRegisterSystem.Core;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
@@ -8,7 +8,7 @@ namespace CashRegisterSystem.UI
     /// Displays and manages the main menu for the cash register system, including login handling,
     /// navigation, and access to cashier and admin functions.
     /// </summary>
-    public static class MainMenuView
+    public static class MainMenuUI
     {
         /// <summary>
         /// Starts the interactive main menu loop and routes the user to cashier or admin functions.
@@ -161,7 +161,7 @@ namespace CashRegisterSystem.UI
                     switch (mainMenuOption)
                     {
                         case 1:
-                            CheckoutController.StartNewCustomer(products);
+                            new CheckoutFlowController().StartNewCustomer(products);
                             break;
 
                         case 2:

@@ -1,4 +1,4 @@
-﻿namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Models
 {
     /// <summary>
     /// Represents a product that can be sold in the cash register system. 

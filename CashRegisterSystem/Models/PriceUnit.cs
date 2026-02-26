@@ -1,4 +1,4 @@
-﻿namespace CashRegisterSystem.Core
+﻿namespace CashRegisterSystem.Models
 {
     /// <summary>
     /// Defines the pricing unit for a product, indicating whether the price 

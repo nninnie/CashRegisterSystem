@@ -1,14 +1,20 @@
 ﻿using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
-using CashRegisterSystem.Core;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
-
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Provides the admin menu for managing products and campaigns.
+    /// </summary>
     public static class AdminController
     {
+        /// <summary>
+        /// Displays the admin menu and handles navigation between product
+        /// management and campaign-related actions.
+        /// </summary>
         public static void ShowAdminMenu(List<Product> products)
         {
             int adminMenuOption = 1;
@@ -72,7 +78,5 @@ namespace CashRegisterSystem.Controllers.Admin
                     return;
             }
         }
-
     }
 }
-

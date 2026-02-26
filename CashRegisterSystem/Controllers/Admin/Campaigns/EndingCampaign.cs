@@ -9,9 +9,15 @@ using System.Threading.Tasks;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
+    /// <summary>
+    /// Handles the process of ending active campaigns in the admin section.
+    /// </summary>
     public static class EndingCampaign
     {
-
+        /// <summary>
+        /// Ends a selected campaign by matching the entered PLU with a product,
+        /// validating that a campaign exists for it, and saving the updated status.
+        /// </summary>
         public static void EndCampaign()
         {
             Console.Clear();
@@ -76,5 +82,4 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.ReadKey();
         }
     }
-
 }

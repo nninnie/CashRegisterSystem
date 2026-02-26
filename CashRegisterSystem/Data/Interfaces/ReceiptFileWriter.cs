@@ -1,28 +1,23 @@
-﻿using CashRegisterSystem.Core;
+﻿using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Data.Interfaces
 {
-    /// <summary>
-    /// Writes receipts to a text file and displays them in the console.
-    /// </summary>
-    /// <remarks>
-    /// Each receipt is appended to a daily receipt file inside the Receipts folder.
-    /// Receipt numbers are generated through <see cref="ReceiptCounter"/>.
-    /// </remarks>
     public class ReceiptFileWriter : IReceiptWriter
     {
         private readonly ReceiptCounter _counter = new ReceiptCounter();
 
-        /// <summary>
-        /// Generates a formatted receipt for the provided cart items, saves it to a daily receipt file,
-        /// and displays the receipt text in the console.
-        /// </summary>
-        /// <param name="cartItems">The items included in the customer's purchase.</param>
-        public void WriteReceipt(List<CartItem> cartItems)
+        public void WriteReceipt(List<CartItem> cartItems, string cashierName, int registerNumber, string paymentMethod, decimal amountReceived)
         {
             int receiptNumber = _counter.GetNextReceiptNumber();
 
-            string receiptText = ReceiptUI.FormatReceipt(receiptNumber, cartItems);
+            string receiptText = ReceiptUI.FormatReceipt(
+                receiptNumber,
+                cartItems,
+                cashierName,
+                registerNumber,
+                paymentMethod,
+                amountReceived
+            );
 
             string receiptFolder = Path.Combine(AppContext.BaseDirectory, "Receipts");
             Directory.CreateDirectory(receiptFolder);

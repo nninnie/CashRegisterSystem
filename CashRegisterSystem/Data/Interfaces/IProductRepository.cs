@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CashRegisterSystem.Core;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Data.Interfaces
 {
