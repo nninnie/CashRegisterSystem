@@ -7,21 +7,23 @@ namespace CashRegisterSystem.Data
 		private static readonly string CampaignFilePath = Path.Combine(
 			AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
 
+
+
 		public static List<Campaign> GetCampaigns()
 		{
+			Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
+
 			if (!File.Exists(CampaignFilePath))
 				return new List<Campaign>();
 
-			// Lista som ska fyllas med Campaign-objekt
+
 			var campaignListFromFile = new List<Campaign>();
 
-			// Läser varje rad i filen och bygger Campaign-objekt
+
 			foreach (var campaignLineText in File.ReadAllLines(CampaignFilePath))
 			{
-				// Dela upp raden i fält
 				var campaignFieldsFromFile = campaignLineText.Split(';');
 
-				// Skapa Campaign-objekt och lägg till i listan
 				campaignListFromFile.Add(new Campaign
 				{
 					Id = int.Parse(campaignFieldsFromFile[0]),
@@ -36,8 +38,12 @@ namespace CashRegisterSystem.Data
 			return campaignListFromFile;
 		}
 
+
+
 		public static void SaveCampaigns(List<Campaign> campaigns)
 		{
+			Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
+
 			var campaignLinesToSave = campaigns.Select(c =>
 				$"{c.Id};{c.Name};{c.Discount};{c.IsActive};{c.StartDate};{c.EndDate}");
 

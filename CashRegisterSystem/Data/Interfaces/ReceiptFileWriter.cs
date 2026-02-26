@@ -19,7 +19,7 @@ namespace CashRegisterSystem.Data.Interfaces
                 amountReceived
             );
 
-            string receiptFolder = Path.Combine(AppContext.BaseDirectory, "Receipts");
+            string receiptFolder = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts");
             Directory.CreateDirectory(receiptFolder);
 
             string filePath = Path.Combine(receiptFolder, $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
