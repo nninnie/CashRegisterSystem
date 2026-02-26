@@ -4,7 +4,8 @@ namespace CashRegisterSystem.Data
 {
 	public class CampaignFileLoader
 	{
-		private static readonly string CampaignFilePath = "campaigns.txt";
+		private static readonly string CampaignFilePath = Path.Combine(
+			AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
 
 		public static List<Campaign> GetCampaigns()
 		{

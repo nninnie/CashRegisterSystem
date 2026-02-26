@@ -96,7 +96,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             // Hämtar alla befintliga kampanjer, skapar ett nytt unikt ID baserat på högsta befintliga ID
             // bygger ett nytt Campaign-objekt med användarens värden, lägger till det i listan och sparar tillbaka till fil
-            var campaignList = CampaignRepository.GetCampaigns();
+            var campaignList = CampaignFileLoader.GetCampaigns();
 
             int newID = campaignList.Any() ? campaignList.Max(c => c.Id) + 1 : 1;
 
@@ -112,7 +112,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             campaignList.Add(newCampaign);
 
-            CampaignRepository.SaveCampaigns(campaignList);
+            CampaignFileLoader.SaveCampaigns(campaignList);
 
             Console.WriteLine("\nKampanj skapad!");
             Console.WriteLine($"Produkt: {selectedProduct.Name}");

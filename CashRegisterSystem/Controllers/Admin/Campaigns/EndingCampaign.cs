@@ -23,7 +23,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.Clear();
             BannerUI.PrintFruitHeader("AVSLUTA KAMPANJER");
 
-            var campaign = CampaignRepository.GetCampaigns();
+            var campaign = CampaignFileLoader.GetCampaigns();
 
             if (!campaign.Any())
             {
@@ -73,9 +73,9 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            selectedCampaign.IsActive = false; 
+            selectedCampaign.IsActive = false;
 
-            CampaignRepository.SaveCampaigns(campaign); 
+            CampaignFileLoader.SaveCampaigns(campaign); 
 
             Console.WriteLine("\nKampanjen har avslutats!");
             Console.ReadKey();

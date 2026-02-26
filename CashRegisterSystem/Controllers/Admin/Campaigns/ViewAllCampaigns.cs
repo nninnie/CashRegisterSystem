@@ -22,7 +22,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.Clear();
             BannerUI.PrintFruitHeader("VISA KAMPANJER");
 
-            var campaigns = CampaignRepository.GetCampaigns();
+            var campaigns = CampaignFileLoader.GetCampaigns();
 
             if (!campaigns.Any())
             {

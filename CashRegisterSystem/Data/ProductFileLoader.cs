@@ -2,24 +2,12 @@
 
 namespace CashRegisterSystem.Data
 {
-    /// <summary>
-    /// Provides file-based loading and saving of product data for the cash register system.
-    /// </summary>
-    /// <remarks>
-    /// If the product file does not exist, a predefined set of default products is returned.
-    /// Products are stored as semicolon-delimited lines in a text file.
-    /// </remarks>
     public static class ProductFileLoader
     {
-        /// <summary>
-        /// The file path where all product data is stored.
-        /// </summary>
-        private static readonly string filePath = "products.txt";
+        private static readonly string filePath =
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Products", "products.txt");
 
-        /// <summary>
-        /// A predefined list of products used when the product file does not exist.
-        /// Ensures the system always has initial product data.
-        /// </summary>
+
         private static readonly List<Product> DefaultProducts = new()
         {
             new Product { PLU = "3174", Name = "Apelsin", Price = 19.90m, PriceUnit = PriceUnit.PerKilo },
@@ -43,16 +31,13 @@ namespace CashRegisterSystem.Data
             new Product { PLU = "3214", Name = "Äpple", Price = 32.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "3264", Name = "Vitlök", Price = 16.90m, PriceUnit = PriceUnit.Each },
             new Product { PLU = "3211", Name = "Vitkål", Price = 19.90m, PriceUnit = PriceUnit.Each },
-
         };
 
-        /// <summary>
-        /// Loads all products from the product file. If the file does not exist,
-        /// the predefined default products are returned.
-        /// </summary>
-        /// <returns>A list of products loaded from file or default products.</returns>
+
         public static List<Product> GetProducts()
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
             if (!File.Exists(filePath))
                 return DefaultProducts;
 
@@ -82,12 +67,11 @@ namespace CashRegisterSystem.Data
             return products;
         }
 
-        /// <summary>
-        /// Saves all products to the product file using semicolon-delimited formatting.
-        /// </summary>
-        /// <param name="products">The list of products to save.</param>
+
         public static void SaveProducts(List<Product> products)
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
             var lines = products.Select(p =>
                 $"{p.PLU};{p.Name};{p.Price};{p.PriceUnit}");
 
