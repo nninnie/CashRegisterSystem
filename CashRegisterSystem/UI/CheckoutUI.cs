@@ -14,14 +14,16 @@ namespace CashRegisterSystem.UI
             foreach (var item in cart.CartItems)
             {
                 string unit = item.Product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
-                decimal total = item.Product.Price * item.Quantity - item.DiscountAmount;
+
+                decimal total = item.FinalPrice; // använder kampanjpris + rabatt
                 totalSum += total;
 
                 Console.WriteLine(
                     $"{item.Product.Name,-20}" +
                     $"{item.Quantity,8}" +
                     $"{unit,4}" +
-                    $"{total,12:F2} kr");
+                    $"{item.UnitPrice,10:F2} kr" +   // visar pris per enhet
+                    $"{total,12:F2} kr");            // visar totalpris
             }
 
             Console.WriteLine("----------------------------------------------------------------------");

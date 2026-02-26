@@ -1,12 +1,8 @@
-﻿using CashRegisterSystem.Models;
+﻿using CashRegisterSystem.Data;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
-    /// <summary>
-    /// Provides a compact multi-column PLU list layout for the cashier interface.
-    /// Automatically distributes products across up to four columns depending on
-    /// the number of items, keeping the view clean and easy to scan.
-    /// </summary>
     public static class PLUDisplayUI
     {
         public static void PrintPLUList(List<Product> products, int maxColumns = 4)
@@ -14,16 +10,15 @@ namespace CashRegisterSystem.UI
             Console.Clear();
             BannerUI.PrintFruitHeader("KASSA");
 
-            int colWidth = 22;
+            var campaigns = CampaignFileLoader.GetCampaigns();
+
+            int colWidth = 28;
             int columns = Math.Min(maxColumns, (int)Math.Ceiling(products.Count / 8.0));
-
             int rows = (int)Math.Ceiling(products.Count / (double)columns);
-            List<List<Product>> cols = new();
 
+            List<List<Product>> cols = new();
             for (int c = 0; c < columns; c++)
-            {
                 cols.Add(products.Skip(c * rows).Take(rows).ToList());
-            }
 
             for (int r = 0; r < rows; r++)
             {
@@ -34,7 +29,19 @@ namespace CashRegisterSystem.UI
                     if (r < cols[c].Count)
                     {
                         var p = cols[c][r];
-                        line += $"{p.PLU} {p.Name}".PadRight(colWidth);
+                        var activeCampaign = campaigns.FirstOrDefault(x => x.Name == p.Name && x.IsActive);
+
+                        decimal priceToShow = ProductUI.GetPrice(p);
+                        string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+
+                        if (activeCampaign != null)
+                        {
+                            line += $"{p.PLU} {p.Name} {priceToShow:0.00} {unit}*".PadRight(colWidth);
+                        }
+                        else
+                        {
+                            line += $"{p.PLU} {p.Name} {p.Price:0.00} {unit}".PadRight(colWidth);
+                        }
                     }
                     else
                     {
@@ -44,7 +51,10 @@ namespace CashRegisterSystem.UI
 
                 Console.WriteLine(line);
             }
-            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n* Kampanjpris");
+            Console.ResetColor();
         }
     }
 }

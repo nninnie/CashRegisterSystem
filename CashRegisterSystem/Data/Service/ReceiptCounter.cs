@@ -1,4 +1,4 @@
-﻿namespace CashRegisterSystem.Data
+﻿namespace CashRegisterSystem.Data.Service
 {
     public class ReceiptCounter
     {

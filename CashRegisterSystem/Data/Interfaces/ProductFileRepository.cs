@@ -1,4 +1,5 @@
-﻿using CashRegisterSystem.Models;
+﻿using CashRegisterSystem.Data.FileLoader;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Data
 {

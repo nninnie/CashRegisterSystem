@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Data\CampaignFileLoader.cs" />
+    <None Include="Data\FileLoader\CampaignFileLoader.cs" />
   </ItemGroup>
 
 </Project>

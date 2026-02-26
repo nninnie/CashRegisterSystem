@@ -4,6 +4,7 @@ using CashRegisterSystem.UI;
 using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
 using CashRegisterSystem.Models;
+using CashRegisterSystem.Data.FileLoader;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
@@ -118,6 +119,9 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.WriteLine($"Produkt: {selectedProduct.Name}");
             Console.WriteLine($"Rabatt: {discountPercent}%");
             Console.WriteLine($"Gäller från {startDate:yyyy-MM-dd} till {endDate:yyyy-MM-dd}");
+
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.ReadKey();
         }
     }
 }

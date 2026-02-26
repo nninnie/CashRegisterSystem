@@ -1,6 +1,6 @@
 ﻿using CashRegisterSystem.Models;
 
-namespace CashRegisterSystem.Data
+namespace CashRegisterSystem.Data.FileLoader
 {
     public static class ProductFileLoader
     {
@@ -16,7 +16,7 @@ namespace CashRegisterSystem.Data
             new Product { PLU = "4666", Name = "Lök gul", Price = 9.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4182", Name = "Lök röd", Price = 12.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "3131", Name = "Kiwi", Price = 9.90m, PriceUnit = PriceUnit.Each },
-            new Product { PLU = "4252", Name = "Jordgubbar", Price = 35.09m, PriceUnit = PriceUnit.Each },
+            new Product { PLU = "4252", Name = "Jordgubbar", Price = 35.90m, PriceUnit = PriceUnit.Each },
             new Product { PLU = "3220", Name = "Päron", Price = 28.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4686", Name = "Paprika grön", Price = 41.90m, PriceUnit = PriceUnit.PerKilo },
             new Product { PLU = "4687", Name = "Paprika gul", Price = 46.90m, PriceUnit = PriceUnit.PerKilo },

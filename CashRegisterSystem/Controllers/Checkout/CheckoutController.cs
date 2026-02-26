@@ -17,7 +17,7 @@ namespace CashRegisterSystem.Controllers
 
         public void StartNewCustomer(List<Product> products)
         {
-            var campaigns = CampaignRepository.GetCampaigns();
+            var campaigns = CampaignFileLoader.GetCampaigns();
             Cart cart = new Cart();
 
             Console.Clear();

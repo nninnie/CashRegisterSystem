@@ -1,4 +1,5 @@
-﻿using CashRegisterSystem.Models;
+﻿using CashRegisterSystem.Data.Service;
+using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Data.Interfaces
 {

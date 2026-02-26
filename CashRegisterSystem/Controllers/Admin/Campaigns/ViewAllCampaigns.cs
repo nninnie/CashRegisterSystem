@@ -1,4 +1,5 @@
 ﻿using CashRegisterSystem.Data;
+using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.UI;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                     $"| Ord pris: {originalPrice} kr | Kampanjpris: {discountedPrice:F2} kr");
             }
 
-            Console.WriteLine("Tryck ENTER för att återgå till menyn ..");
+            Console.WriteLine("\nTryck ENTER för att återgå till menyn ..");
             Console.ReadKey(true);
         }
     }

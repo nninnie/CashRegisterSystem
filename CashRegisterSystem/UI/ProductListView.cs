@@ -1,20 +1,15 @@
 ﻿using CashRegisterSystem.Models;
+using CashRegisterSystem.Data;
 
 namespace CashRegisterSystem.UI
 {
-    /// <summary>
-    /// Displays a formatted product list in a receipt‑style layout,
-    /// including PLU, product name and price information.
-    /// </summary>
     public static class ProductListView
     {
-        /// <summary>
-        /// Shows all products in a clean, aligned table.
-        /// Products are sorted alphabetically for easier scanning.
-        /// </summary>
         public static void ShowProductList(List<Product> products)
         {
             BannerUI.PrintFruitHeader("PRODUKTLISTA");
+
+            var campaigns = CampaignFileLoader.GetCampaigns();
 
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine($" {"PLU",-6} {"Produkt",-20} {"Pris"}");
@@ -22,10 +17,36 @@ namespace CashRegisterSystem.UI
 
             foreach (var p in products.OrderBy(p => p.Name))
             {
-                string type = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
-                string price = $"{p.Price} {type}";
+                string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
 
-                Console.WriteLine($" {p.PLU,-6} {p.Name,-20} {price}");
+                var activeCampaign = campaigns
+                    .FirstOrDefault(c => c.Name == p.Name && c.IsActive);
+
+                decimal priceToShow = ProductUI.GetPrice(p);
+
+                if (activeCampaign != null)
+                {
+                    // Kampanjpris i grönt
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(
+                        $" {p.PLU,-6} {p.Name,-20} {priceToShow:0.00} {unit} (Kampanj!)"
+                    );
+                    Console.ResetColor();
+
+                    // Ordinarie pris i grått
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine(
+                        $" {"",-6} {"",-20} Ordinarie: {p.Price:0.00} {unit}"
+                    );
+                    Console.ResetColor();
+                }
+                else
+                {
+                    // Vanligt pris
+                    Console.WriteLine(
+                        $" {p.PLU,-6} {p.Name,-20} {p.Price:0.00} {unit}"
+                    );
+                }
             }
 
             Console.WriteLine("-----------------------------------------");

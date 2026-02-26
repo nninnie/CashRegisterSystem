@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Data;
 using CashRegisterSystem.Data.Interfaces;
+using CashRegisterSystem.Data.Service;
 using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Core.CheckoutService

@@ -4,15 +4,8 @@ using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
-    /// <summary>
-    /// Provides the admin menu for managing campaigns in the cash register system.
-    /// </summary>
     public class CampaignController
     {
-        /// <summary>
-        /// Displays the campaign menu and handles user navigation between
-        /// creating, viewing, and ending campaigns.
-        /// </summary>
         public static void ShowCampaignMenu()
         {
             int menuOption = 1; // Startar menyn på första alternativet
