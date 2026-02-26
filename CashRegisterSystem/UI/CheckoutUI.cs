@@ -25,7 +25,7 @@ namespace CashRegisterSystem.UI
             }
 
             Console.WriteLine("----------------------------------------------------------------------");
-            Console.WriteLine($"{"",47}Total : {totalSum,8:F2} kr");
+            Console.WriteLine($"{"",51}Total : {totalSum,8:F2} kr");
         }
 
         public static void ShowPluInputPrompt()

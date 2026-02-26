@@ -25,65 +25,77 @@ namespace CashRegisterSystem.Controllers
 
             while (true)
             {
+                CheckoutUI.ShowCart(cart);
                 CheckoutUI.ShowPluInputPrompt();
-                string? input = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(input))
-                    continue;
+                // 🔥 Retry-loop för PLU-inmatning
+                (Product product, decimal quantity)? parsed = null;
 
-                string trimmed = input.Trim().ToUpper();
-
-                // PAY
-                if (_commandParser.IsPayCommand(trimmed))
+                while (parsed == null)
                 {
-                    bool continueShopping = _paymentService.CompletePayment(cart);
+                    Console.Write("PLU och antal/vikt: ");
+                    string? input = Console.ReadLine();
 
-                    if (!continueShopping)
-                        return;
-
-                    _cartService.Clear(cart);
-                    Console.Clear();
-                    PLUDisplayUI.PrintPLUList(products);
-                    continue;
-                }
-
-                // CANCEL
-                if (_commandParser.IsCancelCommand(trimmed))
-                {
-                    Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
-                    return;
-                }
-
-                // DELETE
-                if (_commandParser.IsDeleteCommand(trimmed))
-                {
-                    string? pluToRemove = _commandParser.ExtractPluFromDelete(trimmed);
-
-                    if (pluToRemove is null)
-                    {
-                        Console.WriteLine("Fel format. Skriv: DEL [PLU] för att ta bort en vara.");
+                    if (string.IsNullOrWhiteSpace(input))
                         continue;
+
+                    string trimmed = input.Trim().ToUpper();
+
+                    // PAY
+                    if (_commandParser.IsPayCommand(trimmed))
+                    {
+                        bool continueShopping = _paymentService.CompletePayment(cart);
+
+                        if (!continueShopping)
+                            return;
+
+                        _cartService.Clear(cart);
+                        Console.Clear();
+                        PLUDisplayUI.PrintPLUList(products);
+                        break; // börja om checkout
                     }
 
-                    bool removed = _cartService.RemoveItem(cart, pluToRemove);
+                    // CANCEL
+                    if (_commandParser.IsCancelCommand(trimmed))
+                    {
+                        Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
+                        return;
+                    }
 
-                    if (removed)
-                        Console.WriteLine($"\nVara med PLU {pluToRemove} borttagen från kundvagnen.");
-                    else
-                        Console.WriteLine($"\nIngen vara med PLU {pluToRemove} hittades i kundvagnen.");
+                    // DELETE
+                    if (_commandParser.IsDeleteCommand(trimmed))
+                    {
+                        string? pluToRemove = _commandParser.ExtractPluFromDelete(trimmed);
 
-                    Thread.Sleep(1000);
-                    Console.Clear();
-                    PLUDisplayUI.PrintPLUList(products);
-                    CheckoutUI.ShowCart(cart);
-                    continue;
+                        if (pluToRemove is null)
+                        {
+                            Console.WriteLine("Fel format. Skriv: DEL [PLU] för att ta bort en vara.");
+                            continue;
+                        }
+
+                        bool removed = _cartService.RemoveItem(cart, pluToRemove);
+
+                        if (removed)
+                            Console.WriteLine($"\nVara med PLU {pluToRemove} borttagen från kundvagnen.");
+                        else
+                            Console.WriteLine($"\nIngen vara med PLU {pluToRemove} hittades i kundvagnen.");
+
+                        Thread.Sleep(1000);
+                        Console.Clear();
+                        PLUDisplayUI.PrintPLUList(products);
+                        CheckoutUI.ShowCart(cart);
+                        break;
+                    }
+
+                    // Försök tolka PLU
+                    parsed = _inputParser.Parse(input, products);
                 }
 
-                // PLU + mängd
-                var parsed = _inputParser.Parse(input, products);
-                if (parsed is null)
+                // Om parsed är null betyder det att vi gjorde PAY/CANCEL/DELETE
+                if (parsed == null)
                     continue;
 
+                // Nu har vi en giltig produkt
                 var (product, quantity) = parsed.Value;
 
                 decimal discountAmount = _discountService.CalculateDiscount(product, quantity, campaigns);
@@ -102,9 +114,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1200);
                 Console.Clear();
-
                 PLUDisplayUI.PrintPLUList(products);
-                CheckoutUI.ShowCart(cart);
             }
         }
     }

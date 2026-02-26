@@ -8,6 +8,6 @@ namespace CashRegisterSystem.Data
 {
     public static class RegisterService
     {
-        public static int CurrentRegister { get; set; } = 1;
+        public static int CurrentRegister { get; set; } = 01;
     }
 }
