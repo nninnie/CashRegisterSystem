@@ -1,5 +1,7 @@
 ﻿using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
+using CashRegisterSystem.Data;
+using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 
 public static class AdminMenuController
@@ -42,7 +44,8 @@ public static class AdminMenuController
                     {
                         case 1:
                             Console.Clear();
-                            ProductAdminController.ShowProductListAdmin();
+                            var products = ProductFileRepository.GetAll();
+                            ProductListUI.ShowProductList(products);
                             break;
 
                         case 2:

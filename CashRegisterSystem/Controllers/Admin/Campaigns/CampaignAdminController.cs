@@ -64,7 +64,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            ProductListUI.ShowCompactProductListAdmin(products);
+            ProductListUI.ShowProductList(products);
 
             Console.Write("\nPLU: ");
             string plu = Console.ReadLine()!;
@@ -148,7 +148,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            ProductListUI.ShowCompactProductListAdmin(products);
+            ProductListUI.ShowProductList(products);
 
             Console.Write("\nPLU: ");
             string plu = Console.ReadLine()!;

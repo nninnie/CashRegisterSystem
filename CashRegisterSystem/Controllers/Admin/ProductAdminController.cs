@@ -45,7 +45,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
             Console.Clear();
             BannerUI.PrintFruitHeader("TA BORT PRODUKT");
-            ProductListUI.ShowCompactProductListAdmin(products);
+            ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -71,7 +71,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
             Console.Clear();
             BannerUI.PrintFruitHeader("ÄNDRA PRODUKT");
-            ProductListUI.ShowCompactProductListAdmin(products);
+            ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -94,7 +94,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             Console.Clear();
             ProductListUI.ShowProductList(products);
 
+            Console.ReadKey(true);
         }
-
     }
 }

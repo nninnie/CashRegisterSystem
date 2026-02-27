@@ -7,164 +7,51 @@ namespace CashRegisterSystem.UI
 {
     public static class MenuUI
     {
-        public static void StartMainMenu(List<Product> products)
+        public static int ShowMainMenu(bool isLoggedIn)
         {
-            if (products == null)
-                throw new ArgumentNullException(nameof(products));
-
-            int mainMenuOption = 1;
+            int option = 1;
             ConsoleKeyInfo key;
             Console.CursorVisible = false;
 
             const string highlight = "\u001b[32m";
-            bool isLoggedIn = false;
 
             while (true)
             {
-                bool isSelected = false;
+                Console.Clear();
+                BannerUI.ShowLogo();
 
-                while (!isSelected)
-                {
-                    Console.Clear();
-                    BannerUI.ShowLogo();
-
-                    if (!isLoggedIn)
-                    {
-                        Console.WriteLine($"{(mainMenuOption == 1 ? "·" + highlight : "")} Logga in\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 3 ? "·" + highlight : "")} Admin\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 4 ? "·" + highlight : "")} Avsluta\u001b[0m");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{(mainMenuOption == 1 ? "·" + highlight : "")} Ny kund\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 2 ? "·" + highlight : "")} PLU\u001b[0m");
-                        Console.WriteLine($"{(mainMenuOption == 3 ? "·" + highlight : "")} Logga ut\u001b[0m");
-                    }
-
-                    key = Console.ReadKey(true);
-
-                    switch (key.Key)
-                    {
-                        case ConsoleKey.DownArrow: mainMenuOption++; break;
-                        case ConsoleKey.UpArrow: mainMenuOption--; break;
-                        case ConsoleKey.Enter: isSelected = true; break;
-                    }
-
-                    if (!isLoggedIn)
-                    {
-                        if (mainMenuOption < 1) mainMenuOption = 4;
-                        if (mainMenuOption > 4) mainMenuOption = 1;
-                    }
-                    else
-                    {
-                        if (mainMenuOption < 1) mainMenuOption = 3;
-                        if (mainMenuOption > 3) mainMenuOption = 1;
-                    }
-                }
-
-                Console.CursorVisible = true;
-
-                // EJ INLOGGAD
                 if (!isLoggedIn)
                 {
-                    switch (mainMenuOption)
-                    {
-                        case 1:
-                            Console.Clear();
-                            BannerUI.ShowLogo();
-
-                            Console.Write("Anställningsnummer: ");
-                            string? employeeId = Console.ReadLine();
-
-                            if (string.IsNullOrWhiteSpace(employeeId))
-                            {
-                                Console.WriteLine("Anställningsnummer får inte vara tomt.");
-                                Console.ReadKey();
-                                break;
-                            }
-
-                            Console.Write("Lösenord: ");
-                            string? code = Console.ReadLine();
-
-                            if (code?.ToLower() == "")
-                            {
-                                LoginService.CurrentUserName = employeeId;
-                                isLoggedIn = true;
-                                mainMenuOption = 1;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Tyvärr, det är såklart 'bajskorv'!");
-                                Console.ReadKey();
-                            }
-                            Console.Clear();
-                            break;
-
-                        case 2:
-                            new CheckoutController().StartNewCustomer(products);
-                            break;
-
-                        case 3:
-                            Console.Clear();
-                            BannerUI.ShowLogo();
-
-                            Console.Write("Admin ID: ");
-                            string? adminId = Console.ReadLine();
-
-                            if (string.IsNullOrWhiteSpace(adminId))
-                            {
-                                Console.WriteLine("Admin ID får inte vara tomt.");
-                                Console.ReadKey();
-                                break;
-                            }
-
-                            Console.Write("Lösenord: ");
-                            string? adminPass = Console.ReadLine();
-
-                            if (adminPass?.ToLower() == "")
-                            {
-                                AdminMenuController.ShowAdminMenu();
-                                mainMenuOption = 1;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Tyvärr, lösenordet är 'admin'.");
-                                Console.ReadKey();
-                            }
-                            Console.Clear();
-                            break;
-
-                        case 4:
-                            Console.WriteLine("\n\n\t\t\tLoggar ut...");
-                            Thread.Sleep(1200);
-                            Console.WriteLine("\t\t    Ha en fantastisk dag ❤️\n");
-                            Thread.Sleep(1200);
-                            Environment.Exit(0);
-                            break;
-                    }
+                    Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Logga in\u001b[0m");
+                    Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} PLU\u001b[0m");
+                    Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Admin\u001b[0m");
+                    Console.WriteLine($"{(option == 4 ? "·" + highlight : "")} Avsluta\u001b[0m");
                 }
-
-                // INLOGGAD KASSÖR
                 else
                 {
-                    switch (mainMenuOption)
-                    {
-                        case 1:
-                            new CheckoutController().StartNewCustomer(products);
-                            break;
-
-                        case 2:
-                            new CheckoutController().StartNewCustomer(products);
-                            break;
-
-
-                        case 3:
-                            isLoggedIn = false;
-                            mainMenuOption = 1;
-                            break;
-                    }
+                    Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Ny kund\u001b[0m");
+                    Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} PLU\u001b[0m");
+                    Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Logga ut\u001b[0m");
                 }
+
+                key = Console.ReadKey(true);
+
+                if (key.Key == ConsoleKey.DownArrow) option++;
+                if (key.Key == ConsoleKey.UpArrow) option--;
+
+                if (!isLoggedIn)
+                {
+                    if (option < 1) option = 4;
+                    if (option > 4) option = 1;
+                }
+                else
+                {
+                    if (option < 1) option = 3;
+                    if (option > 3) option = 1;
+                }
+
+                if (key.Key == ConsoleKey.Enter)
+                    return option;
             }
         }
     }

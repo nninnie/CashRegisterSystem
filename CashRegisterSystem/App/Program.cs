@@ -1,4 +1,5 @@
-﻿using CashRegisterSystem.Data.FileLoader;
+﻿using CashRegisterSystem.Controllers;
+using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 
@@ -20,7 +21,8 @@ namespace CashRegisterSystem.App
             List<Product> products = ProductFileLoader.GetProducts();
 
             // Initierar huvudmenyn och tillhandahåller produktlistan som underlag för menyer och funktioner
-            MenuUI.StartMainMenu(products);
+            MainMenuController.Start(products);
+
         }
     }
 }

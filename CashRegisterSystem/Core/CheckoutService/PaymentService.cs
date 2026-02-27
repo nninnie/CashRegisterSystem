@@ -7,6 +7,30 @@ namespace CashRegisterSystem.Core.CheckoutService
 {
     public class PaymentService
     {
+        private int GetNextReceiptNumber()
+        {
+            string receiptFolder = Path.Combine(
+                AppContext.BaseDirectory, "..", "..", "..", "Receipts");
+
+            if (!Directory.Exists(receiptFolder))
+                return 1;
+
+            var files = Directory.GetFiles(receiptFolder, "RECEIPT_*.txt");
+
+            if (files.Length == 0)
+                return 1;
+
+            int maxNumber = files
+                .Select(f => Path.GetFileNameWithoutExtension(f))
+                .Select(name => name.Replace("RECEIPT_", ""))
+                .Where(num => int.TryParse(num, out _))
+                .Select(int.Parse)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            return maxNumber + 1;
+        }
+
         public bool CompletePayment(Cart cart)
         {
             if (cart == null || cart.CartItems.Count == 0)
@@ -44,12 +68,11 @@ namespace CashRegisterSystem.Core.CheckoutService
                 if (option < 1) option = 2;
                 if (option > 2) option = 1;
 
-                DrawMenu(); 
+                DrawMenu();
 
                 if (key.Key == ConsoleKey.Enter)
                     break;
             }
-
 
             string paymentMethod = option == 1 ? "Kontant" : "Kort";
             decimal amountReceived = 0;
@@ -60,10 +83,8 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived = decimal.Parse(Console.ReadLine()!);
             }
 
-
-            // Hämta info från systemet
-            var counter = new ReceiptCounter();
-            int receiptNumber = counter.GetNextReceiptNumber();
+            // Hämta systeminfo
+            int receiptNumber = GetNextReceiptNumber();
             string cashierName = LoginService.CurrentUserName;
             int registerNumber = RegisterService.CurrentRegister;
 
@@ -81,17 +102,19 @@ namespace CashRegisterSystem.Core.CheckoutService
             Console.Clear();
             Console.WriteLine(receipt);
 
-            // Spara kvittot i en fil
-            string receiptPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts", "receipt.txt");
-            Directory.CreateDirectory(Path.GetDirectoryName(receiptPath)!);
+            // Spara kvittot i egen fil
+            string receiptFolder = Path.Combine(
+                AppContext.BaseDirectory, "..", "..", "..", "Receipts");
 
-            if (!File.Exists(receiptPath))
-                File.WriteAllText(receiptPath, ""); // skapa filen
+            Directory.CreateDirectory(receiptFolder);
 
-            File.AppendAllText(receiptPath, receipt + "\n\n");
+            string filePath = Path.Combine(
+                receiptFolder,
+                $"RECEIPT_{receiptNumber}.txt");
+
+            File.WriteAllText(filePath, receipt);
 
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
-
             Console.WriteLine("Tryck ENTER för nästa kund || ESC för att gå tillbaka till menyn.");
 
             var exitKey = Console.ReadKey(true);
@@ -101,6 +124,5 @@ namespace CashRegisterSystem.Core.CheckoutService
 
             return true;
         }
-
     }
 }
