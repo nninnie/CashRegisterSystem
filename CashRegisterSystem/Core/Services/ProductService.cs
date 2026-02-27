@@ -7,34 +7,34 @@ namespace CashRegisterSystem.Core.Services
     {
         public static Product? AddProduct(List<Product> products)
         {
-            string plu = ProductUI.AskForPlu();
+            string plu = ProductInputUI.AskForPlu();
             if (string.IsNullOrWhiteSpace(plu))
             {
-                ProductUI.ShowError("PLU får inte vara tomt.");
+                ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return null;
             }
 
             if (products.Any(p => p.PLU == plu))
             {
-                ProductUI.ShowError("En produkt med detta PLU finns redan.");
+                ProductInputUI.ShowError("En produkt med detta PLU finns redan.");
                 return null;
             }
 
-            string name = ProductUI.AskForName();
+            string name = ProductInputUI.AskForName();
             if (string.IsNullOrWhiteSpace(name))
             {
-                ProductUI.ShowError("Namn får inte vara tomt.");
+                ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return null;
             }
 
-            decimal price = ProductUI.AskForPrice();
+            decimal price = ProductInputUI.AskForPrice();
             if (price <= 0)
             {
-                ProductUI.ShowError("Pris måste vara större än 0.");
+                ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return null;
             }
 
-            PriceUnit unit = ProductUI.AskForUnit();
+            PriceUnit unit = ProductInputUI.AskForUnit();
 
             return new Product
             {
@@ -49,14 +49,14 @@ namespace CashRegisterSystem.Core.Services
         {
             if (string.IsNullOrWhiteSpace(plu))
             {
-                ProductUI.ShowError("PLU får inte vara tomt.");
+                ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
             }
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
             if (product == null)
             {
-                ProductUI.ShowError("Ingen produkt hittades med angivet PLU.");
+                ProductInputUI.ShowError("Ingen produkt hittades med angivet PLU.");
                 return false;
             }
 
@@ -67,32 +67,32 @@ namespace CashRegisterSystem.Core.Services
         {
             if (string.IsNullOrWhiteSpace(plu))
             {
-                ProductUI.ShowError("PLU får inte vara tomt.");
+                ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
             }
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
             if (product == null)
             {
-                ProductUI.ShowError("Ingen produkt hittades med angivet PLU.");
+                ProductInputUI.ShowError("Ingen produkt hittades med angivet PLU.");
                 return false;
             }
 
-            string newName = ProductUI.AskForName();
+            string newName = ProductInputUI.AskForName();
             if (string.IsNullOrWhiteSpace(newName))
             {
-                ProductUI.ShowError("Namn får inte vara tomt.");
+                ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return false;
             }
 
-            decimal newPrice = ProductUI.AskForPrice();
+            decimal newPrice = ProductInputUI.AskForPrice();
             if (newPrice <= 0)
             {
-                ProductUI.ShowError("Pris måste vara större än 0.");
+                ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return false;
             }
 
-            PriceUnit newUnit = ProductUI.AskForUnit();
+            PriceUnit newUnit = ProductInputUI.AskForUnit();
 
             // Apply changes
             product.Name = newName;

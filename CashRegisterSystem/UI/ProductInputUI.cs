@@ -3,35 +3,9 @@ using CashRegisterSystem.Data;
 
 namespace CashRegisterSystem.UI
 {
-    public static class ProductUI
+    public static class ProductInputUI
     {
-        public static void ShowProducts(List<Product> products)
-        {
-            var campaigns = CampaignFileLoader.GetCampaigns();
-
-            foreach (var p in products)
-            {
-                var activeCampaign = campaigns
-                    .FirstOrDefault(c => c.Name == p.Name && c.IsActive);
-
-                if (activeCampaign != null)
-                {
-                    decimal campaignPrice = p.Price * (1 - activeCampaign.Discount / 100);
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{p.PLU} - {p.Name} - {campaignPrice:0.00} kr (Kampanj!)");
-                    Console.ResetColor();
-
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.WriteLine($"   Ordinarie pris: {p.Price:0.00} kr");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"{p.PLU} - {p.Name} - {p.Price:0.00} kr");
-                }
-            }
-        }
+      
         public static decimal GetPrice(Product product)
         {
             var campaigns = CampaignFileLoader.GetCampaigns();

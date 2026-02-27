@@ -14,7 +14,7 @@ namespace CashRegisterSystem.Core.CheckoutService
         public void AddItem(Cart cart, Product product, decimal quantity, decimal discountAmount)
         {
             // Hämta kampanjpris eller ordinarie pris
-            decimal unitPrice = ProductUI.GetPrice(product);
+            decimal unitPrice = ProductInputUI.GetPrice(product);
 
             // Skicka in priset till Cart
             cart.AddItem(product, quantity, discountAmount, unitPrice);

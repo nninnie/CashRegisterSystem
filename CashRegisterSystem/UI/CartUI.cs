@@ -3,7 +3,7 @@ using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
-    public static class CheckoutUI
+    public static class CartUI
     {
         public static void ShowCart(Cart cart)
         {

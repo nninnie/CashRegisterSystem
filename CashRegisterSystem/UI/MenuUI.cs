@@ -116,10 +116,12 @@ namespace CashRegisterSystem.UI
                                 Console.WriteLine("Tyvärr, det är såklart 'bajskorv'!");
                                 Console.ReadKey();
                             }
+                            Console.Clear();
                             break;
 
                         case 2:
-                            ProductListView.ShowProductList(products);
+                            ProductListUI.ShowProductList(products);
+                            Console.Clear();
                             break;
 
                         case 3:
@@ -140,7 +142,7 @@ namespace CashRegisterSystem.UI
 
                             if (adminPass?.ToLower() == "")
                             {
-                                AdminController.ShowAdminMenu(products);
+                                AdminMenuController.ShowAdminMenu(products);
                                 mainMenuOption = 1;
                             }
                             else
@@ -148,6 +150,7 @@ namespace CashRegisterSystem.UI
                                 Console.WriteLine("Tyvärr, lösenordet är 'admin'.");
                                 Console.ReadKey();
                             }
+                            Console.Clear();
                             break;
 
                         case 4:
@@ -170,7 +173,7 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 2:
-                            ProductListView.ShowProductList(products);
+                            ProductListUI.ShowProductList(products);
                             break;
 
                         case 3:

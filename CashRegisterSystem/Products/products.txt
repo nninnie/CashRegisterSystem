@@ -1,16 +1,19 @@
 3174;Apelsin;19,90;PerKilo
 3271;Avokado;18,90;Each
 4011;Bananer;29,90;PerKilo
-4666;Lök gul;9,90;PerKilo
+94011;Banan Eko;24,90;PerKilo
+4666;Lök Gul;11,90;PerKilo
 4182;Lök röd;12,90;PerKilo
 3131;Kiwi;9,90;Each
+3132;Kiwi Gul;12,90;Each
 4252;Jordgubbar;35,90;Each
-3220;Päron;28,90;PerKilo
 4686;Paprika grön;41,90;PerKilo
 4687;Paprika gul;46,90;PerKilo
 4688;Paprika röd;42,90;PerKilo
 4833;Potatis fast;12,90;PerKilo
 4863;Potatis mjölig;12,90;PerKilo
+3220;Päron;28,90;PerKilo
+93220;Päron Eko;26,90;PerKilo
 4521;Sparris;46,90;Each
 4253;Sallad isberg;24,40;Each
 4800;Selleri;16,90;Each
@@ -19,5 +22,6 @@
 3214;Äpple;32,90;PerKilo
 3264;Vitlök;16,90;Each
 3211;Vitkål;19,90;Each
-94011;Eko Banan;24,90;PerKilo
-93220;Eko Päron;26,90;PerKilo
+
+
+

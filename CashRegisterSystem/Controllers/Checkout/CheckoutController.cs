@@ -21,12 +21,12 @@ namespace CashRegisterSystem.Controllers
             Cart cart = new Cart();
 
             Console.Clear();
-            PLUDisplayUI.PrintPLUList(products);
+            CheckoutDisplayUI.PrintPLUList(products);
 
             while (true)
             {
-                CheckoutUI.ShowCart(cart);
-                CheckoutUI.ShowPluInputPrompt();
+                CartUI.ShowCart(cart);
+                CartUI.ShowPluInputPrompt();
 
                 // Retry-loop för PLU-inmatning
                 (Product product, decimal quantity)? parsed = null;
@@ -51,7 +51,7 @@ namespace CashRegisterSystem.Controllers
 
                         _cartService.Clear(cart);
                         Console.Clear();
-                        PLUDisplayUI.PrintPLUList(products);
+                        CheckoutDisplayUI.PrintPLUList(products);
                         break; // börja om checkout
                     }
 
@@ -82,8 +82,8 @@ namespace CashRegisterSystem.Controllers
 
                         Thread.Sleep(1000);
                         Console.Clear();
-                        PLUDisplayUI.PrintPLUList(products);
-                        CheckoutUI.ShowCart(cart);
+                        CheckoutDisplayUI.PrintPLUList(products);
+                        CartUI.ShowCart(cart);
                         break;
                     }
 
@@ -114,7 +114,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1200);
                 Console.Clear();
-                PLUDisplayUI.PrintPLUList(products);
+                CheckoutDisplayUI.PrintPLUList(products);
             }
         }
     }

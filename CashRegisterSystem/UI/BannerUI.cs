@@ -7,24 +7,26 @@
     /// </summary>
     public static class BannerUI
         {
-        public static void PrintFruitHeader(string title)
+        public static void PrintFruitHeader(string title, bool centered = false)
         {
-            Console.Clear();
             Console.WriteLine();
 
-
-            string fruitsLeft = "\t  🍎🍌🍇🍉";
+            string fruitsLeft = "    🍎🍌🍇🍉";
             string fruitsRight = "🍓🍍🍒🍑";
 
-            // Bygger raden: frukter + mellanslag + titel + mellanslag + frukter
             string line = $"{fruitsLeft}  {title}  {fruitsRight}";
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine(line);
-            Console.ResetColor();
 
+            if (centered)
+                WriteCentered(line);
+            else
+                Console.WriteLine(line);
+
+            Console.ResetColor();
             Console.WriteLine();
         }
+
 
         private static string RepeatToWidth(string pattern, int width)
             {
@@ -43,6 +45,14 @@
             Console.WriteLine();
             Console.WriteLine();
         }
+
+        private static void WriteCentered(string text)
+        {
+            int width = Console.WindowWidth;
+            int left = Math.Max(0, (width - text.Length) / 2);
+            Console.WriteLine(new string(' ', left) + text);
+        }
+
 
     }
 }

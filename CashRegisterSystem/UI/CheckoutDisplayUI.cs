@@ -2,7 +2,7 @@
 
 namespace CashRegisterSystem.UI
 {
-    public static class PLUDisplayUI
+    public static class CheckoutDisplayUI
     {
         public static void PrintPLUList(List<Product> products, int maxColumns = 4)
         {

@@ -8,7 +8,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
     /// <summary>
     /// Handles admin actions for adding, editing, and deleting products.
     /// </summary>
-    public static class ProductController
+    public static class ProductAdminController
     {
         /// <summary>
         /// Creates a new product using user input and saves it to the product file.
@@ -24,7 +24,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                 products.Add(newProduct);
                 ProductFileRepository.SaveAll(products);
 
-                ProductUI.ShowConfirmation(
+                ProductInputUI.ShowConfirmation(
                     "Produkt skapad!",
                     $"PLU: {newProduct.PLU}\nNamn: {newProduct.Name}\nPris: {newProduct.Price:0.00} kr"
                 );
@@ -39,9 +39,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll();
 
-            ProductUI.ShowProducts(products);
+            ProductListUI.ShowProductList(products);
 
-            string plu = ProductUI.AskForPlu();
+            string plu = ProductInputUI.AskForPlu();
 
             bool removed = ProductService.DeleteProduct(products, plu);
 
@@ -49,7 +49,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             {
                 ProductFileRepository.SaveAll(products);
 
-                ProductUI.ShowConfirmation(
+                ProductInputUI.ShowConfirmation(
                     "Produkt borttagen!",
                     $"PLU: {plu}"
                 );
@@ -65,9 +65,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll();
 
-            ProductUI.ShowProducts(products);
+            ProductListUI.ShowProductList(products);
 
-            string plu = ProductUI.AskForPlu();
+            string plu = ProductInputUI.AskForPlu();
 
             bool updated = ProductService.EditProduct(products, plu);
 
@@ -75,7 +75,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             {
                 ProductFileRepository.SaveAll(products);
 
-                ProductUI.ShowConfirmation(
+                ProductInputUI.ShowConfirmation(
                     "Produkt uppdaterad!",
                     $"PLU: {plu}"
                 );

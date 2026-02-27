@@ -10,8 +10,6 @@
 
             Console.WriteLine(details);
 
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
-            Console.ReadKey();
         }
 
         public static void ShowError(string message)
