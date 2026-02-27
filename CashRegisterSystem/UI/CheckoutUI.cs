@@ -18,10 +18,10 @@ namespace CashRegisterSystem.UI
                 totalSum += total;
 
                 Console.WriteLine(
-                    $"{item.Product.Name,-20}" +
-                    $"{item.Quantity,8}" +
+                    $"{item.Product.Name,-16}" +
+                    $"{item.Quantity,18}" +
                     $"{unit,4}" +
-                    $"{total,12:F2} kr");
+                    $"{total,29:F2} kr");
             }
 
             Console.WriteLine("----------------------------------------------------------------------");

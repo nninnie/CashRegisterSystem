@@ -1,5 +1,6 @@
 ﻿using CashRegisterSystem.Controllers.Admin.Products;
 using CashRegisterSystem.Data;
+using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.UI;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.Clear();
             BannerUI.PrintFruitHeader("AVSLUTA KAMPANJER");
 
-            var campaign = CampaignRepository.GetCampaigns();
+            var campaign = CampaignFileLoader.GetCampaigns();
 
             if (!campaign.Any())
             {
@@ -65,7 +66,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             // Hitta kampanjen som gäller för denna produkt (kampanjer kopplas via produktnamn)
             var selectedCampaign = campaign.FirstOrDefault(c => c.Name == selectedProduct.Name);
 
-            // Kontrollera att kampanjen finns
             if (selectedCampaign == null)
             {
                 Console.WriteLine("Ingen kampanj hittades för denna produkt");
@@ -74,9 +74,9 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            selectedCampaign.IsActive = false; // Avsluta kampanjen
+            selectedCampaign.IsActive = false;
 
-            CampaignRepository.SaveCampaigns(campaign); // Spara ändringen
+            CampaignFileLoader.SaveCampaigns(campaign); 
 
             Console.WriteLine("\nKampanjen har avslutats!");
             Console.ReadKey();

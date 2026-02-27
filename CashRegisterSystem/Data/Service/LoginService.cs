@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CashRegisterSystem.Data
+namespace CashRegisterSystem.Data.Service
 {
     public static class LoginService
     {

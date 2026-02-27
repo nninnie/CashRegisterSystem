@@ -1,8 +1,5 @@
 ﻿namespace CashRegisterSystem.Models
 {
-    /// <summary>
-    /// Represents a marketing campaign with associated discount, status, and scheduling information.
-    /// </summary>
     public class Campaign
     {
         public int Id { get; set;  }

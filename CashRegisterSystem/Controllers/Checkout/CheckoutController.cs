@@ -7,7 +7,7 @@ using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers
 {
-    public class CheckoutFlowController
+    public class CheckoutController
     {
         private readonly InputParser _inputParser = new();
         private readonly DiscountService _discountService = new();
@@ -17,7 +17,7 @@ namespace CashRegisterSystem.Controllers
 
         public void StartNewCustomer(List<Product> products)
         {
-            var campaigns = CampaignRepository.GetCampaigns();
+            var campaigns = CampaignFileLoader.GetCampaigns();
             Cart cart = new Cart();
 
             Console.Clear();

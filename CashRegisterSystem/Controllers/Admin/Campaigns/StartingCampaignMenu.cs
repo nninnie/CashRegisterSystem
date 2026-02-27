@@ -4,6 +4,7 @@ using CashRegisterSystem.UI;
 using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
 using CashRegisterSystem.Models;
+using CashRegisterSystem.Data.FileLoader;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
@@ -32,7 +33,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             ProductUI.ShowProducts(productList);
 
-            Console.WriteLine("Skriv in PLU för varan du vill skapa kampanj på: ");
+            Console.Write("\nPLU: ");
             string campaignPlu = Console.ReadLine()!;
 
             if (string.IsNullOrWhiteSpace(campaignPlu))
@@ -50,12 +51,12 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.Write("Hur mycket rabatt ska varan ha? ");
+            Console.Write("Rabatt %: ");
             string discountInput = Console.ReadLine()!;
 
             if (string.IsNullOrWhiteSpace(discountInput))
             {
-                Console.WriteLine("Du måste ange rabatt: ");
+                Console.WriteLine("Du måste ange ett tal %: ");
                 return;
             }
 
@@ -96,7 +97,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             // Hämtar alla befintliga kampanjer, skapar ett nytt unikt ID baserat på högsta befintliga ID
             // bygger ett nytt Campaign-objekt med användarens värden, lägger till det i listan och sparar tillbaka till fil
-            var campaignList = CampaignRepository.GetCampaigns();
+            var campaignList = CampaignFileLoader.GetCampaigns();
 
             int newID = campaignList.Any() ? campaignList.Max(c => c.Id) + 1 : 1;
 
@@ -112,12 +113,15 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             campaignList.Add(newCampaign);
 
-            CampaignRepository.SaveCampaigns(campaignList);
+            CampaignFileLoader.SaveCampaigns(campaignList);
 
             Console.WriteLine("\nKampanj skapad!");
             Console.WriteLine($"Produkt: {selectedProduct.Name}");
             Console.WriteLine($"Rabatt: {discountPercent}%");
             Console.WriteLine($"Gäller från {startDate:yyyy-MM-dd} till {endDate:yyyy-MM-dd}");
+
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.ReadKey();
         }
     }
 }
