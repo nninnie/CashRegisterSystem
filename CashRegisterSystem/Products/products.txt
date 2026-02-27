@@ -19,3 +19,5 @@
 3214;Äpple;32,90;PerKilo
 3264;Vitlök;16,90;Each
 3211;Vitkål;19,90;Each
+94011;Eko Banan;24,90;PerKilo
+93220;Eko Päron;26,90;PerKilo

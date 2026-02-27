@@ -22,9 +22,15 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             if (newProduct != null)
             {
                 products.Add(newProduct);
-                ProductFileRepository.SaveAll(products); 
+                ProductFileRepository.SaveAll(products);
+
+                ProductUI.ShowConfirmation(
+                    "Produkt skapad!",
+                    $"PLU: {newProduct.PLU}\nNamn: {newProduct.Name}\nPris: {newProduct.Price:0.00} kr"
+                );
             }
         }
+
 
         /// <summary>
         /// Removes a product based on PLU input and saves the updated list.
@@ -40,8 +46,17 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             bool removed = ProductService.DeleteProduct(products, plu);
 
             if (removed)
+            {
                 ProductFileRepository.SaveAll(products);
+
+                ProductUI.ShowConfirmation(
+                    "Produkt borttagen!",
+                    $"PLU: {plu}"
+                );
+            }
+
         }
+
 
         /// <summary>
         /// Updates an existing product using PLU input and saves the changes.
@@ -57,7 +72,15 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             bool updated = ProductService.EditProduct(products, plu);
 
             if (updated)
+            {
                 ProductFileRepository.SaveAll(products);
+
+                ProductUI.ShowConfirmation(
+                    "Produkt uppdaterad!",
+                    $"PLU: {plu}"
+                );
+            }
+
         }
     }
 }

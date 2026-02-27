@@ -115,13 +115,12 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             CampaignFileLoader.SaveCampaigns(campaignList);
 
-            Console.WriteLine("\nKampanj skapad!");
-            Console.WriteLine($"Produkt: {selectedProduct.Name}");
-            Console.WriteLine($"Rabatt: {discountPercent}%");
-            Console.WriteLine($"Gäller från {startDate:yyyy-MM-dd} till {endDate:yyyy-MM-dd}");
-
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
-            Console.ReadKey();
+            ProductUI.ShowConfirmation(
+                "Kampanj skapad!",
+                $"Produkt: {selectedProduct.Name}\n" +
+                $"Rabatt: {discountPercent}%\n" +
+                $"Gäller från {startDate:yyyy-MM-dd} till {endDate:yyyy-MM-dd}"
+            );
         }
     }
 }

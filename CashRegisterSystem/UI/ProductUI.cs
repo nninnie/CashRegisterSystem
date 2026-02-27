@@ -71,5 +71,28 @@ namespace CashRegisterSystem.UI
             Console.Write("Val: ");
             return Console.ReadLine() == "1" ? PriceUnit.PerKilo : PriceUnit.Each;
         }
+
+        public static void ShowConfirmation(string title, string details)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\n{title}");
+            Console.ResetColor();
+
+            Console.WriteLine(details);
+
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.ReadKey();
+        }
+        public static void ShowError(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ResetColor();
+
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.ReadKey();
+        }
+
+
     }
 }
