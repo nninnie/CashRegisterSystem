@@ -28,7 +28,7 @@ namespace CashRegisterSystem.Controllers
                 CheckoutUI.ShowCart(cart);
                 CheckoutUI.ShowPluInputPrompt();
 
-                // 🔥 Retry-loop för PLU-inmatning
+                // Retry-loop för PLU-inmatning
                 (Product product, decimal quantity)? parsed = null;
 
                 while (parsed == null)
@@ -58,7 +58,7 @@ namespace CashRegisterSystem.Controllers
                     // CANCEL
                     if (_commandParser.IsCancelCommand(trimmed))
                     {
-                        Console.WriteLine("Transaktionen avbröts / Transaction cancelled.");
+                        Console.WriteLine("Transaktionen avbröts");
                         return;
                     }
 

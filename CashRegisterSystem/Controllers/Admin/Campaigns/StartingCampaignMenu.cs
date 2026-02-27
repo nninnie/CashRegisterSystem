@@ -70,7 +70,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.WriteLine("Ange startdatum: ");
+            Console.WriteLine("Ange startdatum (yyyy-MM-dd): ");
             string startInput = Console.ReadLine()!;
 
             if (!DateTime.TryParse(startInput, out DateTime startDate))
@@ -79,7 +79,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            Console.WriteLine("Ange slutdatum: ");
+            Console.WriteLine("Ange slutdatum (yyyy-MM-dd): ");
             string endInput = Console.ReadLine()!;
 
             if (!DateTime.TryParse(endInput, out DateTime endDate))
