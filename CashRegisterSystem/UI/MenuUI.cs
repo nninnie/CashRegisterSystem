@@ -5,16 +5,8 @@ using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
-    /// <summary>
-    /// Displays and manages the main menu for the cash register system, including login handling,
-    /// navigation, and access to cashier and admin functions.
-    /// </summary>
     public static class MenuUI
     {
-        /// <summary>
-        /// Starts the interactive main menu loop and routes the user to cashier or admin functions.
-        /// </summary>
-        /// <param name="products">The list of products available in the system.</param>
         public static void StartMainMenu(List<Product> products)
         {
             if (products == null)
@@ -22,11 +14,9 @@ namespace CashRegisterSystem.UI
 
             int mainMenuOption = 1;
             ConsoleKeyInfo key;
-
             Console.CursorVisible = false;
 
             const string highlight = "\u001b[32m";
-
             bool isLoggedIn = false;
 
             while (true)
@@ -56,17 +46,9 @@ namespace CashRegisterSystem.UI
 
                     switch (key.Key)
                     {
-                        case ConsoleKey.DownArrow:
-                            mainMenuOption++;
-                            break;
-
-                        case ConsoleKey.UpArrow:
-                            mainMenuOption--;
-                            break;
-
-                        case ConsoleKey.Enter:
-                            isSelected = true;
-                            break;
+                        case ConsoleKey.DownArrow: mainMenuOption++; break;
+                        case ConsoleKey.UpArrow: mainMenuOption--; break;
+                        case ConsoleKey.Enter: isSelected = true; break;
                     }
 
                     if (!isLoggedIn)
@@ -83,14 +65,14 @@ namespace CashRegisterSystem.UI
 
                 Console.CursorVisible = true;
 
-                // EJ INLOGGAD ANVÄNDARE
+                // EJ INLOGGAD
                 if (!isLoggedIn)
                 {
                     switch (mainMenuOption)
                     {
                         case 1:
-                            Console.Clear(); 
-                            BannerUI.ShowLogo(); 
+                            Console.Clear();
+                            BannerUI.ShowLogo();
 
                             Console.Write("Anställningsnummer: ");
                             string? employeeId = Console.ReadLine();
@@ -105,7 +87,7 @@ namespace CashRegisterSystem.UI
                             Console.Write("Lösenord: ");
                             string? code = Console.ReadLine();
 
-                            if (code?.ToLower() == "" )
+                            if (code?.ToLower() == "")
                             {
                                 LoginService.CurrentUserName = employeeId;
                                 isLoggedIn = true;
@@ -120,8 +102,7 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 2:
-                            ProductListUI.ShowProductList(products);
-                            Console.Clear();
+                            new CheckoutController().StartNewCustomer(products);
                             break;
 
                         case 3:
@@ -129,8 +110,9 @@ namespace CashRegisterSystem.UI
                             BannerUI.ShowLogo();
 
                             Console.Write("Admin ID: ");
-                                string? adminId = Console.ReadLine();
-                            if(string.IsNullOrWhiteSpace(adminId))
+                            string? adminId = Console.ReadLine();
+
+                            if (string.IsNullOrWhiteSpace(adminId))
                             {
                                 Console.WriteLine("Admin ID får inte vara tomt.");
                                 Console.ReadKey();
@@ -142,7 +124,7 @@ namespace CashRegisterSystem.UI
 
                             if (adminPass?.ToLower() == "")
                             {
-                                AdminMenuController.ShowAdminMenu(products);
+                                AdminMenuController.ShowAdminMenu();
                                 mainMenuOption = 1;
                             }
                             else
@@ -155,7 +137,7 @@ namespace CashRegisterSystem.UI
 
                         case 4:
                             Console.WriteLine("\n\n\t\t\tLoggar ut...");
-                            Thread.Sleep(1200); 
+                            Thread.Sleep(1200);
                             Console.WriteLine("\t\t    Ha en fantastisk dag ❤️\n");
                             Thread.Sleep(1200);
                             Environment.Exit(0);
@@ -173,8 +155,9 @@ namespace CashRegisterSystem.UI
                             break;
 
                         case 2:
-                            ProductListUI.ShowProductList(products);
+                            new CheckoutController().StartNewCustomer(products);
                             break;
+
 
                         case 3:
                             isLoggedIn = false;

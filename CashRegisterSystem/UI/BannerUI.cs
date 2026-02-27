@@ -6,7 +6,7 @@
     /// and simple formatting to create decorative menu sections.
     /// </summary>
     public static class BannerUI
-        {
+    {
         public static void PrintFruitHeader(string title, bool centered = false)
         {
             Console.WriteLine();
@@ -29,12 +29,12 @@
 
 
         private static string RepeatToWidth(string pattern, int width)
-            {
-                string result = "";
-                while (result.Length < width)
-                    result += pattern;
-                return result.Substring(0, width);
-            }
+        {
+            string result = "";
+            while (result.Length < width)
+                result += pattern;
+            return result.Substring(0, width);
+        }
         public static void ShowLogo()
         {
             Console.Clear();
@@ -52,10 +52,5 @@
             int left = Math.Max(0, (width - text.Length) / 2);
             Console.WriteLine(new string(' ', left) + text);
         }
-
-
     }
 }
-
-
-

@@ -55,5 +55,22 @@ namespace CashRegisterSystem.UI
             Console.WriteLine("\nTryck valfri tangent för att återgå till menyn...");
             Console.ReadKey();
         }
+
+
+        public static void ShowCompactProductListAdmin(List<Product> products)
+        {
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine($" {"PLU",-6} {"Produkt",-20} Pris");
+            Console.WriteLine("-----------------------------------------");
+
+            foreach (var p in products)
+            {
+                string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+                Console.WriteLine($" {p.PLU,-6} {p.Name,-20} {p.Price:0.00} {unit}");
+            }
+
+            Console.WriteLine("-----------------------------------------");
+        }
+
     }
 }

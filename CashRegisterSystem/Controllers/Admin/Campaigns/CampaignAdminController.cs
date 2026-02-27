@@ -26,6 +26,8 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             var products = ProductFileLoader.GetProducts();
 
+            Console.WriteLine("-----------------------------------------");
+
             foreach (var c in campaigns)
             {
                 var product = products.FirstOrDefault(p => p.Name == c.Name);
@@ -43,6 +45,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 );
             }
 
+            Console.WriteLine("-----------------------------------------");
             Console.WriteLine("\nTryck valfri tangent för att återgå...");
             Console.ReadKey(true);
         }
@@ -61,7 +64,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowCompactProductListAdmin(products);
 
             Console.Write("\nPLU: ");
             string plu = Console.ReadLine()!;
@@ -145,7 +148,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 return;
             }
 
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowCompactProductListAdmin(products);
 
             Console.Write("\nPLU: ");
             string plu = Console.ReadLine()!;

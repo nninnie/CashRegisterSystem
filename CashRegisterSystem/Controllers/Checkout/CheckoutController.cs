@@ -21,14 +21,13 @@ namespace CashRegisterSystem.Controllers
             Cart cart = new Cart();
 
             Console.Clear();
-            CheckoutDisplayUI.PrintPLUList(products);
+            CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
 
             while (true)
             {
                 CartUI.ShowCart(cart);
                 CartUI.ShowPluInputPrompt();
 
-                // Retry-loop för PLU-inmatning
                 (Product product, decimal quantity)? parsed = null;
 
                 while (parsed == null)
@@ -51,8 +50,8 @@ namespace CashRegisterSystem.Controllers
 
                         _cartService.Clear(cart);
                         Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);
-                        break; // börja om checkout
+                        CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
+                        break;
                     }
 
                     // CANCEL
@@ -82,7 +81,7 @@ namespace CashRegisterSystem.Controllers
 
                         Thread.Sleep(1000);
                         Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);
+                        CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
                         CartUI.ShowCart(cart);
                         break;
                     }
@@ -91,11 +90,9 @@ namespace CashRegisterSystem.Controllers
                     parsed = _inputParser.Parse(input, products);
                 }
 
-                // Om parsed är null betyder det att vi gjorde PAY/CANCEL/DELETE
                 if (parsed == null)
                     continue;
 
-                // Nu har vi en giltig produkt
                 var (product, quantity) = parsed.Value;
 
                 decimal discountAmount = _discountService.CalculateDiscount(product, quantity, campaigns);
@@ -114,7 +111,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1200);
                 Console.Clear();
-                CheckoutDisplayUI.PrintPLUList(products);
+                CheckoutDisplayUI.PrintPLUList(products);   // KASSA-VYN
             }
         }
     }

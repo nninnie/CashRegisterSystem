@@ -17,6 +17,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll();
 
+            Console.Clear();
+            BannerUI.PrintFruitHeader("LÄGG TILL PRODUKT");
+
             var newProduct = ProductService.AddProduct(products);
 
             if (newProduct != null)
@@ -26,11 +29,12 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
                 ProductInputUI.ShowConfirmation(
                     "Produkt skapad!",
-                    $"PLU: {newProduct.PLU}\nNamn: {newProduct.Name}\nPris: {newProduct.Price:0.00} kr"
+                    $"PLU: {newProduct.PLU}\n" +
+                    $"Namn: {newProduct.Name}\n" +
+                    $"Pris: {newProduct.Price:0.00} kr"
                 );
             }
         }
-
 
         /// <summary>
         /// Removes a product based on PLU input and saves the updated list.
@@ -39,7 +43,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll();
 
-            ProductListUI.ShowProductList(products);
+            Console.Clear();
+            BannerUI.PrintFruitHeader("TA BORT PRODUKT");
+            ProductListUI.ShowCompactProductListAdmin(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -54,9 +60,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     $"PLU: {plu}"
                 );
             }
-
         }
-
 
         /// <summary>
         /// Updates an existing product using PLU input and saves the changes.
@@ -65,7 +69,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll();
 
-            ProductListUI.ShowProductList(products);
+            Console.Clear();
+            BannerUI.PrintFruitHeader("ÄNDRA PRODUKT");
+            ProductListUI.ShowCompactProductListAdmin(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -80,7 +86,15 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     $"PLU: {plu}"
                 );
             }
+        }
+        public static void ShowProductListAdmin()
+        {
+            var products = ProductFileRepository.GetAll();
+
+            Console.Clear();
+            ProductListUI.ShowProductList(products);
 
         }
+
     }
 }
