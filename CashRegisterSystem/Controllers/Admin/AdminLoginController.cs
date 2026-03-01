@@ -1,13 +1,13 @@
 ﻿using CashRegisterSystem.UI;
 
-namespace CashRegisterSystem.Controllers
+namespace CashRegisterSystem.Controllers.Admin
 {
     public static class AdminLoginController
     {
         public static void Login()
         {
             Console.Clear();
-            BannerUI.ShowLogo();
+            BannerUI.PrintFruitHeader("ADMIN LOGIN");
 
             Console.Write("Admin ID: ");
             string? adminId = Console.ReadLine();

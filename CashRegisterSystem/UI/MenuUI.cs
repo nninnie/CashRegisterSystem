@@ -10,10 +10,14 @@ namespace CashRegisterSystem.UI
         public static int ShowMainMenu(bool isLoggedIn)
         {
             int option = 1;
-            ConsoleKeyInfo key;
             Console.CursorVisible = false;
 
             const string highlight = "\u001b[32m";
+
+            Console.Clear();
+            Console.Write("\x1b[3J"); // ← Rensar scroll-bufferten i ANSI-terminaler
+            Console.SetCursorPosition(0, 0);
+
 
             while (true)
             {
@@ -34,8 +38,10 @@ namespace CashRegisterSystem.UI
                     Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Logga ut\u001b[0m");
                 }
 
-                key = Console.ReadKey(true);
+                // Läs tangenttrycket här (superviktigt!)
+                ConsoleKeyInfo key = Console.ReadKey(true);
 
+                // Hantera piltangenter
                 if (key.Key == ConsoleKey.DownArrow) option++;
                 if (key.Key == ConsoleKey.UpArrow) option--;
 
@@ -50,9 +56,17 @@ namespace CashRegisterSystem.UI
                     if (option > 3) option = 1;
                 }
 
+                // Hantera Enter
                 if (key.Key == ConsoleKey.Enter)
+                {
+                    // Töm bufferten så Enter inte registreras två gånger
+                    while (Console.KeyAvailable)
+                        Console.ReadKey(true);
+
                     return option;
+                }
             }
         }
+
     }
 }

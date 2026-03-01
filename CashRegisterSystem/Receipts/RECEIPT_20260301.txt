@@ -1,134 +1,144 @@
+
+=== KVITTO 1 ===
 ========================================
                 FruktTorget
              Öppet 08:00 - 23:00
              Tel: 073-570 43 68
 ========================================
-Säljare: 139       Kassa: 1   Kvitto: 1
-Datum: 2026-02-26             Tid: 23:18
+Säljare: 13        Kassa: 1   Kvitto: 1
+Datum: 2026-03-01             Tid: 14:35
 ----------------------------------------
-Bananer         2 * 29,90       59,80 kr
+Apelsin         5 * 19,90       94,53 kr
 ----------------------------------------
-TOTALT:                         59,80 kr
+TOTALT:                         94,53 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-12% moms:                        6,41 kr
-Exkl. moms:                     53,39 kr
+12% moms:                       10,13 kr
+Exkl. moms:                     84,40 kr
 ----------------------------------------
 
 Mottaget kontant:            100,00 kr
-Åter kontant:                 40,20 kr
+Åter kontant:                  5,48 kr
 ========================================
-             Spara kvittot!
-  Tack för besöket och välkommen åter!
+     Tack för besöket, spara kvittot
+            Välkommen åter!
           Org.nr: 987654-3210
 ========================================
 
+=== SLUT ===
 
+=== KVITTO 2 ===
 ========================================
                 FruktTorget
              Öppet 08:00 - 23:00
              Tel: 073-570 43 68
 ========================================
-Säljare: 3         Kassa: 1   Kvitto: 1
-Datum: 2026-02-27             Tid: 12:09
+Säljare: 13        Kassa: 1   Kvitto: 2
+Datum: 2026-03-01             Tid: 14:35
 ----------------------------------------
-Apelsin         8 * 19,90      151,24 kr
-Kiwi Gul        1 * 12,90       12,90 kr
-Eko Päron       5 * 26,90      134,50 kr
+Kiwi            2 *  9,90       19,80 kr
 ----------------------------------------
-TOTALT:                        298,64 kr
+TOTALT:                         19,80 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-12% moms:                       32,00 kr
-Exkl. moms:                    266,64 kr
+12% moms:                        2,12 kr
+Exkl. moms:                     17,68 kr
 ----------------------------------------
 
-Mottaget kontant:            300,00 kr
-Åter kontant:                  1,36 kr
+Mottaget kontant:             20,00 kr
+Åter kontant:                  0,20 kr
 ========================================
-             Spara kvittot!
-  Tack för besöket och välkommen åter!
+     Tack för besöket, spara kvittot
+            Välkommen åter!
           Org.nr: 987654-3210
 ========================================
 
+=== SLUT ===
 
+=== KVITTO 3 ===
 ========================================
                 FruktTorget
              Öppet 08:00 - 23:00
              Tel: 073-570 43 68
 ========================================
-Säljare: 139       Kassa: 1   Kvitto: 2
-Datum: 2026-02-27             Tid: 12:13
+Säljare: 13        Kassa: 1   Kvitto: 3
+Datum: 2026-03-01             Tid: 14:41
 ----------------------------------------
-Eko Banan       1 * 24,90       24,90 kr
+Apelsin         10 * 19,90      189,05 kr
 ----------------------------------------
-TOTALT:                         24,90 kr
+TOTALT:                        189,05 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-12% moms:                        2,67 kr
-Exkl. moms:                     22,23 kr
+12% moms:                       20,26 kr
+Exkl. moms:                    168,79 kr
+----------------------------------------
+
+Mottaget kontant:            200,00 kr
+Åter kontant:                 10,95 kr
+========================================
+     Tack för besöket, spara kvittot
+            Välkommen åter!
+          Org.nr: 987654-3210
+========================================
+
+=== SLUT ===
+
+=== KVITTO 4 ===
+========================================
+                FruktTorget
+             Öppet 08:00 - 23:00
+             Tel: 073-570 43 68
+========================================
+Säljare: 13        Kassa: 1   Kvitto: 4
+Datum: 2026-03-01             Tid: 14:41
+----------------------------------------
+Lök röd         5 * 12,90       64,50 kr
+----------------------------------------
+TOTALT:                         64,50 kr
+
+MOMSREDOVISNING
+----------------------------------------
+12% moms:                        6,91 kr
+Exkl. moms:                     57,59 kr
 ----------------------------------------
 
 Betalt med kort
 ========================================
-             Spara kvittot!
-  Tack för besöket och välkommen åter!
+     Tack för besöket, spara kvittot
+            Välkommen åter!
           Org.nr: 987654-3210
 ========================================
 
+=== SLUT ===
 
+=== KVITTO 5 ===
 ========================================
                 FruktTorget
              Öppet 08:00 - 23:00
              Tel: 073-570 43 68
 ========================================
-Säljare: 139       Kassa: 1   Kvitto: 3
-Datum: 2026-02-27             Tid: 12:13
+Säljare: 13        Kassa: 1   Kvitto: 5
+Datum: 2026-03-01             Tid: 14:41
 ----------------------------------------
-Eko Banan       2 * 24,90       49,80 kr
+Vitlök          2 * 16,90       33,80 kr
 ----------------------------------------
-TOTALT:                         49,80 kr
+TOTALT:                         33,80 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-12% moms:                        5,34 kr
-Exkl. moms:                     44,46 kr
+12% moms:                        3,62 kr
+Exkl. moms:                     30,18 kr
 ----------------------------------------
 
-Betalt med kort
+Mottaget kontant:             50,00 kr
+Åter kontant:                 16,20 kr
 ========================================
-             Spara kvittot!
-  Tack för besöket och välkommen åter!
+     Tack för besöket, spara kvittot
+            Välkommen åter!
           Org.nr: 987654-3210
 ========================================
 
-
-========================================
-                FruktTorget
-             Öppet 08:00 - 23:00
-             Tel: 073-570 43 68
-========================================
-Säljare: 139       Kassa: 1   Kvitto: 4
-Datum: 2026-02-27             Tid: 12:42
-----------------------------------------
-Bananer         2 * 29,90       59,80 kr
-----------------------------------------
-TOTALT:                         59,80 kr
-
-MOMSREDOVISNING
-----------------------------------------
-12% moms:                        6,41 kr
-Exkl. moms:                     53,39 kr
-----------------------------------------
-
-Betalt med kort
-========================================
-             Spara kvittot!
-  Tack för besöket och välkommen åter!
-          Org.nr: 987654-3210
-========================================
-
-
+=== SLUT ===

@@ -7,10 +7,17 @@ namespace CashRegisterSystem.UI
         public static void PrintPLUList(List<Product> products, int maxColumns = 4)
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("KASSA");
+            string indent = new string(' ', 22);
 
-            int colWidth = 28;
-            int columns = Math.Min(maxColumns, (int)Math.Ceiling(products.Count / 8.0));
+            string fruitsLeft = "🍎🍌🍇🍉";
+            string fruitsRight = "🍓🍍🍒🍑";
+
+            Console.WriteLine($"\n{indent}{fruitsLeft}  KASSA  {fruitsRight}");
+            Console.WriteLine();
+            Console.WriteLine("----------------------------------------------------------------------");
+
+            int colWidth = 25;
+            int columns = Math.Min(maxColumns, 3);
             int rows = (int)Math.Ceiling(products.Count / (double)columns);
 
             List<List<Product>> cols = new();

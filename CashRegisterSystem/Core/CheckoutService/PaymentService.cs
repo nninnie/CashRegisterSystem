@@ -1,5 +1,5 @@
-﻿using CashRegisterSystem.Data;
-using CashRegisterSystem.Data.Interfaces;
+﻿using CashRegisterSystem.Core.CashRegisterSystem.Data.Service;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.Data.Service;
 using CashRegisterSystem.Models;
 
@@ -7,30 +7,6 @@ namespace CashRegisterSystem.Core.CheckoutService
 {
     public class PaymentService
     {
-        private int GetNextReceiptNumber()
-        {
-            string receiptFolder = Path.Combine(
-                AppContext.BaseDirectory, "..", "..", "..", "Receipts");
-
-            if (!Directory.Exists(receiptFolder))
-                return 1;
-
-            var files = Directory.GetFiles(receiptFolder, "RECEIPT_*.txt");
-
-            if (files.Length == 0)
-                return 1;
-
-            int maxNumber = files
-                .Select(f => Path.GetFileNameWithoutExtension(f))
-                .Select(name => name.Replace("RECEIPT_", ""))
-                .Where(num => int.TryParse(num, out _))
-                .Select(int.Parse)
-                .DefaultIfEmpty(0)
-                .Max();
-
-            return maxNumber + 1;
-        }
-
         public bool CompletePayment(Cart cart)
         {
             if (cart == null || cart.CartItems.Count == 0)
@@ -52,9 +28,18 @@ namespace CashRegisterSystem.Core.CheckoutService
             {
                 Console.SetCursorPosition(0, menuTop);
 
-                Console.WriteLine($"{(option == 1 ? "· " + highlight : "  ")}Kontant{reset}   ");
-                Console.WriteLine($"{(option == 2 ? "· " + highlight : "  ")}Kort{reset}      ");
+                // Rensa gamla rader
+                Console.WriteLine(new string(' ', 30));
+                Console.WriteLine(new string(' ', 30));
+
+                // Flytta tillbaka markören
+                Console.SetCursorPosition(0, menuTop);
+
+                // Rita menyn igen
+                Console.WriteLine($"{(option == 1 ? "· " + highlight : "  ")}Kontant{reset}");
+                Console.WriteLine($"{(option == 2 ? "· " + highlight : "  ")}Kort{reset}");
             }
+
 
             DrawMenu();
 
@@ -84,7 +69,9 @@ namespace CashRegisterSystem.Core.CheckoutService
             }
 
             // Hämta systeminfo
-            int receiptNumber = GetNextReceiptNumber();
+            int receiptNumber = ReceiptNumberService.GetNext();
+            ReceiptNumberService.Save(receiptNumber);
+
             string cashierName = LoginService.CurrentUserName;
             int registerNumber = RegisterService.CurrentRegister;
 
@@ -98,11 +85,11 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived
             );
 
-            // Skriv ut kvittot
+            // Rensa skärmen innan utskrift
             Console.Clear();
             Console.WriteLine(receipt);
 
-            // Spara kvittot i egen fil
+            // Spara kvittot i dagsfil
             string receiptFolder = Path.Combine(
                 AppContext.BaseDirectory, "..", "..", "..", "Receipts");
 
@@ -110,9 +97,12 @@ namespace CashRegisterSystem.Core.CheckoutService
 
             string filePath = Path.Combine(
                 receiptFolder,
-                $"RECEIPT_{receiptNumber}.txt");
+                $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
 
-            File.WriteAllText(filePath, receipt);
+            File.AppendAllText(filePath,
+                $"\n=== KVITTO {receiptNumber} ===\n" +
+                receipt +
+                "\n=== SLUT ===\n");
 
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
             Console.WriteLine("Tryck ENTER för nästa kund || ESC för att gå tillbaka till menyn.");

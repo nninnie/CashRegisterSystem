@@ -76,8 +76,8 @@ namespace CashRegisterSystem.Data
             sb.AppendLine("========================================");
 
             // --- Footer ---
-            sb.AppendLine("             Spara kvittot!");
-            sb.AppendLine("  Tack för besöket och välkommen åter!");
+            sb.AppendLine("     Tack för besöket, spara kvittot");
+            sb.AppendLine("            Välkommen åter!");
             sb.AppendLine("          Org.nr: 987654-3210");
             sb.AppendLine("========================================");
 

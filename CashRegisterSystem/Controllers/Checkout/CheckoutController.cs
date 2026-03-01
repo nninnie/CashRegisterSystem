@@ -21,7 +21,7 @@ namespace CashRegisterSystem.Controllers
             Cart cart = new Cart();
 
             Console.Clear();
-            CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
+            CheckoutDisplayUI.PrintPLUList(products);   //
 
             while (true)
             {
@@ -50,7 +50,7 @@ namespace CashRegisterSystem.Controllers
 
                         _cartService.Clear(cart);
                         Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
+                        CheckoutDisplayUI.PrintPLUList(products);
                         break;
                     }
 

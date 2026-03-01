@@ -1,16 +1,18 @@
 ﻿using CashRegisterSystem.Data;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
+using System.Reflection.PortableExecutable;
 
 public static class ProductListUI
 {
     public static void ShowProductList(List<Product> products)
     {
+        Console.WriteLine();
         Console.Clear();
-
         BannerUI.PrintFruitHeader("PLU-LISTA");
 
         var campaigns = CampaignFileLoader.GetCampaigns();
+
         Console.WriteLine("-----------------------------------------");
         Console.WriteLine($" {"PLU",-6} {"Produkt",-20} {"Pris"}");
         Console.WriteLine("-----------------------------------------");
@@ -49,5 +51,6 @@ public static class ProductListUI
         Console.WriteLine("-----------------------------------------");
         Console.WriteLine("\nTryck valfri tangent för att återgå till menyn...");
         Console.ReadKey();
+        Console.Clear();
     }
 }

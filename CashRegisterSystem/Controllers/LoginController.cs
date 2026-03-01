@@ -8,7 +8,7 @@ namespace CashRegisterSystem.Controllers
         public static void Login(ref bool isLoggedIn)
         {
             Console.Clear();
-            BannerUI.ShowLogo();
+            BannerUI.PrintFruitHeader("LOGIN");
 
             Console.Write("Anställningsnummer: ");
             string? employeeId = Console.ReadLine();

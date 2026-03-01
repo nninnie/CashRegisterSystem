@@ -37,7 +37,6 @@
         }
         public static void ShowLogo()
         {
-            Console.Clear();
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("\t  🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
