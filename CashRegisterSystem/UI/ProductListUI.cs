@@ -7,16 +7,16 @@ namespace CashRegisterSystem.UI
         public static void ShowProductList(List<Product> products)
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("PLU-LISTA");
+            BannerUI.PrintHeader("PLU-LISTA");
             Console.WriteLine();
             Console.WriteLine("-----------------------------------------------------------");
 
-            // Sortera alfabetiskt efter namn
-            products = products.OrderBy(p => p.Name).ToList();
+            // Sort alphabetically by product name
+            var sortedProducts = products.OrderBy(product => product.Name).ToList();
 
-            foreach (var p in products)
+            foreach (var product in sortedProducts)
             {
-                PrintProduct(p);
+                PrintProduct(product);
             }
 
             Console.WriteLine("-----------------------------------------------------------");
@@ -26,38 +26,44 @@ namespace CashRegisterSystem.UI
             Console.ReadKey(true);
         }
 
-        private static void PrintProduct(Product p)
+        private static void PrintProduct(Product product)
         {
-            string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+            string unitLabel = product.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
 
-            bool hasCampaign = p.CampaignPrice > 0 && p.CampaignPrice < p.Price;
+            bool hasActiveCampaign =
+                product.CampaignPrice > 0 &&
+                product.CampaignPrice < product.Price;
 
-            // Kolumn 1
-            string col1 = $"{p.PLU}   {p.Name}".PadRight(22);
+            decimal displayPrice = hasActiveCampaign
+                ? product.CampaignPrice
+                : product.Price;
 
-            // Kolumn 2
-            decimal displayPrice = hasCampaign ? p.CampaignPrice : p.Price;
-            string col3 = $"{displayPrice:0.00} {unit}".PadRight(18);
+            string pluColumn = product.PLU.PadRight(8);
+            string nameColumn = product.Name.PadRight(25);
+            string priceColumn = $"{displayPrice:0.00} {unitLabel}".PadRight(12);
 
-            // Kolumn 3
-            string col2 = hasCampaign ? $"(Ord: {p.Price:0.00})" : "";
+            string originalPriceColumn = hasActiveCampaign
+                ? $"(Ord: {product.Price:0.00})"
+                : "";
 
-            // Utskrift
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(col1);
+            Console.Write(pluColumn);
+            Console.Write(nameColumn);
 
-            Console.ForegroundColor = hasCampaign ? ConsoleColor.Green : ConsoleColor.White;
-            Console.Write(col3);
+            Console.ForegroundColor = hasActiveCampaign
+                ? ConsoleColor.Green
+                : ConsoleColor.White;
 
-            if (hasCampaign)
+            Console.Write(priceColumn);
+
+            if (hasActiveCampaign)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write(col2);
+                Console.Write(originalPriceColumn);
             }
 
             Console.ResetColor();
             Console.WriteLine();
         }
-
     }
 }

@@ -9,15 +9,14 @@ namespace CashRegisterSystem.UI
     {
         public static int ShowMainMenu(bool isLoggedIn)
         {
-            int option = 1;
+            int selectedMenuOption = 1;
             Console.CursorVisible = false;
 
-            const string highlight = "\u001b[32m";
+            const string highlightColor = "\u001b[32m";
 
             Console.Clear();
-            Console.Write("\x1b[3J"); // ← Rensar scroll-bufferten i ANSI-terminaler
+            Console.Write("\x1b[3J");
             Console.SetCursorPosition(0, 0);
-
 
             while (true)
             {
@@ -26,47 +25,45 @@ namespace CashRegisterSystem.UI
 
                 if (!isLoggedIn)
                 {
-                    Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Logga in\u001b[0m");
-                    Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} PLU\u001b[0m");
-                    Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Admin\u001b[0m");
-                    Console.WriteLine($"{(option == 4 ? "·" + highlight : "")} Avsluta\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 1 ? "·" + highlightColor : "")} Logga in\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 2 ? "·" + highlightColor : "")} PLU\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 3 ? "·" + highlightColor : "")} Admin\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 4 ? "·" + highlightColor : "")} Avsluta\u001b[0m");
                 }
                 else
                 {
-                    Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Ny kund\u001b[0m");
-                    Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} PLU\u001b[0m");
-                    Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Logga ut\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 1 ? "·" + highlightColor : "")} Ny kund\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 2 ? "·" + highlightColor : "")} PLU\u001b[0m");
+                    Console.WriteLine($"{(selectedMenuOption == 3 ? "·" + highlightColor : "")} Logga ut\u001b[0m");
                 }
 
-                // Läs tangenttrycket här (superviktigt!)
-                ConsoleKeyInfo key = Console.ReadKey(true);
+                ConsoleKeyInfo pressedKey = Console.ReadKey(true);
 
-                // Hantera piltangenter
-                if (key.Key == ConsoleKey.DownArrow) option++;
-                if (key.Key == ConsoleKey.UpArrow) option--;
+                if (pressedKey.Key == ConsoleKey.DownArrow)
+                    selectedMenuOption++;
+
+                if (pressedKey.Key == ConsoleKey.UpArrow)
+                    selectedMenuOption--;
 
                 if (!isLoggedIn)
                 {
-                    if (option < 1) option = 4;
-                    if (option > 4) option = 1;
+                    if (selectedMenuOption < 1) selectedMenuOption = 4;
+                    if (selectedMenuOption > 4) selectedMenuOption = 1;
                 }
                 else
                 {
-                    if (option < 1) option = 3;
-                    if (option > 3) option = 1;
+                    if (selectedMenuOption < 1) selectedMenuOption = 3;
+                    if (selectedMenuOption > 3) selectedMenuOption = 1;
                 }
 
-                // Hantera Enter
-                if (key.Key == ConsoleKey.Enter)
+                if (pressedKey.Key == ConsoleKey.Enter)
                 {
-                    // Töm bufferten så Enter inte registreras två gånger
                     while (Console.KeyAvailable)
                         Console.ReadKey(true);
 
-                    return option;
+                    return selectedMenuOption;
                 }
             }
         }
-
     }
 }

@@ -20,28 +20,37 @@ namespace CashRegisterSystem.Core.Services
                 return null;
             }
 
-            string name = ProductInputUI.AskForName();
+            string name = ProductInputUI.AskForProductName();
             if (string.IsNullOrWhiteSpace(name))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return null;
             }
 
-            decimal price = ProductInputUI.AskForPrice();
+            decimal price = ProductInputUI.AskForBasePrice();
             if (price <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return null;
             }
 
-            PriceUnit unit = ProductInputUI.AskForUnit();
+            PriceUnit unit = ProductInputUI.AskForPriceUnit();
 
             return new Product
             {
                 PLU = plu,
                 Name = name,
                 Price = price,
-                PriceUnit = unit
+                PriceUnit = unit,
+
+                // Initiera kampanjfält
+                CampaignPercent = 0,
+                CampaignPrice = 0,
+                MultiBuyQuantity = 0,
+                MultiBuyPrice = 0,
+                CampaignIsActive = false,
+                CampaignStartDate = null,
+                CampaignEndDate = null
             };
         }
 
@@ -63,6 +72,7 @@ namespace CashRegisterSystem.Core.Services
             products.Remove(product);
             return true;
         }
+
         public static bool EditProduct(List<Product> products, string plu)
         {
             if (string.IsNullOrWhiteSpace(plu))
@@ -78,26 +88,35 @@ namespace CashRegisterSystem.Core.Services
                 return false;
             }
 
-            string newName = ProductInputUI.AskForName();
+            string newName = ProductInputUI.AskForProductName();
             if (string.IsNullOrWhiteSpace(newName))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return false;
             }
 
-            decimal newPrice = ProductInputUI.AskForPrice();
+            decimal newPrice = ProductInputUI.AskForBasePrice();
             if (newPrice <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return false;
             }
 
-            PriceUnit newUnit = ProductInputUI.AskForUnit();
+            PriceUnit newUnit = ProductInputUI.AskForPriceUnit();
 
-            // Apply changes
+            // Uppdatera produkt
             product.Name = newName;
             product.Price = newPrice;
             product.PriceUnit = newUnit;
+
+            // Nollställ kampanjdata
+            product.CampaignPercent = 0;
+            product.CampaignPrice = 0;
+            product.MultiBuyQuantity = 0;
+            product.MultiBuyPrice = 0;
+            product.CampaignIsActive = false;
+            product.CampaignStartDate = null;
+            product.CampaignEndDate = null;
 
             return true;
         }

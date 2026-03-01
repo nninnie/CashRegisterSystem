@@ -2,24 +2,20 @@
 
 namespace CashRegisterSystem.Data
 {
-	public class CampaignFileLoader
-	{
-		private static readonly string CampaignFilePath = Path.Combine(
-			AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
+    public class CampaignFileLoader
+    {
+        private static readonly string CampaignFilePath = Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
 
-
-
-        public static List<Campaign> GetCampaigns()
+        public static List<Product> LoadCampaignsIntoProducts(List<Product> products)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
 
             if (!File.Exists(CampaignFilePath))
             {
                 File.WriteAllText(CampaignFilePath, "");
-                return new List<Campaign>();
+                return products;
             }
-
-            var campaignList = new List<Campaign>();
 
             foreach (var line in File.ReadAllLines(CampaignFilePath))
             {
@@ -27,42 +23,40 @@ namespace CashRegisterSystem.Data
                     continue;
 
                 var parts = line.Split(';');
+                if (parts.Length != 7)
+                    continue;
 
-                if (parts.Length != 6)
-                    continue; // hoppa över korrupt rad
+                string plu = parts[0];
+                string campaignName = parts[1];
+                decimal percent = decimal.Parse(parts[2]);
+                decimal price = decimal.Parse(parts[3]);
+                int multiQty = int.Parse(parts[4]);
+                decimal multiPrice = decimal.Parse(parts[5]);
+                bool isActive = bool.Parse(parts[6]);
 
-                if (!int.TryParse(parts[0], out int id)) continue;
-                string name = parts[1];
-                if (!decimal.TryParse(parts[2], out decimal discount)) continue;
-                if (!bool.TryParse(parts[3], out bool isActive)) continue;
-                if (!DateTime.TryParse(parts[4], out DateTime start)) continue;
-                if (!DateTime.TryParse(parts[5], out DateTime end)) continue;
+                var product = products.FirstOrDefault(p => p.PLU == plu);
+                if (product == null)
+                    continue;
 
-                campaignList.Add(new Campaign
-                {
-                    Id = id,
-                    Name = name,
-                    Discount = discount,
-                    IsActive = isActive,
-                    StartDate = start,
-                    EndDate = end
-                });
+                product.CampaignName = campaignName;
+                product.CampaignPercent = percent;
+                product.CampaignPrice = price;
+                product.MultiBuyQuantity = multiQty;
+                product.MultiBuyPrice = multiPrice;
+                product.CampaignIsActive = isActive;
             }
 
-            return campaignList;
+            return products;
         }
 
+        public static void SaveCampaignsFromProducts(List<Product> products)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
 
+            var lines = products.Select(p =>
+                $"{p.PLU};{p.CampaignName};{p.CampaignPercent};{p.CampaignPrice};{p.MultiBuyQuantity};{p.MultiBuyPrice};{p.CampaignIsActive}");
 
-
-        public static void SaveCampaigns(List<Campaign> campaigns)
-		{
-			Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
-
-            var campaignLinesToSave = campaigns.Select(c =>
-                $"{c.Id};{c.Name};{c.Discount};{c.IsActive};{c.StartDate:yyyy-MM-dd};{c.EndDate:yyyy-MM-dd}");
-
-            File.WriteAllLines(CampaignFilePath, campaignLinesToSave);
-		}
-	}
+            File.WriteAllLines(CampaignFilePath, lines);
+        }
+    }
 }

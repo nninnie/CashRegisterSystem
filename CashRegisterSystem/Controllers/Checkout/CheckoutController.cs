@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CashRegisterSystem.Core.CheckoutService;
-using CashRegisterSystem.Data;
+using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 using CashRegisterSystem.Core.Services;
@@ -18,7 +18,6 @@ namespace CashRegisterSystem.Controllers
 
         public void StartNewCustomer(List<Product> products)
         {
-            var campaigns = CampaignFileLoader.GetCampaigns();
             Cart cart = new Cart();
 
             Console.Clear();
@@ -34,7 +33,6 @@ namespace CashRegisterSystem.Controllers
                 while (parsed == null)
                 {
                     string input = InputService.ReadString("PLU och antal/vikt: ");
-
                     string trimmed = input.Trim().ToUpper();
 
                     // PAY
@@ -92,7 +90,8 @@ namespace CashRegisterSystem.Controllers
 
                 var (product, quantity) = parsed.Value;
 
-                decimal discountAmount = _discountService.CalculateDiscount(product, quantity, campaigns);
+                // ✔ Ny version: DiscountService använder bara Product
+                decimal discountAmount = _discountService.CalculateDiscount(product, quantity);
 
                 _cartService.AddItem(cart, product, quantity, discountAmount);
 

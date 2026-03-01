@@ -18,7 +18,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll();
 
             Console.Clear();
-            BannerUI.PrintFruitHeader("LÄGG TILL PRODUKT");
+            BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
             var newProduct = ProductService.AddProduct(products);
 
@@ -44,7 +44,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll();
 
             Console.Clear();
-            BannerUI.PrintFruitHeader("TA BORT PRODUKT");
+            BannerUI.PrintHeader("TA BORT PRODUKT");
             ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();
@@ -70,7 +70,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll();
 
             Console.Clear();
-            BannerUI.PrintFruitHeader("ÄNDRA PRODUKT");
+            BannerUI.PrintHeader("ÄNDRA PRODUKT");
             ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();

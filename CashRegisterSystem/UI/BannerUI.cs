@@ -1,55 +1,52 @@
 ﻿namespace CashRegisterSystem.UI
 {
     /// <summary>
-    //// Provides visual banner elements for the application, including 
-    /// a fruit-themed header and a stylized logo. Handles Unicode output 
-    /// and simple formatting to create decorative menu sections.
+    /// Provides visual banner elements for the application,
+    /// including centered headers and a stylized logo.
     /// </summary>
     public static class BannerUI
     {
-        public static void PrintFruitHeader(string title, bool centered = false)
+        public static void PrintHeader(string title)
         {
             Console.WriteLine();
 
-            string fruitsLeft = "    🍎🍌🍇🍉";
-            string fruitsRight = "🍓🍍🍒🍑";
+            string headerLine = new string('=', Console.WindowWidth - 2);
 
-            string line = $"{fruitsLeft}  {title}  {fruitsRight}";
+            WriteCentered(headerLine);
+            WriteCentered($"  {title}  ");
+            WriteCentered(headerLine);
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-
-            if (centered)
-                WriteCentered(line);
-            else
-                Console.WriteLine(line);
-
-            Console.ResetColor();
             Console.WriteLine();
         }
 
+        public static void ShowLogo()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+
+            // LOGON ÄR ORÖRD – exakt som du vill ha den
+            Console.WriteLine("\t  🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
+
+            Console.ResetColor();
+            Console.WriteLine();
+            Console.WriteLine();
+        }
 
         private static string RepeatToWidth(string pattern, int width)
         {
             string result = "";
             while (result.Length < width)
                 result += pattern;
+
             return result.Substring(0, width);
-        }
-        public static void ShowLogo()
-        {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("\t  🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
-            Console.ResetColor();
-            Console.WriteLine();
-            Console.WriteLine();
         }
 
         private static void WriteCentered(string text)
         {
-            int width = Console.WindowWidth;
-            int left = Math.Max(0, (width - text.Length) / 2);
-            Console.WriteLine(new string(' ', left) + text);
+            int windowWidth = Console.WindowWidth;
+            int leftPadding = Math.Max(0, (windowWidth - text.Length) / 2);
+
+            Console.WriteLine(new string(' ', leftPadding) + text);
         }
     }
 }

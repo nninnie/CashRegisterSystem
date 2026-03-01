@@ -1,46 +1,42 @@
 ﻿using CashRegisterSystem.Core.Services;
-using CashRegisterSystem.Data;
 using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 
-namespace CashRegisterSystem.Controllers.Admin.Campaigns
+namespace CashRegisterSystem.Controllers.Admin
 {
     public static class CampaignAdminController
     {
         public static void ViewAllCampaigns()
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("VISA KAMPANJER");
+            BannerUI.PrintHeader("VISA KAMPANJER");
 
-            var campaigns = CampaignFileLoader.GetCampaigns();
-            if (!campaigns.Any())
+            var products = ProductFileLoader.GetProducts();
+            var campaignProducts = products
+                .Where(p =>
+                    p.CampaignIsActive &&
+                    (p.CampaignPercent > 0 ||
+                     p.CampaignPrice > 0 ||
+                     p.MultiBuyQuantity > 0))
+                .ToList();
+
+            if (!campaignProducts.Any())
             {
-                ProductInputUI.ShowError("Inga kampanjer finns.");
+                ProductInputUI.ShowError("Inga aktiva kampanjer finns.");
                 return;
             }
 
-            var products = ProductFileLoader.GetProducts();
-
             Console.WriteLine("-----------------------------------------");
 
-            foreach (var c in campaigns)
+            foreach (var p in campaignProducts)
             {
-                var product = products.FirstOrDefault(p => p.Name == c.Name);
-
-                decimal originalPrice = product?.Price ?? 0;
-                decimal campaignPrice = product != null
-                    ? CampaignService.GetPrice(product)
-                    : 0;
-
-                string status =
-                    c.EndDate < DateTime.Today ? "AVSLUTAD" :
-                    c.StartDate > DateTime.Today ? "KOMMANDE" : "AKTIV";
+                string type = CampaignService.GetCampaignName(p);
 
                 Console.WriteLine(
-                    $"{c.Id}. {c.Name} - {c.Discount}% - {status} " +
-                    $"({c.StartDate:yyyy-MM-dd} → {c.EndDate:yyyy-MM-dd}) | " +
-                    $"Ord pris: {originalPrice:0.00} kr | Kampanjpris: {campaignPrice:0.00} kr"
+                    $"{p.PLU} - {p.Name} | Typ: {type} | " +
+                    $"Ord pris: {p.Price:0.00} kr | " +
+                    $"Kampanjpris: {CampaignService.GetPrice(p):0.00} kr"
                 );
             }
 
@@ -49,11 +45,10 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             Console.ReadKey(true);
         }
 
-
         public static void StartCampaign()
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("STARTA KAMPANJ");
+            BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileLoader.GetProducts();
             if (!products.Any())
@@ -65,93 +60,136 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             ProductListUI.ShowProductList(products);
 
             string plu = InputService.ReadString("\nPLU: ");
-
             var selectedProduct = products.FirstOrDefault(p => p.PLU == plu);
+
             if (selectedProduct == null)
             {
                 ProductInputUI.ShowError("Ingen produkt hittades.");
                 return;
             }
 
-            decimal discount = InputService.ReadDecimal("Rabatt %: ");
+            // --- Interaktiv meny ---
+            int option = 1;
+            ConsoleKeyInfo key;
+            Console.CursorVisible = false;
+            string highlight = "\u001b[32m";
 
-            DateTime startDate = InputService.ReadDate("Startdatum (yyyy-MM-dd): ");
-
-            DateTime endDate = InputService.ReadDate("Slutdatum (yyyy-MM-dd): ");
-            if (endDate < startDate)
+            while (true)
             {
-                ProductInputUI.ShowError("Slutdatum kan inte vara före startdatum.");
-                return;
+                Console.Clear();
+                BannerUI.PrintHeader("VÄLJ KAMPANJTYP");
+
+                Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Procentkampanj\u001b[0m");
+                Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} Fast kampanjpris\u001b[0m");
+                Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Multiköp\u001b[0m");
+                Console.WriteLine($"{(option == 4 ? "·" + highlight : "")} Avbryt\u001b[0m");
+
+                key = Console.ReadKey(true);
+
+                switch (key.Key)
+                {
+                    case ConsoleKey.DownArrow:
+                        option = option == 4 ? 1 : option + 1;
+                        break;
+
+                    case ConsoleKey.UpArrow:
+                        option = option == 1 ? 4 : option - 1;
+                        break;
+
+                    case ConsoleKey.Enter:
+                        Console.CursorVisible = true;
+
+                        if (option == 1)
+                        {
+                            decimal percent = InputService.ReadDecimal("Rabatt %: ");
+                            selectedProduct.CampaignPercent = percent;
+                            selectedProduct.CampaignPrice = 0;
+                            selectedProduct.MultiBuyQuantity = 0;
+                            selectedProduct.MultiBuyPrice = 0;
+                            selectedProduct.CampaignIsActive = true;
+                            break;
+                        }
+
+                        if (option == 2)
+                        {
+                            decimal newPrice = InputService.ReadDecimal("Kampanjpris: ");
+                            selectedProduct.CampaignPrice = newPrice;
+                            selectedProduct.CampaignPercent = 0;
+                            selectedProduct.MultiBuyQuantity = 0;
+                            selectedProduct.MultiBuyPrice = 0;
+                            selectedProduct.CampaignIsActive = true;
+                            break;
+                        }
+
+                        if (option == 3)
+                        {
+                            int qty = InputService.ReadInt("Antal: ");
+                            decimal price = InputService.ReadDecimal("Paketpris: ");
+                            selectedProduct.MultiBuyQuantity = qty;
+                            selectedProduct.MultiBuyPrice = price;
+                            selectedProduct.CampaignPercent = 0;
+                            selectedProduct.CampaignPrice = 0;
+                            selectedProduct.CampaignIsActive = true;
+                            break;
+                        }
+
+                        if (option == 4)
+                            return;
+
+                        break;
+                }
+
+                if (key.Key == ConsoleKey.Enter)
+                    break;
             }
 
-            var campaigns = CampaignFileLoader.GetCampaigns();
-            int newId = campaigns.Any() ? campaigns.Max(c => c.Id) + 1 : 1;
-
-            var newCampaign = new Campaign
-            {
-                Id = newId,
-                Name = selectedProduct.Name,
-                Discount = discount,
-                StartDate = startDate,
-                EndDate = endDate,
-                IsActive = true
-            };
-
-            campaigns.Add(newCampaign);
-            CampaignFileLoader.SaveCampaigns(campaigns);
+            ProductFileLoader.SaveProducts(products);
 
             ProductInputUI.ShowConfirmation(
                 "Kampanj skapad!",
                 $"Produkt: {selectedProduct.Name}\n" +
-                $"Rabatt: {discount}%\n" +
-                $"Period: {startDate:yyyy-MM-dd} → {endDate:yyyy-MM-dd}"
+                $"Typ: {CampaignService.GetCampaignName(selectedProduct)}"
             );
         }
-
 
         public static void EndCampaign()
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("AVSLUTA KAMPANJ");
-
-            var campaigns = CampaignFileLoader.GetCampaigns();
-            if (!campaigns.Any())
-            {
-                ProductInputUI.ShowError("Inga kampanjer finns.");
-                return;
-            }
+            BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
             var products = ProductFileLoader.GetProducts();
-            if (!products.Any())
+            var campaignProducts = products
+                .Where(p => p.CampaignIsActive)
+                .ToList();
+
+            if (!campaignProducts.Any())
             {
-                ProductInputUI.ShowError("Produktlistan är tom.");
+                ProductInputUI.ShowError("Inga aktiva kampanjer finns.");
                 return;
             }
 
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowProductList(campaignProducts);
 
             string plu = InputService.ReadString("\nPLU: ");
-
             var product = products.FirstOrDefault(p => p.PLU == plu);
+
             if (product == null)
             {
                 ProductInputUI.ShowError("Ingen produkt hittades.");
                 return;
             }
 
-            var campaign = campaigns.FirstOrDefault(c => c.Name == product.Name && c.IsActive);
-            if (campaign == null)
-            {
-                ProductInputUI.ShowError("Ingen aktiv kampanj för denna produkt.");
-                return;
-            }
+            product.CampaignIsActive = false;
+            product.CampaignPercent = 0;
+            product.CampaignPrice = 0;
+            product.MultiBuyQuantity = 0;
+            product.MultiBuyPrice = 0;
 
-            campaign.IsActive = false;
-            CampaignFileLoader.SaveCampaigns(campaigns);
+            ProductFileLoader.SaveProducts(products);
 
             ProductInputUI.ShowConfirmation(
                 "Kampanj avslutad!",
-                $"Produkt: {product.Name}\nRabatt: {campaign.Discount}%"
+                $"Produkt: {product.Name}"
             );
         }
     }

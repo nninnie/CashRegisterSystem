@@ -10,7 +10,7 @@ namespace CashRegisterSystem.Controllers.Admin
             while (true)
             {
                 Console.Clear();
-                BannerUI.PrintFruitHeader("ADMIN LOGIN");
+                BannerUI.PrintHeader("ADMIN LOGIN");
 
                 string adminId = InputService.ReadStringAllowEmpty("Admin ID: ");
 

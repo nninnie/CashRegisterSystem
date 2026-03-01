@@ -1,5 +1,5 @@
 ﻿using CashRegisterSystem.Models;
-
+using System;
 namespace CashRegisterSystem.UI
 {
     public static class CheckoutDisplayUI
@@ -7,42 +7,46 @@ namespace CashRegisterSystem.UI
         public static void PrintPLUList(List<Product> products, int maxColumns = 4)
         {
             Console.Clear();
-            string indent = new string(' ', 22);
 
-            string fruitsLeft = "🍎🍌🍇🍉";
-            string fruitsRight = "🍓🍍🍒🍑";
-
-            Console.WriteLine($"\n{indent}{fruitsLeft}  KASSA  {fruitsRight}");
+            // Centered header instead of emojis
+            ConsoleLayout.WriteCentered("KASSA");
             Console.WriteLine();
             Console.WriteLine("----------------------------------------------------------------------");
 
-            int colWidth = 25;
-            int columns = Math.Min(maxColumns, 3);
-            int rows = (int)Math.Ceiling(products.Count / (double)columns);
+            int columnWidth = 25;
+            int columnCount = Math.Min(maxColumns, 3);
+            int rowCount = (int)Math.Ceiling(products.Count / (double)columnCount);
 
-            List<List<Product>> cols = new();
-            for (int c = 0; c < columns; c++)
-                cols.Add(products.Skip(c * rows).Take(rows).ToList());
+            List<List<Product>> productColumns = new();
 
-            for (int r = 0; r < rows; r++)
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
-                string line = "";
+                productColumns.Add(
+                    products
+                        .Skip(columnIndex * rowCount)
+                        .Take(rowCount)
+                        .ToList()
+                );
+            }
 
-                for (int c = 0; c < columns; c++)
+            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+            {
+                string rowText = "";
+
+                for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
                 {
-                    if (r < cols[c].Count)
+                    if (rowIndex < productColumns[columnIndex].Count)
                     {
-                        var p = cols[c][r];
-                        // Endast PLU + namn
-                        line += $"{p.PLU} {p.Name}".PadRight(colWidth);
+                        Product product = productColumns[columnIndex][rowIndex];
+                        rowText += $"{product.PLU} {product.Name}".PadRight(columnWidth);
                     }
                     else
                     {
-                        line += "".PadRight(colWidth);
+                        rowText += "".PadRight(columnWidth);
                     }
                 }
 
-                Console.WriteLine(line);
+                Console.WriteLine(rowText);
             }
 
             Console.WriteLine();

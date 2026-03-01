@@ -1,7 +1,7 @@
-﻿using CashRegisterSystem.Controllers.Admin.Campaigns;
+﻿
+using CashRegisterSystem.Controllers.Admin.Campaigns;
 using CashRegisterSystem.Controllers.Admin.Products;
 using CashRegisterSystem.Data;
-using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 
 public static class AdminMenuController
@@ -16,7 +16,7 @@ public static class AdminMenuController
         while (true)
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("ADMIN MENY");
+            BannerUI.PrintHeader("ADMIN MENY");
 
             Console.WriteLine($"{(adminMenuOption == 1 ? "·" + highlight : "")} Visa produkter\u001b[0m");
             Console.WriteLine($"{(adminMenuOption == 2 ? "·" + highlight : "")} Ändra produkt\u001b[0m");

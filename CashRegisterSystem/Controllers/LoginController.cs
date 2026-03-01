@@ -8,7 +8,7 @@ public static class LoginController
         while (true)
         {
             Console.Clear();
-            BannerUI.PrintFruitHeader("LOGIN");
+            BannerUI.PrintHeader("LOGIN");
 
             Console.Write("Anställningsnummer: ");
             string employeeId = Console.ReadLine()!;

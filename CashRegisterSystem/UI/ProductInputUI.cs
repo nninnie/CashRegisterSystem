@@ -5,36 +5,42 @@ namespace CashRegisterSystem.UI
 {
     public static class ProductInputUI
     {
-        public static decimal GetPrice(Product product)
+        // Returns the correct price based on active campaign
+        public static decimal GetEffectivePrice(Product product)
         {
             return CampaignService.GetPrice(product);
         }
 
+        // PLU input
         public static string AskForPlu()
         {
-            return InputService.ReadString("Ange PLU: ");
+            return InputService.ReadString("Enter PLU: ");
         }
 
-        public static string AskForName()
+        // Product name input
+        public static string AskForProductName()
         {
-            return InputService.ReadString("Namn: ");
+            return InputService.ReadString("Product name: ");
         }
 
-        public static decimal AskForPrice()
+        // Base price input
+        public static decimal AskForBasePrice()
         {
-            return InputService.ReadDecimal("Pris: ");
+            return InputService.ReadDecimal("Base price: ");
         }
 
-        public static PriceUnit AskForUnit()
+        // Unit selection (kg or each)
+        public static PriceUnit AskForPriceUnit()
         {
-            Console.WriteLine("1. KG");
-            Console.WriteLine("2. STYCK");
+            Console.WriteLine("1. Per kilo (kg)");
+            Console.WriteLine("2. Each (st)");
 
-            int choice = InputService.ReadInt("Val: ");
+            int choice = InputService.ReadInt("Select unit: ");
 
             return choice == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
         }
 
+        // Confirmation message
         public static void ShowConfirmation(string title, string details)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -43,18 +49,25 @@ namespace CashRegisterSystem.UI
 
             Console.WriteLine(details);
 
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
 
+        // Error message
         public static void ShowError(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
             Console.ResetColor();
 
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
+        }
+
+        // Campaign name input (if needed)
+        public static string AskForCampaignLabel()
+        {
+            return InputService.ReadString("Campaign label (e.g. 'Apples 3 for 20'): ");
         }
     }
 }

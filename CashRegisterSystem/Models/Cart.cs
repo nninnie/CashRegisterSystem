@@ -8,29 +8,31 @@ namespace CashRegisterSystem.Models
     {
         public List<CartItem> CartItems { get; } = new();
 
+        /// <summary>
+        /// Adds a product to the cart with full control over quantity, discount and unit price.
+        /// </summary>
         public void AddItem(Product product, decimal quantity, decimal discountAmount, decimal unitPrice)
         {
-            var existingItem = CartItems.FirstOrDefault(i => i.Product.PLU == product.PLU);
+            var existingCartItem = CartItems.FirstOrDefault(item => item.Product.PLU == product.PLU);
 
-            if (existingItem != null)
+            if (existingCartItem != null)
             {
-                // Lägg ihop mängd och rabatt
-                existingItem.Quantity += quantity;
-                existingItem.DiscountAmount += discountAmount;
+                // Increase quantity and discount on existing item
+                existingCartItem.Quantity += quantity;
+                existingCartItem.DiscountAmount += discountAmount;
 
-                // Viktigt: använd samma unit price som första gången
-                // (kampanjpris ska inte ändras mitt i en kundvagn)
+                // UnitPrice is intentionally NOT updated here.
+                // A product keeps the same price it had when first added.
+                return;
             }
-            else
+
+            CartItems.Add(new CartItem
             {
-                CartItems.Add(new CartItem
-                {
-                    Product = product,
-                    Quantity = quantity,
-                    DiscountAmount = discountAmount,
-                    UnitPrice = unitPrice
-                });
-            }
+                Product = product,
+                Quantity = quantity,
+                DiscountAmount = discountAmount,
+                UnitPrice = unitPrice
+            });
         }
 
         /// <summary>
@@ -42,26 +44,29 @@ namespace CashRegisterSystem.Models
         }
 
         /// <summary>
-        /// Totalpris före rabatt.
+        /// Total price before discount.
         /// </summary>
-        public decimal TotalPrice => CartItems.Sum(i => i.TotalPrice);
+        public decimal TotalPrice => CartItems.Sum(item => item.TotalPrice);
 
         /// <summary>
-        /// Rensar kundvagnen.
+        /// Clears the entire cart.
         /// </summary>
-        public void Clear() => CartItems.Clear();
+        public void Clear()
+        {
+            CartItems.Clear();
+        }
 
         /// <summary>
-        /// Removes an item by PLU.
+        /// Removes a product from the cart by PLU.
         /// </summary>
         public bool RemoveItem(string plu)
         {
-            var item = CartItems.FirstOrDefault(i => i.Product.PLU == plu);
+            var cartItem = CartItems.FirstOrDefault(item => item.Product.PLU == plu);
 
-            if (item == null)
+            if (cartItem == null)
                 return false;
 
-            CartItems.Remove(item);
+            CartItems.Remove(cartItem);
             return true;
         }
     }

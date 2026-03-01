@@ -14,7 +14,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             while (true)
             {
                 Console.Clear();
-                BannerUI.PrintFruitHeader("KAMPANJ-MENY");
+                BannerUI.PrintHeader("KAMPANJ-MENY");
 
                 Console.WriteLine($"{(menuOption == 1 ? "·" + highlight : "")} Skapa kampanj\u001b[0m");
                 Console.WriteLine($"{(menuOption == 2 ? "·" + highlight : "")} Visa kampanjer\u001b[0m");
