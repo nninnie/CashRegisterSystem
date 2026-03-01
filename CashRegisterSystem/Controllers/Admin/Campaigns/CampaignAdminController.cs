@@ -1,14 +1,11 @@
-﻿using CashRegisterSystem.Data;
+﻿using CashRegisterSystem.Core.Services;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
-    /// <summary>
-    /// Handles all admin actions related to campaigns:
-    /// viewing, creating, and ending campaigns.
-    /// </summary>
     public static class CampaignAdminController
     {
         public static void ViewAllCampaigns()
@@ -17,7 +14,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             BannerUI.PrintFruitHeader("VISA KAMPANJER");
 
             var campaigns = CampaignFileLoader.GetCampaigns();
-
             if (!campaigns.Any())
             {
                 ProductInputUI.ShowError("Inga kampanjer finns.");
@@ -31,8 +27,11 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             foreach (var c in campaigns)
             {
                 var product = products.FirstOrDefault(p => p.Name == c.Name);
+
                 decimal originalPrice = product?.Price ?? 0;
-                decimal discountedPrice = originalPrice - (originalPrice * (c.Discount / 100m));
+                decimal campaignPrice = product != null
+                    ? CampaignService.GetPrice(product)
+                    : 0;
 
                 string status =
                     c.EndDate < DateTime.Today ? "AVSLUTAD" :
@@ -41,7 +40,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                 Console.WriteLine(
                     $"{c.Id}. {c.Name} - {c.Discount}% - {status} " +
                     $"({c.StartDate:yyyy-MM-dd} → {c.EndDate:yyyy-MM-dd}) | " +
-                    $"Ord pris: {originalPrice:0.00} kr | Kampanjpris: {discountedPrice:0.00} kr"
+                    $"Ord pris: {originalPrice:0.00} kr | Kampanjpris: {campaignPrice:0.00} kr"
                 );
             }
 
@@ -57,7 +56,6 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             BannerUI.PrintFruitHeader("STARTA KAMPANJ");
 
             var products = ProductFileLoader.GetProducts();
-
             if (!products.Any())
             {
                 ProductInputUI.ShowError("Produktlistan är tom.");
@@ -66,41 +64,23 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             ProductListUI.ShowProductList(products);
 
-            Console.Write("\nPLU: ");
-            string plu = Console.ReadLine()!;
-
-            if (string.IsNullOrWhiteSpace(plu))
-            {
-                ProductInputUI.ShowError("PLU får inte vara tomt.");
-                return;
-            }
+            string plu = InputService.ReadString("\nPLU: ");
 
             var selectedProduct = products.FirstOrDefault(p => p.PLU == plu);
-
             if (selectedProduct == null)
             {
                 ProductInputUI.ShowError("Ingen produkt hittades.");
                 return;
             }
 
-            Console.Write("Rabatt %: ");
-            if (!decimal.TryParse(Console.ReadLine(), out var discount) || discount < 0)
-            {
-                ProductInputUI.ShowError("Ogiltig rabatt.");
-                return;
-            }
+            decimal discount = InputService.ReadDecimal("Rabatt %: ");
 
-            Console.Write("Startdatum (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
-            {
-                ProductInputUI.ShowError("Ogiltigt startdatum.");
-                return;
-            }
+            DateTime startDate = InputService.ReadDate("Startdatum (yyyy-MM-dd): ");
 
-            Console.Write("Slutdatum (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate) || endDate < startDate)
+            DateTime endDate = InputService.ReadDate("Slutdatum (yyyy-MM-dd): ");
+            if (endDate < startDate)
             {
-                ProductInputUI.ShowError("Ogiltigt slutdatum.");
+                ProductInputUI.ShowError("Slutdatum kan inte vara före startdatum.");
                 return;
             }
 
@@ -150,14 +130,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
 
             ProductListUI.ShowProductList(products);
 
-            Console.Write("\nPLU: ");
-            string plu = Console.ReadLine()!;
-
-            if (string.IsNullOrWhiteSpace(plu))
-            {
-                ProductInputUI.ShowError("PLU får inte vara tomt.");
-                return;
-            }
+            string plu = InputService.ReadString("\nPLU: ");
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
             if (product == null)

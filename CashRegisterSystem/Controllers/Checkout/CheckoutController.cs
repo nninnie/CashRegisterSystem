@@ -4,6 +4,7 @@ using CashRegisterSystem.Core.CheckoutService;
 using CashRegisterSystem.Data;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
+using CashRegisterSystem.Core.Services;
 
 namespace CashRegisterSystem.Controllers
 {
@@ -21,7 +22,7 @@ namespace CashRegisterSystem.Controllers
             Cart cart = new Cart();
 
             Console.Clear();
-            CheckoutDisplayUI.PrintPLUList(products);   //
+            CheckoutDisplayUI.PrintPLUList(products);
 
             while (true)
             {
@@ -32,11 +33,7 @@ namespace CashRegisterSystem.Controllers
 
                 while (parsed == null)
                 {
-                    Console.Write("PLU och antal/vikt: ");
-                    string? input = Console.ReadLine();
-
-                    if (string.IsNullOrWhiteSpace(input))
-                        continue;
+                    string input = InputService.ReadString("PLU och antal/vikt: ");
 
                     string trimmed = input.Trim().ToUpper();
 
@@ -81,7 +78,7 @@ namespace CashRegisterSystem.Controllers
 
                         Thread.Sleep(1000);
                         Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);   // ✔️ KASSA-VYN
+                        CheckoutDisplayUI.PrintPLUList(products);
                         CartUI.ShowCart(cart);
                         break;
                     }
@@ -111,7 +108,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1200);
                 Console.Clear();
-                CheckoutDisplayUI.PrintPLUList(products);   // KASSA-VYN
+                CheckoutDisplayUI.PrintPLUList(products);
             }
         }
     }

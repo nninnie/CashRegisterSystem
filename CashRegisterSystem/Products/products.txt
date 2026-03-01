@@ -22,6 +22,5 @@
 3214;Äpple;32,90;PerKilo
 3264;Vitlök;16,90;Each
 3211;Vitkål;19,90;Each
-
-
-
+4593;Gurka;19,90;Each
+4304;Citron;9,90;Each

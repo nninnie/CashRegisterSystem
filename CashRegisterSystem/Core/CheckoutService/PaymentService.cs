@@ -1,4 +1,5 @@
 ﻿using CashRegisterSystem.Core.CashRegisterSystem.Data.Service;
+using CashRegisterSystem.Core.Services;
 using CashRegisterSystem.Data;
 using CashRegisterSystem.Data.Service;
 using CashRegisterSystem.Models;
@@ -28,9 +29,9 @@ namespace CashRegisterSystem.Core.CheckoutService
             {
                 Console.SetCursorPosition(0, menuTop);
 
-                // Rensa gamla rader
-                Console.WriteLine(new string(' ', 30));
-                Console.WriteLine(new string(' ', 30));
+                // Rensa två rader
+                Console.WriteLine(new string(' ', 40));
+                Console.WriteLine(new string(' ', 40));
 
                 // Flytta tillbaka markören
                 Console.SetCursorPosition(0, menuTop);
@@ -64,18 +65,15 @@ namespace CashRegisterSystem.Core.CheckoutService
 
             if (paymentMethod == "Kontant")
             {
-                Console.Write("\nMottaget belopp: ");
-                amountReceived = decimal.Parse(Console.ReadLine()!);
+                amountReceived = InputService.ReadDecimal("\nMottaget belopp: ");
             }
 
-            // Hämta systeminfo
             int receiptNumber = ReceiptNumberService.GetNext();
             ReceiptNumberService.Save(receiptNumber);
 
             string cashierName = LoginService.CurrentUserName;
             int registerNumber = RegisterService.CurrentRegister;
 
-            // Skapa kvittot
             string receipt = ReceiptUI.FormatReceipt(
                 receiptNumber,
                 cart.CartItems,
@@ -85,11 +83,9 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived
             );
 
-            // Rensa skärmen innan utskrift
             Console.Clear();
             Console.WriteLine(receipt);
 
-            // Spara kvittot i dagsfil
             string receiptFolder = Path.Combine(
                 AppContext.BaseDirectory, "..", "..", "..", "Receipts");
 

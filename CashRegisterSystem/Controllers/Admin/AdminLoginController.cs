@@ -1,4 +1,5 @@
 ﻿using CashRegisterSystem.UI;
+using CashRegisterSystem.Core.Services;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
@@ -6,29 +7,44 @@ namespace CashRegisterSystem.Controllers.Admin
     {
         public static void Login()
         {
-            Console.Clear();
-            BannerUI.PrintFruitHeader("ADMIN LOGIN");
-
-            Console.Write("Admin ID: ");
-            string? adminId = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(adminId))
+            while (true)
             {
-                Console.WriteLine("Admin ID får inte vara tomt.");
-                Console.ReadKey();
-                return;
-            }
+                Console.Clear();
+                BannerUI.PrintFruitHeader("ADMIN LOGIN");
 
-            Console.Write("Lösenord: ");
-            string? adminPass = Console.ReadLine();
+                string adminId = InputService.ReadStringAllowEmpty("Admin ID: ");
 
-            if (adminPass?.ToLower() == "")
-            {
-                AdminMenuController.ShowAdminMenu();
-            }
-            else
-            {
+                if (string.IsNullOrWhiteSpace(adminId))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Fältet får inte vara tomt.");
+                    Console.ResetColor();
+
+                    Thread.Sleep(900);
+                    continue; // ← hoppa tillbaka till toppen
+                }
+
+                string adminPass = InputService.ReadStringAllowEmpty("Lösenord: ");
+
+                //if (string.IsNullOrWhiteSpace(adminPass))
+                //{
+                //    Console.ForegroundColor = ConsoleColor.Red;
+                //    Console.WriteLine("Fältet får inte vara tomt.");
+                //    Console.ResetColor();
+
+                //    Thread.Sleep(900);
+                //    continue; // ← hoppa tillbaka till toppen
+                //}
+
+                if (adminPass.ToLower() == "admin" || adminPass.ToLower() == "")
+                {
+                    AdminMenuController.ShowAdminMenu();
+                    return;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Tyvärr, lösenordet är 'admin'.");
+                Console.ResetColor();
                 Console.ReadKey();
             }
         }

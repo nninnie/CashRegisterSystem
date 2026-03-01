@@ -1,38 +1,42 @@
 ﻿using CashRegisterSystem.Data.Service;
 using CashRegisterSystem.UI;
 
-namespace CashRegisterSystem.Controllers
+public static class LoginController
 {
-    public static class LoginController
+    public static void Login(ref bool isLoggedIn)
     {
-        public static void Login(ref bool isLoggedIn)
+        while (true)
         {
             Console.Clear();
             BannerUI.PrintFruitHeader("LOGIN");
 
             Console.Write("Anställningsnummer: ");
-            string? employeeId = Console.ReadLine();
+            string employeeId = Console.ReadLine()!;
 
             if (string.IsNullOrWhiteSpace(employeeId))
             {
-                Console.WriteLine("Anställningsnummer får inte vara tomt.");
-                Console.ReadKey();
-                return;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Fältet får inte vara tomt.");
+                Console.ResetColor();
+
+                Thread.Sleep(900);
+                continue; // ← hoppa tillbaka till början och rita om allt
             }
 
             Console.Write("Lösenord: ");
-            string? code = Console.ReadLine();
+            string code = Console.ReadLine()!;
 
-            if (code?.ToLower() == "")
+            if (code.ToLower() == "bajskorv" || code.ToLower() == "")
             {
                 LoginService.CurrentUserName = employeeId;
                 isLoggedIn = true;
+                return;
             }
-            else
-            {
-                Console.WriteLine("Tyvärr, det är såklart 'bajskorv'!");
-                Console.ReadKey();
-            }
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Tyvärr, det är såklart 'bajskorv'!");
+            Console.ResetColor();
+            Console.ReadKey();
         }
     }
 }

@@ -1,56 +1,63 @@
-﻿using CashRegisterSystem.Data;
-using CashRegisterSystem.Models;
-using CashRegisterSystem.UI;
-using System.Reflection.PortableExecutable;
+﻿using CashRegisterSystem.Models;
 
-public static class ProductListUI
+namespace CashRegisterSystem.UI
 {
-    public static void ShowProductList(List<Product> products)
+    public static class ProductListUI
     {
-        Console.WriteLine();
-        Console.Clear();
-        BannerUI.PrintFruitHeader("PLU-LISTA");
+        public static void ShowProductList(List<Product> products)
+        {
+            Console.Clear();
+            BannerUI.PrintFruitHeader("PLU-LISTA");
+            Console.WriteLine();
+            Console.WriteLine("-----------------------------------------------------------");
 
-        var campaigns = CampaignFileLoader.GetCampaigns();
+            // Sortera alfabetiskt efter namn
+            products = products.OrderBy(p => p.Name).ToList();
 
-        Console.WriteLine("-----------------------------------------");
-        Console.WriteLine($" {"PLU",-6} {"Produkt",-20} {"Pris"}");
-        Console.WriteLine("-----------------------------------------");
+            foreach (var p in products)
+            {
+                PrintProduct(p);
+            }
 
-        foreach (var p in products.OrderBy(p => p.Name))
+            Console.WriteLine("-----------------------------------------------------------");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nÅtergå till menyn");
+            Console.ResetColor();
+            Console.ReadKey(true);
+        }
+
+        private static void PrintProduct(Product p)
         {
             string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
 
-            var activeCampaign = campaigns
-                .FirstOrDefault(c => c.Name == p.Name && c.IsActive);
+            bool hasCampaign = p.CampaignPrice > 0 && p.CampaignPrice < p.Price;
 
-            if (activeCampaign != null)
+            // Kolumn 1
+            string col1 = $"{p.PLU}   {p.Name}".PadRight(22);
+
+            // Kolumn 2
+            decimal displayPrice = hasCampaign ? p.CampaignPrice : p.Price;
+            string col3 = $"{displayPrice:0.00} {unit}".PadRight(18);
+
+            // Kolumn 3
+            string col2 = hasCampaign ? $"(Ord: {p.Price:0.00})" : "";
+
+            // Utskrift
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(col1);
+
+            Console.ForegroundColor = hasCampaign ? ConsoleColor.Green : ConsoleColor.White;
+            Console.Write(col3);
+
+            if (hasCampaign)
             {
-                decimal campaignPrice = p.Price * (1 - activeCampaign.Discount / 100m);
-
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine(
-                    $" {p.PLU,-6} {p.Name,-20} {campaignPrice:0.00} {unit}"
-                );
-                Console.ResetColor();
-
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine(
-                    $" {"",-6} {"",-20} (Ord: {p.Price:0.00} {unit})"
-                );
-                Console.ResetColor();
+                Console.Write(col2);
             }
-            else
-            {
-                Console.WriteLine(
-                    $" {p.PLU,-6} {p.Name,-20} {p.Price:0.00} {unit}"
-                );
-            }
+
+            Console.ResetColor();
+            Console.WriteLine();
         }
 
-        Console.WriteLine("-----------------------------------------");
-        Console.WriteLine("\nTryck valfri tangent för att återgå till menyn...");
-        Console.ReadKey();
-        Console.Clear();
     }
 }
