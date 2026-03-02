@@ -46,14 +46,7 @@ namespace CashRegisterSystem.UI
             Console.WriteLine();
         }
 
-        /// <summary>
-        /// Writes a horizontal divider line using '-'.
-        /// Used to visually separate UI sections.
-        /// </summary>
-        public static void WriteDivider()
-        {
-            Console.WriteLine(new string('-', Width));
-        }
+
 
         /// <summary>
         /// Writes a centered section title with visual markers.

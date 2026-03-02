@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
@@ -11,13 +10,12 @@ namespace CashRegisterSystem.UI
     public static class CartUI
     {
         // Total width of the cart display area
-        private const int Width = 70;
+        private const int CartWidth = 70;
 
-        // Column widths for a real checkout layout
-        private const int NameWidth = 25;   // Product name
-        private const int QtyWidth = 6;     // Quantity or weight
-        private const int UnitWidth = 3;    // st / kg
-        private const int TotalWidth = 10;  // Total amount
+        // Column widths
+        private const int NameColumnWidth = 30;     // Product name (left)
+        private const int QuantityColumnWidth = 10; // Centered quantity/weight
+        private const int PriceColumnWidth = 10;    // Right-aligned price
 
         /// <summary>
         /// Prints all items currently in the cart with aligned columns.
@@ -30,47 +28,57 @@ namespace CashRegisterSystem.UI
 
             foreach (var item in cart.CartItems)
             {
-                // Null-safety for product name
-                string name = item.Product.Name ?? "(saknas namn)";
-
-                // Truncate long names to fit the column
-                if (name.Length > NameWidth)
-                    name = name[..(NameWidth - 3)] + "...";
-
-                name = name.PadRight(NameWidth);
-
-                string qtyText;
-                string unitLabel;
-
-                // Weight-based product
-                if (item.Product.PriceUnit == PriceUnit.PerKilo)
-                {
-                    qtyText = $"{item.Weight:F2}".PadLeft(QtyWidth);
-                    unitLabel = "kg";
-                }
-                else // Piece-based product
-                {
-                    qtyText = $"{item.Quantity}".PadLeft(QtyWidth);
-                    unitLabel = "st";
-                }
-
-                // Calculate total price including discount
-                decimal total = item.TotalPrice - item.DiscountAmount;
-                totalSum += total;
-
-                string totalColumn = $"{total:0.00} kr".PadLeft(TotalWidth);
-
-                // Real checkout style:
-                // [Name][Qty][Unit][Total]
-                Console.WriteLine($"{name}{qtyText} {unitLabel.PadRight(UnitWidth)}{totalColumn}");
+                Console.WriteLine(BuildCartLine(item));
+                totalSum += item.TotalPrice - item.DiscountAmount;
             }
 
             Console.WriteLine("----------------------------------------------------------------------");
 
             // TOTAL line – right aligned
             string totalText = $"Total: {totalSum:0.00} kr";
-            Console.WriteLine(totalText.PadLeft(Width));
+            Console.WriteLine(totalText.PadLeft(CartWidth));
         }
+
+        /// <summary>
+        /// Builds a single cart line with left-aligned name, centered quantity,
+        /// and fully right-aligned price. Ensures nothing goes outside the cart width.
+        /// </summary>
+        private static string BuildCartLine(CartItem item)
+        {
+            // --- Product name (left column) ---
+            string name = item.Product.Name ?? "(saknas)";
+            if (name.Length > NameColumnWidth)
+                name = name.Substring(0, NameColumnWidth - 3) + "...";
+
+            string nameCol = name.PadRight(NameColumnWidth);
+
+            // --- Quantity or weight (center column) ---
+            string qty = item.Product.PriceUnit == PriceUnit.PerKilo
+                ? $"{item.Weight:F2} kg"
+                : $"{item.Quantity} st";
+
+            int qtyPadding = (QuantityColumnWidth - qty.Length) / 2;
+            if (qtyPadding < 0) qtyPadding = 0;
+
+            string qtyCol =
+                new string(' ', qtyPadding) +
+                qty +
+                new string(' ', QuantityColumnWidth - qtyPadding - qty.Length);
+
+            // --- Price (right column) ---
+            decimal total = item.TotalPrice - item.DiscountAmount;
+            string priceText = $"{total:0.00} kr";
+
+            // Calculate spacing so price is fully right-aligned within CartWidth
+            int usedWidth = NameColumnWidth + QuantityColumnWidth;
+            int spacesBeforePrice = CartWidth - usedWidth - priceText.Length;
+            if (spacesBeforePrice < 1) spacesBeforePrice = 1;
+
+            string priceCol = new string(' ', spacesBeforePrice) + priceText;
+
+            return $"{nameCol}{qtyCol}{priceCol}";
+        }
+
 
         /// <summary>
         /// Shows the PLU input prompt used during checkout.

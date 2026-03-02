@@ -2,22 +2,25 @@
 using System.Text;
 
 /// <summary>
-/// Handles all receipt formatting and printing logic.
-/// The class is responsible only for building the receipt text,
-/// following a fixed-width layout (40 characters) to mimic real store receipts.
+/// Builds and formats the printed receipt using a fixed-width layout.
+/// Responsible only for text formatting, not business logic.
 /// </summary>
 public static class ReceiptUI
 {
-    // Fixed receipt width used for all alignment.
-    private const int ReceiptWidth = 40;
+    // ---------------------------------------------------------
+    // 1. CONSTANTS
+    // ---------------------------------------------------------
 
-    // Column widths for product line formatting.
-    private const int ProductNameWidth = 14;
-    private const int QuantityWidth = 5;
-    private const int UnitPriceWidth = 6;
+    private const int ReceiptLineWidth = 40;
+    private const int ProductNameColumnWidth = 14;
+    private const int QuantityColumnWidth = 5;
+
+    // ---------------------------------------------------------
+    // 2. MAIN METHOD (TOP → BOTTOM)
+    // ---------------------------------------------------------
 
     /// <summary>
-    /// Builds the full receipt as a formatted string.
+    /// Creates the full receipt text in the same order it is printed.
     /// </summary>
     public static string FormatReceipt(
         int receiptNumber,
@@ -30,218 +33,212 @@ public static class ReceiptUI
         if (cartItems == null)
             throw new ArgumentNullException(nameof(cartItems));
 
-        var sb = new StringBuilder();
+        var receiptBuilder = new StringBuilder();
 
-        BuildHeader(sb, cashierName, registerNumber, receiptNumber);
+        BuildReceiptHeader(receiptBuilder, cashierName, registerNumber, receiptNumber);
 
-        decimal receiptTotal = 0;
+        decimal totalReceiptAmount = 0;
 
-        foreach (var item in cartItems)
+        foreach (var cartItem in cartItems)
         {
-            sb.AppendLine(BuildProductLine(item));
-            receiptTotal += item.TotalPrice - item.DiscountAmount;
+            receiptBuilder.AppendLine(BuildProductLine(cartItem));
+            totalReceiptAmount += cartItem.TotalPrice - cartItem.DiscountAmount;
 
-            if (item.DiscountAmount > 0)
-                sb.AppendLine(RightAlign($"Rabatt: -{item.DiscountAmount:0.00} kr"));
+            if (cartItem.DiscountAmount > 0)
+                receiptBuilder.AppendLine(RightAlignText($"Rabatt: -{cartItem.DiscountAmount:0.00} kr"));
         }
 
-        BuildTotals(sb, receiptTotal);
-        BuildVatSection(sb, receiptTotal);
-        BuildPaymentSection(sb, paymentMethod, amountReceived, receiptTotal);
+        BuildTotalSection(receiptBuilder, totalReceiptAmount);
+        BuildVatSection(receiptBuilder, totalReceiptAmount);
+        BuildPaymentSection(receiptBuilder, paymentMethod, amountReceived, totalReceiptAmount);
 
-        sb.AppendLine(new string('=', ReceiptWidth));
-        sb.AppendLine(Center("SPARA KVITTOT"));
-        sb.AppendLine(Center("TACK FÖR BESÖKET!"));
-        sb.AppendLine(Center("VÄLKOMMEN ÅTER"));
-        sb.AppendLine(new string('=', ReceiptWidth));
+        receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
+        receiptBuilder.AppendLine(CenterText("SPARA KVITTOT"));
+        receiptBuilder.AppendLine(CenterText("TACK FÖR BESÖKET!"));
+        receiptBuilder.AppendLine(CenterText("VÄLKOMMEN ÅTER"));
+        receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
 
-        return sb.ToString();
+        return receiptBuilder.ToString();
     }
 
     // ---------------------------------------------------------
-    // HEADER SECTION
+    // 3. HEADER SECTION
     // ---------------------------------------------------------
 
     /// <summary>
-    /// Writes the store header, cashier info, date and time.
+    /// Writes store header, cashier info, date and time.
     /// </summary>
-    private static void BuildHeader(StringBuilder sb, string cashier, int register, int receipt)
+    private static void BuildReceiptHeader(
+        StringBuilder receiptBuilder,
+        string cashierName,
+        int registerNumber,
+        int receiptNumber)
     {
-        sb.AppendLine(new string('=', ReceiptWidth));
-        sb.AppendLine(Center("FruktTorget"));
-        sb.AppendLine(Center("Öppet 08:00 - 23:00"));
-        sb.AppendLine(Center("Tel: 073-570 43 68"));
-        sb.AppendLine(new string('=', ReceiptWidth));
+        receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
+        receiptBuilder.AppendLine(CenterText("Frukt Marknaden"));
+        receiptBuilder.AppendLine(CenterText("Öppet 08:00 - 23:00"));
+        receiptBuilder.AppendLine(CenterText("Tel: 073-570 43 68"));
+        receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
 
-        sb.AppendLine(
-            $"Säljare: {cashier}".PadRight(19) +
-            $"Kassa: {register}".PadRight(11) +
-            $"Kvitto: {receipt}"
+        receiptBuilder.AppendLine(
+            $"Säljare: {cashierName}".PadRight(19) +
+            $"Kassa: {registerNumber}".PadRight(11) +
+            $"Kvitto: {receiptNumber}"
         );
 
-        sb.AppendLine(
+        receiptBuilder.AppendLine(
             $"Datum: {DateTime.Now:yyyy-MM-dd}".PadRight(30) +
             $"Tid: {DateTime.Now:HH:mm}"
         );
 
-        sb.AppendLine(new string('-', ReceiptWidth));
+        receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
     }
 
     // ---------------------------------------------------------
-    // PRODUCT LINE SECTION
+    // 4. PRODUCT LINE SECTION
     // ---------------------------------------------------------
 
     /// <summary>
-    /// Builds a single product line with quantity, unit, price and total.
-    /// Ensures the line always fits within 40 characters.
+    /// Builds a single product line with quantity, unit and total.
+    /// Ensures the line always fits within the fixed receipt width.
     /// </summary>
-    private static string BuildProductLine(CartItem item)
+    private static string BuildProductLine(CartItem cartItem)
     {
-        string name = item.Product.Name ?? "(saknas)";
+        string productName = cartItem.Product.Name ?? "(saknas)";
 
-        // Truncate long product names to fit the receipt width.
-        if (name.Length > ProductNameWidth)
-            name = name.Substring(0, ProductNameWidth - 3) + "...";
+        if (productName.Length > ProductNameColumnWidth)
+            productName = productName.Substring(0, ProductNameColumnWidth - 3) + "...";
 
-        string nameCol = name.PadRight(ProductNameWidth);
+        string productNameColumn = productName.PadRight(ProductNameColumnWidth);
 
-        string qtyCol;
+        string quantityColumn;
         string unitLabel;
-        string priceCol;
 
-        // Weight-based product
-        if (item.Product.PriceUnit == PriceUnit.PerKilo)
+        if (cartItem.Product.PriceUnit == PriceUnit.PerKilo)
         {
-            qtyCol = $"{item.Weight:F2}".PadLeft(QuantityWidth);
+            quantityColumn = $"{cartItem.Weight:F2}".PadLeft(QuantityColumnWidth);
             unitLabel = "kg";
-            priceCol = $"{item.UnitPrice:0.00} Kr/kg";
         }
-        else // Piece-based product
+        else
         {
-            qtyCol = $"{item.Quantity}".PadLeft(QuantityWidth);
+            quantityColumn = $"{cartItem.Quantity}".PadLeft(QuantityColumnWidth);
             unitLabel = "st";
-            priceCol = $"{item.UnitPrice:0.00}";
         }
 
-        string left = $"{nameCol}{qtyCol} {unitLabel} * {priceCol}";
-        string total = $"{item.TotalPrice:0.00} kr";
+        string leftSideText = $"{productNameColumn}{quantityColumn} {unitLabel}";
+        string totalPriceText = $"{cartItem.TotalPrice:0.00} kr";
 
-        // Calculate spacing so the total always aligns to the right.
-        int spaces = ReceiptWidth - left.Length - total.Length;
-        if (spaces < 1) spaces = 1;
+        int spacing = ReceiptLineWidth - leftSideText.Length - totalPriceText.Length;
+        if (spacing < 1)
+            spacing = 1;
 
-        return left + new string(' ', spaces) + total;
+        return leftSideText + new string(' ', spacing) + totalPriceText;
     }
 
     // ---------------------------------------------------------
-    // TOTALS SECTION
+    // 5. TOTALS SECTION
     // ---------------------------------------------------------
 
     /// <summary>
     /// Writes the total amount section.
     /// </summary>
-    private static void BuildTotals(StringBuilder sb, decimal total)
+    private static void BuildTotalSection(StringBuilder receiptBuilder, decimal totalAmount)
     {
-        sb.AppendLine(new string('-', ReceiptWidth));
-        sb.AppendLine(AlignRight("TOTALT:", $"{total:0.00} kr"));
-        sb.AppendLine();
+        receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
+        receiptBuilder.AppendLine(AlignLabelAndValueRight("TOTALT:", $"{totalAmount:0.00} kr"));
+        receiptBuilder.AppendLine();
     }
 
     // ---------------------------------------------------------
-    // VAT SECTION
+    // 6. VAT SECTION
     // ---------------------------------------------------------
 
     /// <summary>
     /// Writes VAT breakdown (12%).
     /// </summary>
-    private static void BuildVatSection(StringBuilder sb, decimal total)
+    private static void BuildVatSection(StringBuilder receiptBuilder, decimal totalAmount)
     {
-        const decimal vatRate = 0.12m;
-        decimal vatAmount = total * vatRate / (1 + vatRate);
-        decimal exVat = total - vatAmount;
+        const decimal VatRate = 0.12m;
+        decimal vatAmount = totalAmount * VatRate / (1 + VatRate);
+        decimal amountExcludingVat = totalAmount - vatAmount;
 
-        sb.AppendLine("MOMSREDOVISNING");
-        sb.AppendLine(new string('-', ReceiptWidth));
-        sb.AppendLine(AlignRight("12% moms:", $"{vatAmount:0.00} kr"));
-        sb.AppendLine(AlignRight("Exkl. moms:", $"{exVat:0.00} kr"));
-        sb.AppendLine(new string('-', ReceiptWidth));
-        sb.AppendLine();
+        receiptBuilder.AppendLine("MOMSREDOVISNING");
+        receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
+        receiptBuilder.AppendLine(AlignLabelAndValueRight("12% moms:", $"{vatAmount:0.00} kr"));
+        receiptBuilder.AppendLine(AlignLabelAndValueRight("Exkl. moms:", $"{amountExcludingVat:0.00} kr"));
+        receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
+        receiptBuilder.AppendLine();
     }
 
     // ---------------------------------------------------------
-    // PAYMENT SECTION
+    // 7. PAYMENT SECTION
     // ---------------------------------------------------------
 
     /// <summary>
     /// Writes payment details depending on payment method.
     /// </summary>
-    private static void BuildPaymentSection(StringBuilder sb, string method, decimal received, decimal total)
+    private static void BuildPaymentSection(
+        StringBuilder receiptBuilder,
+        string paymentMethod,
+        decimal amountReceived,
+        decimal totalAmount)
     {
-        if (method.Equals("Kontant", StringComparison.OrdinalIgnoreCase))
+        if (paymentMethod.Equals("Kontant", StringComparison.OrdinalIgnoreCase))
         {
-            decimal safeReceived = Math.Max(0, received);
-            decimal change = safeReceived - total;
+            decimal safeAmountReceived = Math.Max(0, amountReceived);
+            decimal changeAmount = safeAmountReceived - totalAmount;
 
-            sb.AppendLine(AlignRight("Mottaget kontant:", $"{safeReceived:0.00} kr"));
-            sb.AppendLine(AlignRight("Åter kontant:", $"{change:0.00} kr"));
+
+            receiptBuilder.AppendLine(AlignLabelAndValueRight("Mottaget kontant:", $"{safeAmountReceived:0.00} kr"));
+            receiptBuilder.AppendLine(AlignLabelAndValueRight("Åter kontant:", $"{changeAmount:0.00} kr"));
         }
         else
         {
-            sb.AppendLine("Betalt med kort");
-            sb.AppendLine(FormatCardPaymentDetails());
+            receiptBuilder.AppendLine("Betalt med kort");
+            receiptBuilder.AppendLine(FormatCardPaymentDetails());
         }
     }
 
     // ---------------------------------------------------------
-    // HELPER METHODS
+    // 8. HELPER METHODS
     // ---------------------------------------------------------
 
-    /// <summary>
-    /// Aligns a label on the left and a value on the right.
-    /// </summary>
-    private static string AlignRight(string left, string right)
+    private static string AlignLabelAndValueRight(string leftLabel, string rightValue)
     {
-        int spaces = ReceiptWidth - left.Length - right.Length;
-        if (spaces < 1) spaces = 1;
-        return left + new string(' ', spaces) + right;
+        int spaces = ReceiptLineWidth - leftLabel.Length - rightValue.Length;
+        if (spaces < 1)
+            spaces = 1;
+
+        return leftLabel + new string(' ', spaces) + rightValue;
     }
 
-    /// <summary>
-    /// Right-aligns a full string across the receipt width.
-    /// </summary>
-    private static string RightAlign(string text)
+    private static string RightAlignText(string text)
     {
-        return text.PadLeft(ReceiptWidth);
+        return text.PadLeft(ReceiptLineWidth);
     }
 
-    /// <summary>
-    /// Centers text within the fixed receipt width.
-    /// </summary>
-    private static string Center(string text)
+    private static string CenterText(string text)
     {
-        if (text.Length >= ReceiptWidth)
+        if (text.Length >= ReceiptLineWidth)
             return text;
 
-        int padding = (ReceiptWidth - text.Length) / 2;
+        int padding = (ReceiptLineWidth - text.Length) / 2;
         return new string(' ', padding) + text;
     }
 
-    /// <summary>
-    /// Builds the card payment detail block.
-    /// </summary>
     private static string FormatCardPaymentDetails()
     {
-        var sb = new StringBuilder();
+        var cardDetailsBuilder = new StringBuilder();
 
-        sb.AppendLine("Term: 1710025506");
-        sb.AppendLine("DEBIT MASTERCARD ************5271");
-        sb.AppendLine("Butik: 13403");
-        sb.AppendLine($"Datum: {DateTime.Now:yyyy-MM-dd HH:mm}");
-        sb.AppendLine("TVR: 0000008001");
-        sb.AppendLine("Ref: 002550692064 130 Rsp:00 120440 K/1 7");
-        sb.AppendLine("Personlig kod / Contactless");
-        sb.AppendLine("Spara kvittot");
+        cardDetailsBuilder.AppendLine("Term: 1710025506");
+        cardDetailsBuilder.AppendLine("DEBIT MASTERCARD ************5271");
+        cardDetailsBuilder.AppendLine("Butik: 13403");
+        cardDetailsBuilder.AppendLine($"Datum: {DateTime.Now:yyyy-MM-dd HH:mm}");
+        cardDetailsBuilder.AppendLine("TVR: 0000008001");
+        cardDetailsBuilder.AppendLine("Ref: 002550692064 130 Rsp:00 120440 K/1 7");
+        cardDetailsBuilder.AppendLine("Personlig kod / Contactless");
+        cardDetailsBuilder.AppendLine("Spara kvittot");
 
-        return sb.ToString();
+        return cardDetailsBuilder.ToString();
     }
 }

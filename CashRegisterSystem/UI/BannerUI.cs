@@ -1,53 +1,67 @@
-﻿namespace CashRegisterSystem.UI
+﻿using System;
+
+namespace CashRegisterSystem.UI
 {
     /// <summary>
-    /// Provides visual banner elements for the application,
-    /// including centered headers and a stylized logo.
+    /// Provides reusable banner and logo rendering for all menu screens.
+    /// Ensures consistent width and centered text across the application.
     /// </summary>
     public static class BannerUI
     {
+        // Fixed width used for all banners to match checkout layout
+        private const int BannerWidth = 70;
+
         /// <summary>
-        /// Prints a centered header with '=' lines above and below.
-        /// Used for major sections such as "KASSA", "PLU-LISTA", etc.
+        /// Prints a clean, full-width header with centered title.
         /// </summary>
         public static void PrintHeader(string title)
         {
             Console.WriteLine();
 
-            string headerLine = new string('=', Console.WindowWidth - 2);
+            string line = new string('=', BannerWidth);
 
-            WriteCentered(headerLine);
-            WriteCentered($"  {title}  ");
-            WriteCentered(headerLine);
+            // Full-width top border
+            Console.WriteLine(line);
+
+            // Centered title
+            int padding = (BannerWidth - title.Length) / 2;
+            Console.WriteLine(new string(' ', padding) + title.ToUpper());
+
+            // Full-width bottom border
+            Console.WriteLine(line);
 
             Console.WriteLine();
         }
 
+
         /// <summary>
-        /// Displays the store logo in color.
+        /// Displays the store logo centered in the same width as banners.
         /// </summary>
         public static void ShowLogo()
         {
             Console.WriteLine();
+            Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
 
-            // LOGON ÄR ORÖRD – exakt som du vill ha den
-            Console.WriteLine("\t  🍎🍌🍇🍉 𝗙 𝗥 𝗨 𝗞 𝗧   𝗧 𝗢 𝗥 𝗚 𝗘 𝗧 🍓🍍🍒🍑");
+            // Exact visual centering for Unicode/emoji logo
+            string logo = "🍎🍌🍇🍉 𝗙 𝗥 I U 𝗧   M A R K E 𝗧 🍓🍍🍒🍑";
+            string paddedLogo = new string(' ', 16) + logo; 
+
+            Console.WriteLine(paddedLogo);
 
             Console.ResetColor();
             Console.WriteLine();
-            Console.WriteLine();
+            
         }
 
+
         /// <summary>
-        /// Writes text centered horizontally in the console window.
+        /// Writes a single line of text centered within the banner width.
         /// </summary>
         private static void WriteCentered(string text)
         {
-            int windowWidth = Console.WindowWidth;
-            int leftPadding = Math.Max(0, (windowWidth - text.Length) / 2);
-
-            Console.WriteLine(new string(' ', leftPadding) + text);
+            int padding = Math.Max(0, (BannerWidth - text.Length) / 2);
+            Console.WriteLine(new string(' ', padding) + text);
         }
     }
 }

@@ -17,9 +17,6 @@ namespace CashRegisterSystem.UI
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("PLU-LISTA");
 
-            Console.WriteLine();
-            ConsoleLayout.WriteDivider();
-
             // Sort alphabetically by product name
             var sortedProducts = products
                 .OrderBy(product => product.Name)
@@ -30,9 +27,7 @@ namespace CashRegisterSystem.UI
                 PrintProduct(product);
             }
 
-            ConsoleLayout.WriteDivider();
-
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("\nÅtergå till menyn");
             Console.ResetColor();
             Console.ReadKey(true);

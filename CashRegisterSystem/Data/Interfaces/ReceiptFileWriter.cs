@@ -66,7 +66,8 @@ namespace CashRegisterSystem.Data.Interfaces
 
             string filePath = Path.Combine(
                 receiptFolder,
-                $"RECEIPT_{receiptNumber}.txt");
+                $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
+
 
             File.WriteAllText(filePath, receiptText);
 
