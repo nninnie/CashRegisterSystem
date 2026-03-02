@@ -1,13 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CashRegisterSystem.Data.Service
 {
+    /// <summary>
+    /// Stores the currently active cash register number.
+    /// Used so the system always knows which register is in use.
+    /// </summary>
     public static class RegisterService
     {
-        public static int CurrentRegister { get; set; } = 01;
+        // The active register number. Default is 1.
+        private static int _currentRegister = 1;
+
+        public static int CurrentRegister
+        {
+            get => _currentRegister;
+            set
+            {
+                // Prevents invalid register numbers (0 or negative)
+                if (value <= 0)
+                    _currentRegister = 1;
+                else
+                    _currentRegister = value;
+            }
+        }
     }
 }

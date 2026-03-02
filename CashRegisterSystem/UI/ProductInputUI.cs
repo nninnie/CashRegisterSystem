@@ -3,44 +3,62 @@ using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
+    /// <summary>
+    /// Handles all user input related to products.
+    /// Provides simple and safe input methods for PLU, names, prices and units.
+    /// All console text is in Swedish, while code and comments are in English.
+    /// </summary>
     public static class ProductInputUI
     {
-        // Returns the correct price based on active campaign
+        /// <summary>
+        /// Returns the correct price depending on whether a campaign is active.
+        /// </summary>
         public static decimal GetEffectivePrice(Product product)
         {
             return CampaignService.GetPrice(product);
         }
 
-        // PLU input
+        /// <summary>
+        /// Asks the user to enter a PLU code.
+        /// </summary>
         public static string AskForPlu()
         {
-            return InputService.ReadString("Enter PLU: ");
+            return InputService.ReadString("Ange PLU: ");
         }
 
-        // Product name input
+        /// <summary>
+        /// Asks the user to enter a product name.
+        /// </summary>
         public static string AskForProductName()
         {
-            return InputService.ReadString("Product name: ");
+            return InputService.ReadString("Produktnamn: ");
         }
 
-        // Base price input
+        /// <summary>
+        /// Asks the user to enter the base price.
+        /// NOTE: Price is entered as a whole number (no decimals).
+        /// </summary>
         public static decimal AskForBasePrice()
         {
-            return InputService.ReadDecimal("Base price: ");
+            return InputService.ReadDecimal("Grundpris (heltal): ");
         }
 
-        // Unit selection (kg or each)
+        /// <summary>
+        /// Lets the user choose whether the product is sold per kilo or per piece.
+        /// </summary>
         public static PriceUnit AskForPriceUnit()
         {
             Console.WriteLine("1. Per kilo (kg)");
-            Console.WriteLine("2. Each (st)");
+            Console.WriteLine("2. Per styck (st)");
 
-            int choice = InputService.ReadInt("Select unit: ");
+            int choice = InputService.ReadInt("Välj enhet: ");
 
             return choice == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
         }
 
-        // Confirmation message
+        /// <summary>
+        /// Shows a confirmation message in green text.
+        /// </summary>
         public static void ShowConfirmation(string title, string details)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -48,26 +66,29 @@ namespace CashRegisterSystem.UI
             Console.ResetColor();
 
             Console.WriteLine(details);
-
-            Console.WriteLine("\nPress any key to continue...");
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
             Console.ReadKey();
         }
 
-        // Error message
+        /// <summary>
+        /// Shows an error message in red text.
+        /// </summary>
         public static void ShowError(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
             Console.ResetColor();
 
-            Console.WriteLine("\nPress any key to continue...");
+            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
             Console.ReadKey();
         }
 
-        // Campaign name input (if needed)
+        /// <summary>
+        /// Asks the user to enter a campaign label if needed.
+        /// </summary>
         public static string AskForCampaignLabel()
         {
-            return InputService.ReadString("Campaign label (e.g. 'Apples 3 for 20'): ");
+            return InputService.ReadString("Kampanjnamn (t.ex. 'Äpplen 3 för 20'): ");
         }
     }
 }

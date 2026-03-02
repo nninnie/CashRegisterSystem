@@ -1,12 +1,15 @@
 ﻿using CashRegisterSystem.Core.Services;
 using CashRegisterSystem.Data;
-using CashRegisterSystem.Data.Interfaces;
 using CashRegisterSystem.UI;
+using CashRegisterSystem.Models;
+using System;
+using System.Collections.Generic;
 
 namespace CashRegisterSystem.Controllers.Admin.Products
 {
     /// <summary>
-    /// Handles admin actions for adding, editing, and deleting products.
+    /// Handles admin actions for adding, editing and deleting products.
+    /// Ensures safe input and consistent UI flow.
     /// </summary>
     public static class ProductAdminController
     {
@@ -15,9 +18,10 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         /// </summary>
         public static void AddProduct()
         {
-            var products = ProductFileRepository.GetAll();
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
             var newProduct = ProductService.AddProduct(products);
@@ -41,9 +45,10 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         /// </summary>
         public static void DeleteProduct()
         {
-            var products = ProductFileRepository.GetAll();
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("TA BORT PRODUKT");
             ProductListUI.ShowProductList(products);
 
@@ -67,9 +72,10 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         /// </summary>
         public static void EditProduct()
         {
-            var products = ProductFileRepository.GetAll();
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
             ProductListUI.ShowProductList(products);
 
@@ -87,9 +93,13 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                 );
             }
         }
+
+        /// <summary>
+        /// Displays the full product list in admin mode.
+        /// </summary>
         public static void ShowProductListAdmin()
         {
-            var products = ProductFileRepository.GetAll();
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             Console.Clear();
             ProductListUI.ShowProductList(products);

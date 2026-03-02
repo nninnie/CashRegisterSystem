@@ -1,14 +1,26 @@
 ﻿using CashRegisterSystem.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CashRegisterSystem.Data
 {
+    /// <summary>
+    /// Loads and saves campaign data for products.
+    /// Ensures safe parsing and prevents crashes from invalid files.
+    /// </summary>
     public class CampaignFileLoader
     {
         private static readonly string CampaignFilePath = Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
 
+        // Loads campaign data and applies it to the product list.
         public static List<Product> LoadCampaignsIntoProducts(List<Product> products)
         {
+            if (products == null)
+                return new List<Product>();
+
             Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
 
             if (!File.Exists(CampaignFilePath))
@@ -27,12 +39,24 @@ namespace CashRegisterSystem.Data
                     continue;
 
                 string plu = parts[0];
+
+                // Safe parsing
                 string campaignName = parts[1];
-                decimal percent = decimal.Parse(parts[2]);
-                decimal price = decimal.Parse(parts[3]);
-                int multiQty = int.Parse(parts[4]);
-                decimal multiPrice = decimal.Parse(parts[5]);
-                bool isActive = bool.Parse(parts[6]);
+
+                if (!decimal.TryParse(parts[2], out decimal percent))
+                    continue;
+
+                if (!decimal.TryParse(parts[3], out decimal price))
+                    continue;
+
+                if (!int.TryParse(parts[4], out int multiQty))
+                    continue;
+
+                if (!decimal.TryParse(parts[5], out decimal multiPrice))
+                    continue;
+
+                if (!bool.TryParse(parts[6], out bool isActive))
+                    continue;
 
                 var product = products.FirstOrDefault(p => p.PLU == plu);
                 if (product == null)
@@ -49,8 +73,12 @@ namespace CashRegisterSystem.Data
             return products;
         }
 
+        // Saves campaign data from products to file.
         public static void SaveCampaignsFromProducts(List<Product> products)
         {
+            if (products == null)
+                return;
+
             Directory.CreateDirectory(Path.GetDirectoryName(CampaignFilePath)!);
 
             var lines = products.Select(p =>

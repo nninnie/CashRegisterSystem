@@ -1,5 +1,14 @@
 ﻿namespace CashRegisterSystem.Models
 {
+    /// <summary>
+    /// Represents a product in the cash register system.
+    /// Stores PLU, name, price, price unit and VAT.
+    /// Also supports different campaign types such as percent discount,
+    /// fixed price, multibuy and date‑controlled campaigns.
+    /// Price is always stored as an integer value to avoid invalid input.
+    /// All fields are kept simple and safe to prevent crashes.
+    /// </summary>
+
     public class Product
     {
         public int Id { get; set; }

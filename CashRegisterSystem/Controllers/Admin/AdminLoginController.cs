@@ -1,8 +1,14 @@
 ﻿using CashRegisterSystem.UI;
 using CashRegisterSystem.Core.Services;
+using System;
+using System.Threading;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Handles admin login and grants access to the admin menu.
+    /// Ensures safe input and consistent UI behavior.
+    /// </summary>
     public static class AdminLoginController
     {
         public static void Login()
@@ -10,43 +16,37 @@ namespace CashRegisterSystem.Controllers.Admin
             while (true)
             {
                 Console.Clear();
+                BannerUI.ShowLogo();
                 BannerUI.PrintHeader("ADMIN LOGIN");
 
                 string adminId = InputService.ReadStringAllowEmpty("Admin ID: ");
 
                 if (string.IsNullOrWhiteSpace(adminId))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Fältet får inte vara tomt.");
-                    Console.ResetColor();
-
-                    Thread.Sleep(900);
-                    continue; // ← hoppa tillbaka till toppen
+                    ShowError("Fältet får inte vara tomt.");
+                    continue;
                 }
 
                 string adminPass = InputService.ReadStringAllowEmpty("Lösenord: ");
 
-                //if (string.IsNullOrWhiteSpace(adminPass))
-                //{
-                //    Console.ForegroundColor = ConsoleColor.Red;
-                //    Console.WriteLine("Fältet får inte vara tomt.");
-                //    Console.ResetColor();
-
-                //    Thread.Sleep(900);
-                //    continue; // ← hoppa tillbaka till toppen
-                //}
-
-                if (adminPass.ToLower() == "admin" || adminPass.ToLower() == "")
+                // Temporär inloggning
+                if (string.Equals(adminPass, "admin", StringComparison.OrdinalIgnoreCase) ||
+                    string.IsNullOrWhiteSpace(adminPass))
                 {
                     AdminMenuController.ShowAdminMenu();
                     return;
                 }
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Tyvärr, lösenordet är 'admin'.");
-                Console.ResetColor();
-                Console.ReadKey();
+                ShowError("Tyvärr, lösenordet är 'admin'.");
             }
+        }
+
+        private static void ShowError(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ResetColor();
+            Thread.Sleep(900);
         }
     }
 }

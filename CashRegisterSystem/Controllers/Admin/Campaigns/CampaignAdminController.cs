@@ -2,17 +2,26 @@
 using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
+    /// <summary>
+    /// Handles creation, viewing and ending of product campaigns.
+    /// Ensures safe input and consistent UI behavior.
+    /// </summary>
     public static class CampaignAdminController
     {
         public static void ViewAllCampaigns()
         {
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("VISA KAMPANJER");
 
-            var products = ProductFileLoader.GetProducts();
+            var products = ProductFileLoader.GetProducts() ?? new List<Product>();
+
             var campaignProducts = products
                 .Where(p =>
                     p.CampaignIsActive &&
@@ -48,9 +57,10 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void StartCampaign()
         {
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
-            var products = ProductFileLoader.GetProducts();
+            var products = ProductFileLoader.GetProducts() ?? new List<Product>();
             if (!products.Any())
             {
                 ProductInputUI.ShowError("Produktlistan är tom.");
@@ -68,21 +78,23 @@ namespace CashRegisterSystem.Controllers.Admin
                 return;
             }
 
-            // --- Interaktiv meny ---
             int option = 1;
             ConsoleKeyInfo key;
             Console.CursorVisible = false;
-            string highlight = "\u001b[32m";
+
+            const string highlight = "\u001b[32m";
+            const string reset = "\u001b[0m";
 
             while (true)
             {
                 Console.Clear();
+                BannerUI.ShowLogo();
                 BannerUI.PrintHeader("VÄLJ KAMPANJTYP");
 
-                Console.WriteLine($"{(option == 1 ? "·" + highlight : "")} Procentkampanj\u001b[0m");
-                Console.WriteLine($"{(option == 2 ? "·" + highlight : "")} Fast kampanjpris\u001b[0m");
-                Console.WriteLine($"{(option == 3 ? "·" + highlight : "")} Multiköp\u001b[0m");
-                Console.WriteLine($"{(option == 4 ? "·" + highlight : "")} Avbryt\u001b[0m");
+                Console.WriteLine($"{(option == 1 ? "·" + highlight : "  ")} Procentkampanj{reset}");
+                Console.WriteLine($"{(option == 2 ? "·" + highlight : "  ")} Fast kampanjpris{reset}");
+                Console.WriteLine($"{(option == 3 ? "·" + highlight : "  ")} Multiköp{reset}");
+                Console.WriteLine($"{(option == 4 ? "·" + highlight : "  ")} Avbryt{reset}");
 
                 key = Console.ReadKey(true);
 
@@ -101,35 +113,19 @@ namespace CashRegisterSystem.Controllers.Admin
 
                         if (option == 1)
                         {
-                            decimal percent = InputService.ReadDecimal("Rabatt %: ");
-                            selectedProduct.CampaignPercent = percent;
-                            selectedProduct.CampaignPrice = 0;
-                            selectedProduct.MultiBuyQuantity = 0;
-                            selectedProduct.MultiBuyPrice = 0;
-                            selectedProduct.CampaignIsActive = true;
+                            ApplyPercentCampaign(selectedProduct);
                             break;
                         }
 
                         if (option == 2)
                         {
-                            decimal newPrice = InputService.ReadDecimal("Kampanjpris: ");
-                            selectedProduct.CampaignPrice = newPrice;
-                            selectedProduct.CampaignPercent = 0;
-                            selectedProduct.MultiBuyQuantity = 0;
-                            selectedProduct.MultiBuyPrice = 0;
-                            selectedProduct.CampaignIsActive = true;
+                            ApplyFixedPriceCampaign(selectedProduct);
                             break;
                         }
 
                         if (option == 3)
                         {
-                            int qty = InputService.ReadInt("Antal: ");
-                            decimal price = InputService.ReadDecimal("Paketpris: ");
-                            selectedProduct.MultiBuyQuantity = qty;
-                            selectedProduct.MultiBuyPrice = price;
-                            selectedProduct.CampaignPercent = 0;
-                            selectedProduct.CampaignPrice = 0;
-                            selectedProduct.CampaignIsActive = true;
+                            ApplyMultiBuyCampaign(selectedProduct);
                             break;
                         }
 
@@ -155,12 +151,11 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void EndCampaign()
         {
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
-            var products = ProductFileLoader.GetProducts();
-            var campaignProducts = products
-                .Where(p => p.CampaignIsActive)
-                .ToList();
+            var products = ProductFileLoader.GetProducts() ?? new List<Product>();
+            var campaignProducts = products.Where(p => p.CampaignIsActive).ToList();
 
             if (!campaignProducts.Any())
             {
@@ -179,18 +174,48 @@ namespace CashRegisterSystem.Controllers.Admin
                 return;
             }
 
-            product.CampaignIsActive = false;
-            product.CampaignPercent = 0;
-            product.CampaignPrice = 0;
-            product.MultiBuyQuantity = 0;
-            product.MultiBuyPrice = 0;
-
+            ResetCampaign(product);
             ProductFileLoader.SaveProducts(products);
 
             ProductInputUI.ShowConfirmation(
                 "Kampanj avslutad!",
                 $"Produkt: {product.Name}"
             );
+        }
+
+        private static void ApplyPercentCampaign(Product p)
+        {
+            decimal percent = InputService.ReadDecimal("Rabatt %: ");
+            ResetCampaign(p);
+            p.CampaignPercent = percent;
+            p.CampaignIsActive = true;
+        }
+
+        private static void ApplyFixedPriceCampaign(Product p)
+        {
+            decimal newPrice = InputService.ReadDecimal("Kampanjpris: ");
+            ResetCampaign(p);
+            p.CampaignPrice = newPrice;
+            p.CampaignIsActive = true;
+        }
+
+        private static void ApplyMultiBuyCampaign(Product p)
+        {
+            int qty = InputService.ReadInt("Antal: ");
+            decimal price = InputService.ReadDecimal("Paketpris: ");
+            ResetCampaign(p);
+            p.MultiBuyQuantity = qty;
+            p.MultiBuyPrice = price;
+            p.CampaignIsActive = true;
+        }
+
+        private static void ResetCampaign(Product p)
+        {
+            p.CampaignPercent = 0;
+            p.CampaignPrice = 0;
+            p.MultiBuyQuantity = 0;
+            p.MultiBuyPrice = 0;
+            p.CampaignIsActive = false;
         }
     }
 }

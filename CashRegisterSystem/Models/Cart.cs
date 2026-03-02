@@ -4,25 +4,34 @@ using System.Linq;
 
 namespace CashRegisterSystem.Models
 {
+    /// <summary>
+    /// Represents the shopping cart. Stores cart items and
+    /// provides methods for adding, removing and clearing items.
+    /// Handles both quantity-based and weight-based products.
+    /// </summary>
     public class Cart
     {
+        // All items currently in the cart.
         public List<CartItem> CartItems { get; } = new();
 
-        /// <summary>
-        /// Adds a product to the cart with full control over quantity, discount and unit price.
-        /// </summary>
-        public void AddItem(Product product, decimal quantity, decimal discountAmount, decimal unitPrice)
+        // Adds a quantity-based product (pieces).
+        public void AddItem(Product product, int quantity, decimal discountAmount, decimal unitPrice)
         {
+            if (product == null)
+                return;
+
+            if (quantity < 0)
+                quantity = 0;
+
+            if (discountAmount < 0)
+                discountAmount = 0;
+
             var existingCartItem = CartItems.FirstOrDefault(item => item.Product.PLU == product.PLU);
 
             if (existingCartItem != null)
             {
-                // Increase quantity and discount on existing item
                 existingCartItem.Quantity += quantity;
                 existingCartItem.DiscountAmount += discountAmount;
-
-                // UnitPrice is intentionally NOT updated here.
-                // A product keeps the same price it had when first added.
                 return;
             }
 
@@ -30,37 +39,61 @@ namespace CashRegisterSystem.Models
             {
                 Product = product,
                 Quantity = quantity,
+                Weight = 0,
                 DiscountAmount = discountAmount,
                 UnitPrice = unitPrice
             });
         }
 
-        /// <summary>
-        /// Adds a product without discount (fallback).
-        /// </summary>
-        public void AddItem(Product product, decimal quantity)
+        // Adds a weight-based product (kilograms).
+        public void AddItemByWeight(Product product, decimal weight, decimal discountAmount, decimal unitPrice)
+        {
+            if (product == null)
+                return;
+
+            if (weight < 0)
+                weight = 0;
+
+            if (discountAmount < 0)
+                discountAmount = 0;
+
+            var existingCartItem = CartItems.FirstOrDefault(item => item.Product.PLU == product.PLU);
+
+            if (existingCartItem != null)
+            {
+                existingCartItem.Weight += weight;
+                existingCartItem.DiscountAmount += discountAmount;
+                return;
+            }
+
+            CartItems.Add(new CartItem
+            {
+                Product = product,
+                Quantity = 0,
+                Weight = weight,
+                DiscountAmount = discountAmount,
+                UnitPrice = unitPrice
+            });
+        }
+
+        // Fallback for simple quantity-based adding.
+        public void AddItem(Product product, int quantity)
         {
             AddItem(product, quantity, 0, product.Price);
         }
 
-        /// <summary>
-        /// Total price before discount.
-        /// </summary>
+        // Calculates the total price of all items.
         public decimal TotalPrice => CartItems.Sum(item => item.TotalPrice);
 
-        /// <summary>
-        /// Clears the entire cart.
-        /// </summary>
-        public void Clear()
-        {
-            CartItems.Clear();
-        }
+        // Removes all items.
+        public void Clear() => CartItems.Clear();
 
-        /// <summary>
-        /// Removes a product from the cart by PLU.
-        /// </summary>
+        // Removes a specific item by PLU.
         public bool RemoveItem(string plu)
         {
+            if (string.IsNullOrWhiteSpace(plu))
+                return false;
+
             var cartItem = CartItems.FirstOrDefault(item => item.Product.PLU == plu);
 
             if (cartItem == null)

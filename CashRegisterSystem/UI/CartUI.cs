@@ -1,10 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.UI
 {
+    /// <summary>
+    /// Displays the shopping cart in a clean, structured checkout format.
+    /// Uses fixed-width columns to mimic a real cash register layout.
+    /// </summary>
     public static class CartUI
     {
+        // Total width of the cart display area
+        private const int Width = 70;
+
+        // Column widths for a real checkout layout
+        private const int NameWidth = 25;   // Product name
+        private const int QtyWidth = 6;     // Quantity or weight
+        private const int UnitWidth = 3;    // st / kg
+        private const int TotalWidth = 10;  // Total amount
+
+        /// <summary>
+        /// Prints all items currently in the cart with aligned columns.
+        /// </summary>
         public static void ShowCart(Cart cart)
         {
             Console.WriteLine("------------------------------KUNDVAGN--------------------------------\n");
@@ -13,21 +30,51 @@ namespace CashRegisterSystem.UI
 
             foreach (var item in cart.CartItems)
             {
-                string unit = item.Product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
-                decimal total = item.Product.Price * item.Quantity - item.DiscountAmount;
+                // Null-safety for product name
+                string name = item.Product.Name ?? "(saknas namn)";
+
+                // Truncate long names to fit the column
+                if (name.Length > NameWidth)
+                    name = name[..(NameWidth - 3)] + "...";
+
+                name = name.PadRight(NameWidth);
+
+                string qtyText;
+                string unitLabel;
+
+                // Weight-based product
+                if (item.Product.PriceUnit == PriceUnit.PerKilo)
+                {
+                    qtyText = $"{item.Weight:F2}".PadLeft(QtyWidth);
+                    unitLabel = "kg";
+                }
+                else // Piece-based product
+                {
+                    qtyText = $"{item.Quantity}".PadLeft(QtyWidth);
+                    unitLabel = "st";
+                }
+
+                // Calculate total price including discount
+                decimal total = item.TotalPrice - item.DiscountAmount;
                 totalSum += total;
 
-                Console.WriteLine(
-                    $"{item.Product.Name,-16}" +
-                    $"{item.Quantity,18}" +
-                    $"{unit,4}" +
-                    $"{total,29:F2} kr");
+                string totalColumn = $"{total:0.00} kr".PadLeft(TotalWidth);
+
+                // Real checkout style:
+                // [Name][Qty][Unit][Total]
+                Console.WriteLine($"{name}{qtyText} {unitLabel.PadRight(UnitWidth)}{totalColumn}");
             }
 
             Console.WriteLine("----------------------------------------------------------------------");
-            Console.WriteLine($"{"",51}Total : {totalSum,8:F2} kr");
+
+            // TOTAL line – right aligned
+            string totalText = $"Total: {totalSum:0.00} kr";
+            Console.WriteLine(totalText.PadLeft(Width));
         }
 
+        /// <summary>
+        /// Shows the PLU input prompt used during checkout.
+        /// </summary>
         public static void ShowPluInputPrompt()
         {
             Console.WriteLine("----------------------------------------------------------------------");

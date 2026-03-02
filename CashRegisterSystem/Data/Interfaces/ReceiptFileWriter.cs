@@ -1,9 +1,18 @@
 ﻿using CashRegisterSystem.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CashRegisterSystem.Data.Interfaces
 {
+    /// <summary>
+    /// Writes receipts to text files and prints them to the console.
+    /// Automatically generates the next receipt number.
+    /// </summary>
     public class ReceiptFileWriter : IReceiptWriter
     {
+        // Returns the next available receipt number based on existing files.
         private int GetNextReceiptNumber()
         {
             string receiptFolder = Path.Combine(
@@ -28,6 +37,7 @@ namespace CashRegisterSystem.Data.Interfaces
             return maxNumber + 1;
         }
 
+        // Writes the receipt to a file and prints it to the console.
         public void WriteReceipt(
             List<CartItem> cartItems,
             string cashierName,
@@ -35,6 +45,9 @@ namespace CashRegisterSystem.Data.Interfaces
             string paymentMethod,
             decimal amountReceived)
         {
+            if (cartItems == null || cartItems.Count == 0)
+                return;
+
             int receiptNumber = GetNextReceiptNumber();
 
             string receiptText = ReceiptUI.FormatReceipt(

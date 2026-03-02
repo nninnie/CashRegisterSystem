@@ -1,28 +1,28 @@
-﻿using CashRegisterSystem.Controllers;
+﻿using CashRegisterSystem.Controllers.Main;
 using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
+using System;
+using System.Collections.Generic;
 
 namespace CashRegisterSystem.App
 {
     /// <summary>
-    /// Entry point for the cash register application, responsible for initializing core data and starting the main menu.
+    /// Entry point for the cash register application.
+    /// Loads product data and launches the main menu.
     /// </summary>
     internal class Program
     {
-        /// <summary>
-        /// Loads product data and launches the main menu interface for the system.
-        /// </summary>
         static void Main(string[] args)
         {
+            // Load all products from file (fallback to empty list if file missing)
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Hämtar alla produkter från filen (eller standardlista om filen saknas)
-            List<Product> products = ProductFileLoader.GetProducts();
+            // Load all products from file (fallback to empty list if file missing)
+            List<Product> products = ProductFileLoader.GetProducts() ?? new List<Product>();
 
-            // Initierar huvudmenyn och tillhandahåller produktlistan som underlag för menyer och funktioner
+            // Start main menu with loaded products
             MainMenuController.Start(products);
-
         }
     }
 }

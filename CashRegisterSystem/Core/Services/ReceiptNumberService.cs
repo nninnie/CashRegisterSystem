@@ -1,32 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace CashRegisterSystem.Core
+namespace CashRegisterSystem.Data.Service
 {
-    namespace CashRegisterSystem.Data.Service
+    /// <summary>
+    /// Handles the receipt counter stored in a text file.
+    /// Ensures safe reading and writing so the system never crashes.
+    /// </summary>
+    public static class ReceiptNumberService
     {
-        public static class ReceiptNumberService
+        private static readonly string CounterFile =
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts", "receipt_counter.txt");
+
+        // Returns the next receipt number.
+        public static int GetNext()
         {
-            private static readonly string CounterFile =
-                Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts", "receipt_counter.txt");
+            Directory.CreateDirectory(Path.GetDirectoryName(CounterFile)!);
 
-            public static int GetNext()
-            {
-                if (!File.Exists(CounterFile))
-                    return 1;
+            if (!File.Exists(CounterFile))
+                return 1;
 
-                string text = File.ReadAllText(CounterFile);
-                return int.TryParse(text, out int num) ? num + 1 : 1;
-            }
+            string text = File.ReadAllText(CounterFile);
 
-            public static void Save(int number)
-            {
-                File.WriteAllText(CounterFile, number.ToString());
-            }
+            return int.TryParse(text, out int num)
+                ? num + 1
+                : 1; // Prevents crashes from corrupted files
+        }
+
+        // Saves the current receipt number.
+        public static void Save(int number)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(CounterFile)!);
+
+            if (number < 1)
+                number = 1;
+
+            File.WriteAllText(CounterFile, number.ToString());
         }
     }
-
 }

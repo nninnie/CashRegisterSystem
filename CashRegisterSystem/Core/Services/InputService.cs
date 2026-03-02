@@ -1,8 +1,14 @@
-﻿namespace CashRegisterSystem.Core.Services
+﻿using System;
+
+namespace CashRegisterSystem.Core.Services
 {
+    /// <summary>
+    /// Provides safe input methods for strings, numbers and dates.
+    /// Ensures trimmed values and prevents crashes from invalid input.
+    /// </summary>
     public static class InputService
     {
-        // STRIKT STRING – används i menyer, admin, produktinmatning
+        // Strict string input (used in menus, admin, product input).
         public static string ReadString(string prompt)
         {
             Console.Write(prompt);
@@ -10,14 +16,14 @@
             return input.Trim();
         }
 
-        // TILLÅTER TOM STRÄNG – används i LOGIN och ADMIN LOGIN
+        // Allows empty string (used in login).
         public static string ReadStringAllowEmpty(string prompt)
         {
             Console.Write(prompt);
             return Console.ReadLine() ?? "";
         }
 
-        // HELTAL
+        // Reads an integer safely.
         public static int ReadInt(string prompt)
         {
             while (true)
@@ -34,7 +40,7 @@
             }
         }
 
-        // DECIMAL
+        // Reads a decimal safely.
         public static decimal ReadDecimal(string prompt)
         {
             while (true)
@@ -51,7 +57,7 @@
             }
         }
 
-        // DATUM – används i kampanjer
+        // Reads a date safely (used in campaigns).
         public static DateTime ReadDate(string prompt)
         {
             while (true)

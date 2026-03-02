@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using CashRegisterSystem.Core.CheckoutService;
-using CashRegisterSystem.Data.FileLoader;
+using CashRegisterSystem.Core.Services;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
-using CashRegisterSystem.Core.Services;
 
 namespace CashRegisterSystem.Controllers
 {
+    /// <summary>
+    /// Handles the full checkout flow: parsing input, adding/removing items,
+    /// applying discounts and completing payment.
+    /// </summary>
     public class CheckoutController
     {
         private readonly InputParser _inputParser = new();
@@ -18,6 +22,9 @@ namespace CashRegisterSystem.Controllers
 
         public void StartNewCustomer(List<Product> products)
         {
+            if (products == null)
+                products = new List<Product>();
+
             Cart cart = new Cart();
 
             Console.Clear();
@@ -59,30 +66,15 @@ namespace CashRegisterSystem.Controllers
                     // DELETE
                     if (_commandParser.IsDeleteCommand(trimmed))
                     {
-                        string? pluToRemove = _commandParser.ExtractPluFromDelete(trimmed);
-
-                        if (pluToRemove is null)
-                        {
-                            Console.WriteLine("Fel format. Skriv: DEL [PLU] för att ta bort en vara.");
-                            continue;
-                        }
-
-                        bool removed = _cartService.RemoveItem(cart, pluToRemove);
-
-                        if (removed)
-                            Console.WriteLine($"\nVara med PLU {pluToRemove} borttagen från kundvagnen.");
-                        else
-                            Console.WriteLine($"\nIngen vara med PLU {pluToRemove} hittades i kundvagnen.");
-
-                        Thread.Sleep(1000);
-                        Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);
-                        CartUI.ShowCart(cart);
+                        HandleDeleteCommand(trimmed, cart, products);
                         break;
                     }
 
-                    // Försök tolka PLU
+                    // Försök tolka PLU + antal/vikt
                     parsed = _inputParser.Parse(input, products);
+
+                    if (parsed == null)
+                        ShowError("Fel format. Skriv: PLU [mellanslag] antal/vikt");
                 }
 
                 if (parsed == null)
@@ -90,14 +82,17 @@ namespace CashRegisterSystem.Controllers
 
                 var (product, quantity) = parsed.Value;
 
-                // ✔ Ny version: DiscountService använder bara Product
+                // Validering av antal/vikt
+                if (!ValidateQuantity(product, quantity))
+                    continue;
+
+                // Rabatt
                 decimal discountAmount = _discountService.CalculateDiscount(product, quantity);
 
-                _cartService.AddItem(cart, product, quantity, discountAmount);
+                // Lägg till vara
+                AddItemToCart(cart, product, quantity, discountAmount);
 
-                string unitText = product.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
-                Console.WriteLine($"\n{quantity} {unitText} av {product.Name} tillagd i kundvagnen.");
-
+                // Rabattmeddelande
                 if (discountAmount > 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -109,6 +104,74 @@ namespace CashRegisterSystem.Controllers
                 Console.Clear();
                 CheckoutDisplayUI.PrintPLUList(products);
             }
+        }
+
+        private void HandleDeleteCommand(string trimmed, Cart cart, List<Product> products)
+        {
+            string? pluToRemove = _commandParser.ExtractPluFromDelete(trimmed);
+
+            if (pluToRemove is null)
+            {
+                ShowError("Fel format. Skriv: DEL [PLU]");
+                return;
+            }
+
+            bool removed = _cartService.RemoveItem(cart, pluToRemove);
+
+            if (removed)
+                Console.WriteLine($"\nVara med PLU {pluToRemove} borttagen.");
+            else
+                Console.WriteLine($"\nIngen vara med PLU {pluToRemove} hittades.");
+
+            Thread.Sleep(1000);
+            Console.Clear();
+            CheckoutDisplayUI.PrintPLUList(products);
+            CartUI.ShowCart(cart);
+        }
+
+        private bool ValidateQuantity(Product product, decimal quantity)
+        {
+            if (product.PriceUnit == PriceUnit.Each)
+            {
+                if (quantity <= 0 || quantity % 1 != 0)
+                {
+                    ShowError("Styckvaror måste vara ett heltal (t.ex. 1, 2, 3).");
+                    return false;
+                }
+            }
+            else if (product.PriceUnit == PriceUnit.PerKilo)
+            {
+                if (quantity <= 0)
+                {
+                    ShowError("Vikt måste vara större än 0 (t.ex. 0.25, 1.5).");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void AddItemToCart(Cart cart, Product product, decimal quantity, decimal discountAmount)
+        {
+            if (product.PriceUnit == PriceUnit.PerKilo)
+            {
+                _cartService.AddItemByWeight(cart, product, quantity, discountAmount);
+                Console.WriteLine($"\n{quantity:F2} kg av {product.Name} tillagd i kundvagnen.");
+            }
+            else
+            {
+                int qty = (int)quantity;
+                _cartService.AddItem(cart, product, qty, discountAmount);
+                Console.WriteLine($"\n{qty} st av {product.Name} tillagd i kundvagnen.");
+            }
+        }
+
+        private void ShowError(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n" + message);
+            Console.ResetColor();
+            Thread.Sleep(1200);
         }
     }
 }

@@ -3,47 +3,54 @@ using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Core.CheckoutService
 {
+    /// <summary>
+    /// Calculates discount amounts for products based on active campaigns.
+    /// Handles percent discounts, fixed prices and multibuy offers safely.
+    /// </summary>
     public class DiscountService
     {
         public decimal CalculateDiscount(Product product, decimal quantity)
         {
+            if (product == null || quantity <= 0)
+                return 0;
+
             if (!product.CampaignIsActive)
                 return 0;
 
+            // Check campaign date range
             if (product.CampaignStartDate.HasValue && product.CampaignStartDate > DateTime.Today)
                 return 0;
 
             if (product.CampaignEndDate.HasValue && product.CampaignEndDate < DateTime.Today)
                 return 0;
 
-            decimal totalPrice = product.Price * quantity;
+            decimal originalTotal = product.Price * quantity;
 
-            // Procentkampanj
+            // Percent discount
             if (product.CampaignPercent > 0)
             {
-                return totalPrice * (product.CampaignPercent / 100);
+                decimal discount = originalTotal * (product.CampaignPercent / 100m);
+                return Math.Round(discount, 2);
             }
 
-            // Fast kampanjpris
+            // Fixed campaign price
             if (product.CampaignPrice > 0)
             {
-                decimal normalPrice = totalPrice;
-                decimal campaignPrice = product.CampaignPrice * quantity;
-                return normalPrice - campaignPrice;
+                decimal campaignTotal = product.CampaignPrice * quantity;
+                return originalTotal - campaignTotal;
             }
 
-            // Multiköp (t.ex. 3 för 20 kr)
+            // Multibuy (e.g., 3 for 20 kr)
             if (product.MultiBuyQuantity > 0 && product.MultiBuyPrice > 0)
             {
                 int fullSets = (int)(quantity / product.MultiBuyQuantity);
                 decimal remaining = quantity % product.MultiBuyQuantity;
 
-                decimal normalPrice = totalPrice;
                 decimal multiBuyTotal =
                     (fullSets * product.MultiBuyPrice) +
                     (remaining * product.Price);
 
-                return normalPrice - multiBuyTotal;
+                return originalTotal - multiBuyTotal;
             }
 
             return 0;

@@ -1,12 +1,22 @@
 ﻿using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CashRegisterSystem.Core.Services
 {
+    /// <summary>
+    /// Handles creation, editing and deletion of products.
+    /// Ensures safe input and prevents invalid product data.
+    /// </summary>
     public static class ProductService
     {
+        // Creates a new product from user input.
         public static Product? AddProduct(List<Product> products)
         {
+            if (products == null)
+                return null;
+
             string plu = ProductInputUI.AskForPlu();
             if (string.IsNullOrWhiteSpace(plu))
             {
@@ -43,7 +53,7 @@ namespace CashRegisterSystem.Core.Services
                 Price = price,
                 PriceUnit = unit,
 
-                // Initiera kampanjfält
+                // Reset campaign fields
                 CampaignPercent = 0,
                 CampaignPrice = 0,
                 MultiBuyQuantity = 0,
@@ -54,8 +64,12 @@ namespace CashRegisterSystem.Core.Services
             };
         }
 
+        // Deletes a product by PLU.
         public static bool DeleteProduct(List<Product> products, string plu)
         {
+            if (products == null)
+                return false;
+
             if (string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
@@ -73,8 +87,12 @@ namespace CashRegisterSystem.Core.Services
             return true;
         }
 
+        // Edits an existing product.
         public static bool EditProduct(List<Product> products, string plu)
         {
+            if (products == null)
+                return false;
+
             if (string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
@@ -104,12 +122,12 @@ namespace CashRegisterSystem.Core.Services
 
             PriceUnit newUnit = ProductInputUI.AskForPriceUnit();
 
-            // Uppdatera produkt
+            // Update product
             product.Name = newName;
             product.Price = newPrice;
             product.PriceUnit = newUnit;
 
-            // Nollställ kampanjdata
+            // Reset campaign data
             product.CampaignPercent = 0;
             product.CampaignPrice = 0;
             product.MultiBuyQuantity = 0;

@@ -6,6 +6,10 @@
     /// </summary>
     public static class BannerUI
     {
+        /// <summary>
+        /// Prints a centered header with '=' lines above and below.
+        /// Used for major sections such as "KASSA", "PLU-LISTA", etc.
+        /// </summary>
         public static void PrintHeader(string title)
         {
             Console.WriteLine();
@@ -19,6 +23,9 @@
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Displays the store logo in color.
+        /// </summary>
         public static void ShowLogo()
         {
             Console.WriteLine();
@@ -32,15 +39,9 @@
             Console.WriteLine();
         }
 
-        private static string RepeatToWidth(string pattern, int width)
-        {
-            string result = "";
-            while (result.Length < width)
-                result += pattern;
-
-            return result.Substring(0, width);
-        }
-
+        /// <summary>
+        /// Writes text centered horizontally in the console window.
+        /// </summary>
         private static void WriteCentered(string text)
         {
             int windowWidth = Console.WindowWidth;

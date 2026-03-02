@@ -1,7 +1,12 @@
 ﻿using CashRegisterSystem.UI;
+using System;
 
 namespace CashRegisterSystem.Controllers.Admin.Campaigns
 {
+    /// <summary>
+    /// Displays and handles navigation for the campaign administration menu.
+    /// Ensures consistent UI behavior and safe input handling.
+    /// </summary>
     public class CampaignMenuController
     {
         public static void ShowCampaignMenu()
@@ -9,17 +14,20 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             int menuOption = 1;
             ConsoleKeyInfo key;
             Console.CursorVisible = false;
-            string highlight = "\u001b[32m";
+
+            const string highlight = "\u001b[32m";
+            const string reset = "\u001b[0m";
 
             while (true)
             {
                 Console.Clear();
+                BannerUI.ShowLogo();
                 BannerUI.PrintHeader("KAMPANJ-MENY");
 
-                Console.WriteLine($"{(menuOption == 1 ? "·" + highlight : "")} Skapa kampanj\u001b[0m");
-                Console.WriteLine($"{(menuOption == 2 ? "·" + highlight : "")} Visa kampanjer\u001b[0m");
-                Console.WriteLine($"{(menuOption == 3 ? "·" + highlight : "")} Avsluta kampanj\u001b[0m");
-                Console.WriteLine($"{(menuOption == 4 ? "·" + highlight : "")} Tillbaka\u001b[0m");
+                Console.WriteLine($"{(menuOption == 1 ? "·" + highlight : "  ")} Skapa kampanj{reset}");
+                Console.WriteLine($"{(menuOption == 2 ? "·" + highlight : "  ")} Visa kampanjer{reset}");
+                Console.WriteLine($"{(menuOption == 3 ? "·" + highlight : "  ")} Avsluta kampanj{reset}");
+                Console.WriteLine($"{(menuOption == 4 ? "·" + highlight : "  ")} Tillbaka{reset}");
 
                 key = Console.ReadKey(true);
 

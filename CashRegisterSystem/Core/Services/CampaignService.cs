@@ -3,33 +3,43 @@ using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.Core.Services
 {
+    /// <summary>
+    /// Calculates campaign prices, discounts and multibuy totals for products.
+    /// Keeps logic simple and prevents invalid values from causing crashes.
+    /// </summary>
     public static class CampaignService
     {
-        // Hämtar rätt pris baserat på kampanjtyp
+        // Returns the correct unit price based on active campaign.
         public static decimal GetPrice(Product p)
         {
-            // Multiköp hanteras i CartService (per antal)
+            if (p == null)
+                return 0;
+
+            // Multibuy handled in CartService (per quantity)
             if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
                 return p.Price;
 
-            // Fast kampanjpris
+            // Fixed campaign price
             if (p.CampaignPrice > 0)
                 return p.CampaignPrice;
 
-            // Procentkampanj
+            // Percent discount
             if (p.CampaignPercent > 0)
             {
                 decimal discounted = p.Price * (1 - p.CampaignPercent / 100m);
                 return Math.Round(discounted, 2);
             }
 
-            // Ingen kampanj
+            // No campaign
             return p.Price;
         }
 
-        // Beräknar totalpris för multiköp
+        // Calculates total price for multibuy campaigns.
         public static decimal GetMultiBuyTotal(Product p, decimal quantity)
         {
+            if (p == null || quantity <= 0)
+                return 0;
+
             if (p.MultiBuyQuantity <= 0 || p.MultiBuyPrice <= 0)
                 return quantity * GetPrice(p);
 
@@ -42,26 +52,29 @@ namespace CashRegisterSystem.Core.Services
             return packTotal + restTotal;
         }
 
-        // Beräknar rabattbeloppet
+        // Calculates the discount amount for a given quantity.
         public static decimal GetDiscount(Product p, decimal quantity)
         {
+            if (p == null || quantity <= 0)
+                return 0;
+
             decimal original = p.Price * quantity;
 
-            // Multiköp
+            // Multibuy
             if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
             {
                 decimal multiTotal = GetMultiBuyTotal(p, quantity);
                 return original - multiTotal;
             }
 
-            // Fast kampanjpris
+            // Fixed campaign price
             if (p.CampaignPrice > 0)
             {
                 decimal discounted = p.CampaignPrice * quantity;
                 return original - discounted;
             }
 
-            // Procentkampanj
+            // Percent campaign
             if (p.CampaignPercent > 0)
             {
                 decimal discounted = GetPrice(p) * quantity;
@@ -71,9 +84,12 @@ namespace CashRegisterSystem.Core.Services
             return 0;
         }
 
-        // Genererar rabattnamn
+        // Generates a readable campaign name.
         public static string GetCampaignName(Product p)
         {
+            if (p == null)
+                return "Rabatt";
+
             if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
                 return $"{p.MultiBuyQuantity} för {p.MultiBuyPrice:0.00} kr";
 
