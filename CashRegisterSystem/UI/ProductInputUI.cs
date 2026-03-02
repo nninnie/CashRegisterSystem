@@ -40,7 +40,7 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static decimal AskForBasePrice()
         {
-            return InputService.ReadDecimal("Grundpris (heltal): ");
+            return InputService.ReadDecimal("Grundpris: ");
         }
 
         /// <summary>

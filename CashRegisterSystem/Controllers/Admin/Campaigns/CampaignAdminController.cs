@@ -10,10 +10,13 @@ namespace CashRegisterSystem.Controllers.Admin
 {
     /// <summary>
     /// Handles creation, viewing and ending of product campaigns.
-    /// Ensures safe input and consistent UI behavior.
+    /// Responsible only for campaign logic (no product CRUD).
     /// </summary>
     public static class CampaignAdminController
     {
+        /// <summary>
+        /// Displays all active campaigns.
+        /// </summary>
         public static void ViewAllCampaigns()
         {
             Console.Clear();
@@ -23,11 +26,7 @@ namespace CashRegisterSystem.Controllers.Admin
             var products = ProductFileLoader.GetProducts() ?? new List<Product>();
 
             var campaignProducts = products
-                .Where(p =>
-                    p.CampaignIsActive &&
-                    (p.CampaignPercent > 0 ||
-                     p.CampaignPrice > 0 ||
-                     p.MultiBuyQuantity > 0))
+                .Where(p => p.CampaignIsActive)
                 .ToList();
 
             if (!campaignProducts.Any())
@@ -54,6 +53,9 @@ namespace CashRegisterSystem.Controllers.Admin
             Console.ReadKey(true);
         }
 
+        /// <summary>
+        /// Starts a campaign for a selected product.
+        /// </summary>
         public static void StartCampaign()
         {
             Console.Clear();
@@ -61,93 +63,81 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileLoader.GetProducts() ?? new List<Product>();
-            if (!products.Any())
-            {
-                ProductInputUI.ShowError("Produktlistan är tom.");
-                return;
-            }
 
-            ProductListUI.ShowProductList(products);
+            string plu = InputService.ReadString("PLU: ");
+            var product = products.FirstOrDefault(p => p.PLU == plu);
 
-            string plu = InputService.ReadString("\nPLU: ");
-            var selectedProduct = products.FirstOrDefault(p => p.PLU == plu);
-
-            if (selectedProduct == null)
+            if (product == null)
             {
                 ProductInputUI.ShowError("Ingen produkt hittades.");
                 return;
             }
 
             int option = 1;
-            ConsoleKeyInfo key;
             Console.CursorVisible = false;
 
             const string highlight = "\u001b[32m";
             const string reset = "\u001b[0m";
 
+            Console.WriteLine("\nVälj kampanjtyp med piltangenterna och tryck ENTER:\n");
+            int menuTop = Console.CursorTop;
+
+            void DrawMenu()
+            {
+                Console.SetCursorPosition(0, menuTop);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Console.Write(new string(' ', 60));
+                    Console.SetCursorPosition(0, menuTop + i);
+                }
+
+                Console.SetCursorPosition(0, menuTop);
+
+                Console.WriteLine(option == 1 ? $"· {highlight}Procentkampanj{reset}" : "  Procentkampanj");
+                Console.WriteLine(option == 2 ? $"· {highlight}Fast kampanjpris{reset}" : "  Fast kampanjpris");
+                Console.WriteLine(option == 3 ? $"· {highlight}Multiköp{reset}" : "  Multiköp");
+                Console.WriteLine(option == 4 ? $"· {highlight}Avbryt{reset}" : "  Avbryt");
+            }
+
+            DrawMenu();
+
             while (true)
             {
-                Console.Clear();
-                BannerUI.ShowLogo();
-                BannerUI.PrintHeader("VÄLJ KAMPANJTYP");
+                var key = Console.ReadKey(true);
 
-                Console.WriteLine($"{(option == 1 ? "·" + highlight : "  ")} Procentkampanj{reset}");
-                Console.WriteLine($"{(option == 2 ? "·" + highlight : "  ")} Fast kampanjpris{reset}");
-                Console.WriteLine($"{(option == 3 ? "·" + highlight : "  ")} Multiköp{reset}");
-                Console.WriteLine($"{(option == 4 ? "·" + highlight : "  ")} Avbryt{reset}");
+                if (key.Key == ConsoleKey.DownArrow)
+                    option = option == 4 ? 1 : option + 1;
 
-                key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.UpArrow)
+                    option = option == 1 ? 4 : option - 1;
 
-                switch (key.Key)
-                {
-                    case ConsoleKey.DownArrow:
-                        option = option == 4 ? 1 : option + 1;
-                        break;
-
-                    case ConsoleKey.UpArrow:
-                        option = option == 1 ? 4 : option - 1;
-                        break;
-
-                    case ConsoleKey.Enter:
-                        Console.CursorVisible = true;
-
-                        if (option == 1)
-                        {
-                            ApplyPercentCampaign(selectedProduct);
-                            break;
-                        }
-
-                        if (option == 2)
-                        {
-                            ApplyFixedPriceCampaign(selectedProduct);
-                            break;
-                        }
-
-                        if (option == 3)
-                        {
-                            ApplyMultiBuyCampaign(selectedProduct);
-                            break;
-                        }
-
-                        if (option == 4)
-                            return;
-
-                        break;
-                }
+                DrawMenu();
 
                 if (key.Key == ConsoleKey.Enter)
                     break;
             }
 
+            Console.CursorVisible = true;
+
+            if (option == 4)
+                return;
+
+            if (option == 1) ApplyPercentCampaign(product);
+            if (option == 2) ApplyFixedPriceCampaign(product);
+            if (option == 3) ApplyMultiBuyCampaign(product);
+
             ProductFileLoader.SaveProducts(products);
 
             ProductInputUI.ShowConfirmation(
                 "Kampanj skapad!",
-                $"Produkt: {selectedProduct.Name}\n" +
-                $"Typ: {CampaignService.GetCampaignName(selectedProduct)}"
+                $"Produkt: {product.Name}\nTyp: {CampaignService.GetCampaignName(product)}"
             );
         }
 
+        /// <summary>
+        /// Ends an active campaign.
+        /// </summary>
         public static void EndCampaign()
         {
             Console.Clear();
@@ -155,17 +145,8 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
             var products = ProductFileLoader.GetProducts() ?? new List<Product>();
-            var campaignProducts = products.Where(p => p.CampaignIsActive).ToList();
 
-            if (!campaignProducts.Any())
-            {
-                ProductInputUI.ShowError("Inga aktiva kampanjer finns.");
-                return;
-            }
-
-            ProductListUI.ShowProductList(campaignProducts);
-
-            string plu = InputService.ReadString("\nPLU: ");
+            string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)

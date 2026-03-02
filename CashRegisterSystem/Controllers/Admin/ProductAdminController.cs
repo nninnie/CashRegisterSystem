@@ -1,15 +1,17 @@
 ﻿using CashRegisterSystem.Core.Services;
 using CashRegisterSystem.Data;
-using CashRegisterSystem.UI;
+using CashRegisterSystem.Data.FileLoader;
 using CashRegisterSystem.Models;
+using CashRegisterSystem.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CashRegisterSystem.Controllers.Admin.Products
 {
     /// <summary>
     /// Handles admin actions for adding, editing and deleting products.
-    /// Ensures safe input and consistent UI flow.
+    /// Responsible only for product administration (no campaign logic).
     /// </summary>
     public static class ProductAdminController
     {
@@ -50,6 +52,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("TA BORT PRODUKT");
+
             ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();
@@ -68,7 +71,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         }
 
         /// <summary>
-        /// Updates an existing product using PLU input and saves the changes.
+        /// Lets the admin edit a selected product. Shows product info and a clean menu.
         /// </summary>
         public static void EditProduct()
         {
@@ -77,21 +80,126 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
-            ProductListUI.ShowProductList(products);
+
+            // Use compact PLU list with price (admin version)
+            ProductListUI.ShowCompactWithPrice(products);
 
             string plu = ProductInputUI.AskForPlu();
 
-            bool updated = ProductService.EditProduct(products, plu);
+            var product = products.FirstOrDefault(p => p.PLU == plu);
 
-            if (updated)
+            if (product == null)
             {
-                ProductFileRepository.SaveAll(products);
-
-                ProductInputUI.ShowConfirmation(
-                    "Produkt uppdaterad!",
-                    $"PLU: {plu}"
-                );
+                ProductInputUI.ShowError("Ingen produkt hittades.");
+                return;
             }
+
+            EditProductMenu(product, products);
+        }
+
+        /// <summary>
+        /// Shows product info and lets the admin choose what to edit.
+        /// </summary>
+        private static void EditProductMenu(Product product, List<Product> allProducts)
+        {
+            Console.Clear();
+            BannerUI.ShowLogo();
+            BannerUI.PrintHeader("ÄNDRA PRODUKT");
+
+            ShowProductInfo(product);
+
+            Console.WriteLine("\nVälj vad du vill ändra:\n");
+
+            int option = 1;
+            int menuTop = Console.CursorTop;
+
+            const string highlight = "\u001b[32m";
+            const string reset = "\u001b[0m";
+
+            void DrawMenu()
+            {
+                Console.SetCursorPosition(0, menuTop);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Console.Write(new string(' ', 60));
+                    Console.SetCursorPosition(0, menuTop + i);
+                }
+
+                Console.SetCursorPosition(0, menuTop);
+
+                Console.WriteLine(option == 1 ? $"· {highlight}Namn{reset}" : "  Namn");
+                Console.WriteLine(option == 2 ? $"· {highlight}Pris{reset}" : "  Pris");
+                Console.WriteLine(option == 3 ? $"· {highlight}Enhet (kg/st){reset}" : "  Enhet (kg/st)");
+                Console.WriteLine(option == 4 ? $"· {highlight}Tillbaka{reset}" : "  Tillbaka");
+            }
+
+            DrawMenu();
+
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+
+                if (key.Key == ConsoleKey.DownArrow)
+                    option = option == 4 ? 1 : option + 1;
+
+                if (key.Key == ConsoleKey.UpArrow)
+                    option = option == 1 ? 4 : option - 1;
+
+                DrawMenu();
+
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+            }
+
+            Console.CursorVisible = true;
+
+            switch (option)
+            {
+                case 1:
+                    product.Name = InputService.ReadString("Nytt namn: ");
+                    break;
+
+                case 2:
+                    product.Price = InputService.ReadDecimal("Nytt pris: ");
+                    break;
+
+                case 3:
+                    product.PriceUnit = InputService.ReadUnit("Ny enhet (kg/st): ");
+                    break;
+
+                case 4:
+                    return;
+            }
+
+            ProductFileRepository.SaveAll(allProducts);
+
+            ProductInputUI.ShowConfirmation(
+                "Produkten uppdaterad!",
+                product.Name
+            );
+        }
+
+        /// <summary>
+        /// Shows product details in a clean, receipt-like layout.
+        /// </summary>
+        private static void ShowProductInfo(Product p)
+        {
+            string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+
+            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine($"PLU:        {p.PLU}");
+            Console.WriteLine($"Namn:       {p.Name}");
+            Console.WriteLine($"Pris:       {p.Price:0} {unit}");
+
+            if (p.CampaignIsActive)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Kampanj:    {CampaignService.GetCampaignName(p)}");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine("--------------------------------------------------");
         }
 
         /// <summary>

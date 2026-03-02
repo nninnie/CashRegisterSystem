@@ -75,5 +75,54 @@ namespace CashRegisterSystem.UI
 
             Console.ResetColor();
         }
+
+        /// <summary>
+        /// Shows a compact 3-column PLU list including price.
+        /// Used in Edit Product (admin), not in checkout.
+        /// </summary>
+        public static void ShowCompactWithPrice(List<Product> products)
+        {
+            var sorted = products.OrderBy(p => p.Name).ToList();
+
+            int colWidth = 38;     // total width per column
+            int pluWidth = 6;      // PLU
+            int nameWidth = 14;    // product name
+            int priceWidth = 10;   // price + unit
+
+            int itemsPerRow = 2;   // two columns per row (your example)
+            int rowCount = (int)Math.Ceiling(sorted.Count / (double)itemsPerRow);
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                string row = "";
+
+                for (int col = 0; col < itemsPerRow; col++)
+                {
+                    int index = i + col * rowCount;
+                    if (index >= sorted.Count)
+                    {
+                        row += "".PadRight(colWidth);
+                        continue;
+                    }
+
+                    var p = sorted[index];
+
+                    string plu = (p.PLU ?? "").PadRight(pluWidth);
+                    string name = (p.Name ?? "").PadRight(nameWidth);
+                    string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+                    string price = $"{p.Price:0.00} {unit}".PadRight(priceWidth);
+
+                    string colText = $"{plu} {name} {price}";
+                    row += colText.PadRight(colWidth);
+
+                }
+
+                Console.WriteLine(row);
+            }
+
+            Console.WriteLine();
+        }
+
     }
 }
+
