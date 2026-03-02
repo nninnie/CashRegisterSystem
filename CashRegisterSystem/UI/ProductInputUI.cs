@@ -66,7 +66,7 @@ namespace CashRegisterSystem.UI
             Console.ResetColor();
 
             Console.WriteLine(details);
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.WriteLine("\nÅtergå till meny...");
             Console.ReadKey();
         }
 

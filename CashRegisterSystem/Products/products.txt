@@ -15,7 +15,7 @@
 3220;Päron;28,90;PerKilo
 93220;Päron Eko;26,90;PerKilo
 4521;Sparris;46,90;Each
-4253;Sallad isberg;24,40;Each
+4061;Sallad isberg;24,40;PerKilo
 4800;Selleri;16,90;Each
 4645;Svamp champinjon;19,90;Each
 4806;Tomat kvist;26,90;PerKilo

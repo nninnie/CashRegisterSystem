@@ -36,7 +36,7 @@
         public DateTime? CampaignEndDate { get; set; }
 
         // Aktiv/inaktiv
-        public bool CampaignIsActive { get; set; } = true;
+        public bool CampaignIsActive { get; set; } = false;
 
         // Fast moms
         public decimal VatRate => 0.12m;

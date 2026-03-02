@@ -150,7 +150,9 @@ namespace CashRegisterSystem.Core.CheckoutService
             File.WriteAllText(pdfPath, receiptText);
 
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
-            Console.WriteLine("Tryck valfri tangent för att fortsätta.");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("Återgå till meny..");
+            Console.ResetColor();
             Console.ReadKey(true);
 
             return false; // Always return a bool

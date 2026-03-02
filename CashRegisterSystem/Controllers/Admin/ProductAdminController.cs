@@ -75,17 +75,16 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         /// </summary>
         public static void EditProduct()
         {
-            var products = ProductFileRepository.GetAll() ?? new List<Product>();
-
             Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
-            // Use compact PLU list with price (admin version)
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
+
+            // Visa samma PLU-lista som i admin/kampanj
             ProductListUI.ShowCompactWithPrice(products);
 
-            string plu = ProductInputUI.AskForPlu();
-
+            string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)
@@ -94,91 +93,61 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                 return;
             }
 
-            EditProductMenu(product, products);
-        }
-
-        /// <summary>
-        /// Shows product info and lets the admin choose what to edit.
-        /// </summary>
-        private static void EditProductMenu(Product product, List<Product> allProducts)
-        {
             Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
-            ShowProductInfo(product);
+            // Produktinfo UTAN kampanj
+            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine($"PLU:        {product.PLU}");
+            Console.WriteLine($"Namn:       {product.Name}");
+            Console.WriteLine($"Pris:       {product.Price:0.00} {(product.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st")}");
+            Console.WriteLine("--------------------------------------------------");
 
-            Console.WriteLine("\nVälj vad du vill ändra:\n");
+            Console.WriteLine();
+            Console.WriteLine("Vad vill du ändra?");
+            Console.WriteLine("1. PLU");
+            Console.WriteLine("2. Namn");
+            Console.WriteLine("3. Pris");
+            Console.WriteLine("4. Enhet (kg/st)");
+            Console.WriteLine("5. Tillbaka");
 
-            int option = 1;
-            int menuTop = Console.CursorTop;
+            int choice = InputService.ReadInt("Val: ");
 
-            const string highlight = "\u001b[32m";
-            const string reset = "\u001b[0m";
-
-            void DrawMenu()
-            {
-                Console.SetCursorPosition(0, menuTop);
-
-                for (int i = 0; i < 4; i++)
-                {
-                    Console.Write(new string(' ', 60));
-                    Console.SetCursorPosition(0, menuTop + i);
-                }
-
-                Console.SetCursorPosition(0, menuTop);
-
-                Console.WriteLine(option == 1 ? $"· {highlight}Namn{reset}" : "  Namn");
-                Console.WriteLine(option == 2 ? $"· {highlight}Pris{reset}" : "  Pris");
-                Console.WriteLine(option == 3 ? $"· {highlight}Enhet (kg/st){reset}" : "  Enhet (kg/st)");
-                Console.WriteLine(option == 4 ? $"· {highlight}Tillbaka{reset}" : "  Tillbaka");
-            }
-
-            DrawMenu();
-
-            while (true)
-            {
-                var key = Console.ReadKey(true);
-
-                if (key.Key == ConsoleKey.DownArrow)
-                    option = option == 4 ? 1 : option + 1;
-
-                if (key.Key == ConsoleKey.UpArrow)
-                    option = option == 1 ? 4 : option - 1;
-
-                DrawMenu();
-
-                if (key.Key == ConsoleKey.Enter)
-                    break;
-            }
-
-            Console.CursorVisible = true;
-
-            switch (option)
+            switch (choice)
             {
                 case 1:
-                    product.Name = InputService.ReadString("Nytt namn: ");
+                    product.PLU = InputService.ReadString("\nNytt PLU: ");
                     break;
 
                 case 2:
-                    product.Price = InputService.ReadDecimal("Nytt pris: ");
+                    product.Name = InputService.ReadString("\nNytt namn: ");
                     break;
 
                 case 3:
-                    product.PriceUnit = InputService.ReadUnit("Ny enhet (kg/st): ");
+                    product.Price = InputService.ReadDecimal("\nNytt pris: ");
                     break;
 
                 case 4:
+                    product.PriceUnit = InputService.ReadUnit("\nNy enhet (kg/st): ");
+                    break;
+
+                case 5:
+                    return;
+
+                default:
+                    ProductInputUI.ShowError("Ogiltigt val.");
                     return;
             }
 
-            ProductFileRepository.SaveAll(allProducts);
+            ProductFileRepository.SaveAll(products);
 
             ProductInputUI.ShowConfirmation(
                 "Produkten uppdaterad!",
                 product.Name
             );
         }
+
 
         /// <summary>
         /// Shows product details in a clean, receipt-like layout.

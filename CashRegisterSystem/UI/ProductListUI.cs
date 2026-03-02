@@ -84,12 +84,12 @@ namespace CashRegisterSystem.UI
         {
             var sorted = products.OrderBy(p => p.Name).ToList();
 
-            int colWidth = 38;     // total width per column
-            int pluWidth = 6;      // PLU
-            int nameWidth = 14;    // product name
-            int priceWidth = 10;   // price + unit
+            int colWidth = 38;
+            int pluWidth = 6;
+            int nameWidth = 14;
+            int priceWidth = 10;
 
-            int itemsPerRow = 2;   // two columns per row (your example)
+            int itemsPerRow = 2;
             int rowCount = (int)Math.Ceiling(sorted.Count / (double)itemsPerRow);
 
             for (int i = 0; i < rowCount; i++)
@@ -112,9 +112,31 @@ namespace CashRegisterSystem.UI
                     string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
                     string price = $"{p.Price:0.00} {unit}".PadRight(priceWidth);
 
-                    string colText = $"{plu} {name} {price}";
-                    row += colText.PadRight(colWidth);
+                    // ⭐ Kampanjtext beroende på typ
+                    string campaignText = "";
 
+                    if (p.CampaignIsActive)
+                    {
+                        // FAST KAMPANJPRIS
+                        if (p.CampaignPrice > 0)
+                        {
+                            campaignText = $" (KAMPANJ: {p.CampaignPrice:0.00} kr)";
+                        }
+                        // PROCENTKAMPANJ
+                        else if (p.CampaignPercent > 0)
+                        {
+                            decimal newPrice = p.Price * (1 - (p.CampaignPercent / 100));
+                            campaignText = $" (KAMPANJ: {newPrice:0.00} kr)";
+                        }
+                        // MULTIKÖP
+                        else if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
+                        {
+                            campaignText = " (KAMPANJ MULTI)";
+                        }
+                    }
+
+                    string colText = $"{plu} {name} {price}{campaignText}";
+                    row += colText.PadRight(colWidth);
                 }
 
                 Console.WriteLine(row);
