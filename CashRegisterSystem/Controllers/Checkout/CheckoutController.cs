@@ -27,8 +27,7 @@ namespace CashRegisterSystem.Controllers
 
             Cart cart = new Cart();
 
-            Console.Clear();
-            CheckoutDisplayUI.PrintPLUList(products);
+            ShowCheckoutPluList(products);
 
             while (true)
             {
@@ -52,7 +51,7 @@ namespace CashRegisterSystem.Controllers
 
                         _cartService.Clear(cart);
                         Console.Clear();
-                        CheckoutDisplayUI.PrintPLUList(products);
+                        ShowCheckoutPluList(products);
                         break;
                     }
 
@@ -102,7 +101,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1200);
                 Console.Clear();
-                CheckoutDisplayUI.PrintPLUList(products);
+                ShowCheckoutPluList(products);
             }
         }
 
@@ -125,7 +124,7 @@ namespace CashRegisterSystem.Controllers
 
             Thread.Sleep(1000);
             Console.Clear();
-            CheckoutDisplayUI.PrintPLUList(products);
+            ShowCheckoutPluList(products);
             CartUI.ShowCart(cart);
         }
 
@@ -173,5 +172,14 @@ namespace CashRegisterSystem.Controllers
             Console.ResetColor();
             Thread.Sleep(1200);
         }
+
+        private void ShowCheckoutPluList(List<Product> products)
+        {
+            Console.Clear();
+            BannerUI.ShowLogo();
+            BannerUI.PrintHeader("KASSA");
+            ProductListUI.ShowCompactPLU(products);
+        }
+
     }
 }

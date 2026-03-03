@@ -22,7 +22,7 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
             {
                 Console.Clear();
                 BannerUI.ShowLogo();
-                BannerUI.PrintHeader("KAMPANJ-MENY");
+                BannerUI.PrintHeader("KAMPANJ MENY");
 
                 Console.WriteLine($"{(menuOption == 1 ? "·" + highlight : "  ")} Skapa kampanj{reset}");
                 Console.WriteLine($"{(menuOption == 2 ? "·" + highlight : "  ")} Visa kampanjer{reset}");
@@ -48,17 +48,14 @@ namespace CashRegisterSystem.Controllers.Admin.Campaigns
                         {
                             case 1:
                                 CampaignAdminController.StartCampaign();
-                                Console.Clear();
                                 break;
 
                             case 2:
                                 CampaignAdminController.ViewAllCampaigns();
-                                Console.Clear();
                                 break;
 
                             case 3:
                                 CampaignAdminController.EndCampaign();
-                                Console.Clear();
                                 break;
 
                             case 4:

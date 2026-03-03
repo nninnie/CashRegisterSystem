@@ -21,6 +21,8 @@ public static class AdminMenuController
 
         while (true)
         {
+            var products = ProductFileRepository.GetAll();
+
             Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ADMIN MENY");
@@ -51,7 +53,6 @@ public static class AdminMenuController
                     {
                         case 1:
                             Console.Clear();
-                            var products = ProductFileRepository.GetAll();
                             ProductListUI.ShowProductList(products);
                             break;
 

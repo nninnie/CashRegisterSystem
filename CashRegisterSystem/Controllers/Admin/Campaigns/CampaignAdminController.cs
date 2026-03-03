@@ -20,25 +20,27 @@ namespace CashRegisterSystem.Controllers.Admin
         public static void ViewAllCampaigns()
         {
             Console.Clear();
-            BannerUI.ShowLogo();
-            BannerUI.PrintHeader("VISA KAMPANJER");
+            BannerUI.PrintHeader("AKTIVA KAMPANJER");
 
-            var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            var campaignProducts = products.Where(p => p.CampaignIsActive).ToList();
+            var products = ProductFileRepository.GetAll()
+                ?.Where(p => p.CampaignIsActive)
+                .ToList() ?? new List<Product>();
 
-            if (!campaignProducts.Any())
+            if (!products.Any())
             {
-                ProductInputUI.ShowError("Inga aktiva kampanjer finns.");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Inga aktiva kampanjer.");
+                Console.ResetColor();
+                Console.ReadKey();
                 return;
             }
 
-            foreach (var p in campaignProducts)
-                Console.WriteLine(BuildCampaignLine(p));
+            // Visa standard-PLU-listan (70 tecken, samma som överallt)
+            ProductListUI.ShowProductList(products);
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("\nÅtergå till meny..");
-            Console.ResetColor();
-            Console.ReadKey(true);
+            Console.WriteLine();
+            Console.WriteLine("Tryck valfri tangent för att återgå...");
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowCompactWithPrice(products);
+            ProductListUI.ShowProductList(products);
 
             string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
@@ -116,7 +118,7 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowCompactWithPrice(products);
+            ProductListUI.ShowProductList(products);
 
             string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
@@ -196,23 +198,28 @@ namespace CashRegisterSystem.Controllers.Admin
         /// </summary>
         private static string BuildCampaignLine(Product p)
         {
-            string plu = p.PLU.PadRight(4);
-            string name = Truncate(p.Name, 15).PadRight(15);
+            // Kolumnbredder
+            string plu = p.PLU.PadRight(6);
 
-            string type = p.CampaignPercent > 0
-                ? $"Procent {p.CampaignPercent}%"
-                : p.CampaignPrice > 0
-                    ? "Fast pris"
-                    : p.MultiBuyQuantity > 0
-                        ? $"{p.MultiBuyQuantity} för {p.MultiBuyPrice:0}"
-                        : "Kampanj";
+            string nameRaw = Truncate(p.Name, 14).PadRight(14);
+            string name = nameRaw; // ingen färg här
 
-            type = Truncate(type, 14).PadRight(14);
+            string typeRaw =
+                p.CampaignPercent > 0 ? $"Procent {p.CampaignPercent}%"
+                : p.CampaignPrice > 0 ? "Fast pris"
+                : p.MultiBuyQuantity > 0 ? $"{p.MultiBuyQuantity} för {p.MultiBuyPrice:0}"
+                : "Kampanj";
 
-            string ord = $"{p.Price:0.00}".PadLeft(6);
-            string kamp = $"{CampaignService.GetPrice(p):0.00}".PadLeft(6);
+            string typePadded = Truncate(typeRaw, 12).PadRight(12);
+            string type = $"\u001b[92m{typePadded}\u001b[0m";
 
-            return $"{plu} {name} | {type} | Ord:{ord}  Kamp:{kamp}";
+            string ordRaw = $"Ord: {p.Price:0.00}".PadRight(14);
+            string ord = $"\u001b[90m{ordRaw}\u001b[0m";
+
+            string kampRaw = $"Kamp: {CampaignService.GetPrice(p):0.00}".PadRight(14);
+            string kamp = $"\u001b[92m{kampRaw}\u001b[0m";
+
+            return $"{plu}| {name}| {type}| {ord}| {kamp}";
         }
     }
-}
+    }

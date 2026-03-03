@@ -27,7 +27,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
             // Show compact PLU list before creating a new product (same style as other admin views)
-            ProductListUI.ShowCompactWithPrice(products);
+            ProductListUI.ShowProductList(products);
 
             var newProduct = ProductService.AddProduct(products);
 
@@ -57,7 +57,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.PrintHeader("TA BORT PRODUKT");
 
             // Show compact PLU list before asking for PLU
-            ProductListUI.ShowCompactWithPrice(products);
+            ProductListUI.ShowProductList(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -86,7 +86,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             // Show compact PLU list before asking for PLU
-            ProductListUI.ShowCompactWithPrice(products);
+            ProductListUI.ShowProductList(products);
+
 
             string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
@@ -170,20 +171,6 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             Console.WriteLine("--------------------------------------------------");
         }
 
-        /// <summary>
-        /// Displays the full product list in admin mode.
-        /// </summary>
-        public static void ShowProductListAdmin()
-        {
-            var products = ProductFileRepository.GetAll() ?? new List<Product>();
-
-            Console.Clear();
-            BannerUI.ShowLogo();
-            BannerUI.PrintHeader("PRODUKTLISTA ADMIN");
-
-            ProductListUI.ShowProductList(products);
-
-            Console.ReadKey(true);
-        }
+       
     }
 }
