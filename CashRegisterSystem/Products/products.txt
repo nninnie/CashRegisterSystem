@@ -8,19 +8,20 @@
 3132;Kiwi Gul;12,90;Each
 4252;Jordgubbar;35,90;Each
 4686;Paprika grön;41,90;PerKilo
-4687;Paprika gul;46,90;PerKilo
+4687;Paprika gul;39,90;PerKilo
 4688;Paprika röd;42,90;PerKilo
 4833;Potatis fast;12,90;PerKilo
 4863;Potatis mjölig;12,90;PerKilo
-3220;Päron;28,90;PerKilo
+3220;Päron;19,90;PerKilo
 93220;Päron Eko;26,90;PerKilo
 4521;Sparris;46,90;Each
 4061;Sallad isberg;24,40;PerKilo
 4800;Selleri;16,90;Each
-4645;Svamp champinjon;19,90;Each
 4806;Tomat kvist;26,90;PerKilo
 3214;Äpple;32,90;PerKilo
 3264;Vitlök;16,90;Each
 3211;Vitkål;19,90;Each
-4593;Gurka;19,90;Each
+4593;Gurka;17,90;Each
 4304;Citron;9,90;Each
+3163;Persilja;19,90;Each
+4645;Champinjoner;16,90;Each

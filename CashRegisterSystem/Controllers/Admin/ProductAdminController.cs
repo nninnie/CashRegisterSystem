@@ -26,6 +26,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
+            // Show compact PLU list before creating a new product (same style as other admin views)
+            ProductListUI.ShowCompactWithPrice(products);
+
             var newProduct = ProductService.AddProduct(products);
 
             if (newProduct != null)
@@ -53,7 +56,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("TA BORT PRODUKT");
 
-            ProductListUI.ShowProductList(products);
+            // Show compact PLU list before asking for PLU
+            ProductListUI.ShowCompactWithPrice(products);
 
             string plu = ProductInputUI.AskForPlu();
 
@@ -71,7 +75,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         }
 
         /// <summary>
-        /// Lets the admin edit a selected product. Shows product info and a clean menu.
+        /// Lets the admin edit a selected product. Shows product info and a simple menu.
         /// </summary>
         public static void EditProduct()
         {
@@ -81,7 +85,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
-            // Visa samma PLU-lista som i admin/kampanj
+            // Show compact PLU list before asking for PLU
             ProductListUI.ShowCompactWithPrice(products);
 
             string plu = InputService.ReadString("PLU: ");
@@ -97,12 +101,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
-            // Produktinfo UTAN kampanj
-            Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine($"PLU:        {product.PLU}");
-            Console.WriteLine($"Namn:       {product.Name}");
-            Console.WriteLine($"Pris:       {product.Price:0.00} {(product.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st")}");
-            Console.WriteLine("--------------------------------------------------");
+            // Reuse common product info layout (DRY)
+            ShowProductInfo(product);
 
             Console.WriteLine();
             Console.WriteLine("Vad vill du ändra?");
@@ -148,23 +148,22 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             );
         }
 
-
         /// <summary>
         /// Shows product details in a clean, receipt-like layout.
         /// </summary>
-        private static void ShowProductInfo(Product p)
+        private static void ShowProductInfo(Product product)
         {
-            string unit = p.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
+            string unit = product.PriceUnit == PriceUnit.PerKilo ? "kr/kg" : "kr/st";
 
             Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine($"PLU:        {p.PLU}");
-            Console.WriteLine($"Namn:       {p.Name}");
-            Console.WriteLine($"Pris:       {p.Price:0} {unit}");
+            Console.WriteLine($"PLU:        {product.PLU}");
+            Console.WriteLine($"Namn:       {product.Name}");
+            Console.WriteLine($"Pris:       {product.Price:0.00} {unit}");
 
-            if (p.CampaignIsActive)
+            if (product.CampaignIsActive)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Kampanj:    {CampaignService.GetCampaignName(p)}");
+                Console.WriteLine($"Kampanj:    {CampaignService.GetCampaignName(product)}");
                 Console.ResetColor();
             }
 
@@ -179,6 +178,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             Console.Clear();
+            BannerUI.ShowLogo();
+            BannerUI.PrintHeader("PRODUKTLISTA ADMIN");
+
             ProductListUI.ShowProductList(products);
 
             Console.ReadKey(true);

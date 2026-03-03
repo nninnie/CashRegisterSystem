@@ -5,25 +5,37 @@ using System.Collections.Generic;
 namespace CashRegisterSystem.Data
 {
     /// <summary>
-    /// Provides simple access to loading and saving all products.
-    /// Uses ProductFileLoader as the underlying file handler.
+    /// Provides unified access to loading and saving all products.
+    /// Loads products from file and applies campaign data.
+    /// Ensures no null values and prevents crashes.
     /// </summary>
     public static class ProductFileRepository
     {
-        // Returns all products from file.
+        /// <summary>
+        /// Loads all products and applies campaign data.
+        /// </summary>
         public static List<Product> GetAll()
         {
-            var products = ProductFileLoader.GetProducts();
-            return products ?? new List<Product>(); // Prevents null crashes
+            var products = ProductFileLoader.GetProducts() ?? new List<Product>();
+
+            // Load campaign data into the products
+            products = CampaignFileLoader.LoadCampaignsIntoProducts(products);
+
+            return products;
         }
 
-        // Saves all products to file.
+        /// <summary>
+        /// Saves all products to file.
+        /// </summary>
         public static void SaveAll(List<Product> products)
         {
             if (products == null)
                 return;
 
             ProductFileLoader.SaveProducts(products);
+
+            // Also save campaign data
+            CampaignFileLoader.SaveCampaignsFromProducts(products);
         }
     }
 }
