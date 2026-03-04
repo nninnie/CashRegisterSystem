@@ -44,7 +44,7 @@ namespace CashRegisterSystem.UI
             Console.ForegroundColor = ConsoleColor.DarkCyan;
 
             // Exact visual centering for Unicode/emoji logo
-            string logo = "🍎🍌🍇🍉 𝗙 𝗥 I U 𝗧   M A R K E 𝗧 🍓🍍🍒🍑";
+            string logo = "🍎🍌🍇🍉 𝗙 𝗥 U K T   M A R K N A D 🍓🍍🍒🍑";
             string paddedLogo = new string(' ', 16) + logo; 
 
             Console.WriteLine(paddedLogo);

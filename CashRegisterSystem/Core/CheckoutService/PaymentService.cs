@@ -1,6 +1,7 @@
 ﻿using CashRegisterSystem.Core.Services;
 using CashRegisterSystem.Data.Service;
 using CashRegisterSystem.Models;
+using CashRegisterSystem.UI;
 using System;
 using System.IO;
 
@@ -11,64 +12,86 @@ namespace CashRegisterSystem.Core.CheckoutService
     /// </summary>
     public class PaymentService
     {
+        /// <summary>
+        /// Completes the payment flow for the current cart.
+        /// </summary>
         public bool CompletePayment(Cart cart)
         {
+            // Guard clause: empty or null cart
             if (cart == null || cart.CartItems.Count == 0)
             {
                 Console.WriteLine("Kundvagnen är tom.");
                 return true;
             }
 
+            // Payment selection
             int selectedOption = 1;
             const string highlight = "\u001b[32m";
             const string reset = "\u001b[0m";
 
-            Console.WriteLine("\nVälj betalningsmetod:\n");
-            int menuTopRow = Console.CursorTop;
-
-            // Draws the payment menu safely at a fixed position
-            void DrawPaymentMenu()
+            void DrawPaymentMenu(int startRow)
             {
-                Console.SetCursorPosition(0, menuTopRow);
+                // Safety: keep inside buffer
+                if (startRow < 0) startRow = 0;
+                if (startRow >= Console.BufferHeight - 2) startRow = Console.BufferHeight - 3;
 
-                for (int i = 0; i < 2; i++)
-                {
-                    Console.Write(new string(' ', 40));
-                    Console.SetCursorPosition(0, menuTopRow + i);
-                }
+                // --- CLEAR ROW 1 ---
+                Console.SetCursorPosition(0, startRow);
+                Console.Write(new string(' ', Console.WindowWidth));
 
-                Console.SetCursorPosition(0, menuTopRow);
+                // --- CLEAR ROW 2 ---
+                Console.SetCursorPosition(0, startRow + 1);
+                Console.Write(new string(' ', Console.WindowWidth));
 
+                // --- DRAW ROW 1 ---
+                Console.SetCursorPosition(0, startRow);
                 Console.WriteLine(selectedOption == 1
                     ? $"· {highlight}Kontant{reset}"
                     : "  Kontant");
 
+                // --- DRAW ROW 2 ---
+                Console.SetCursorPosition(0, startRow + 1);
                 Console.WriteLine(selectedOption == 2
                     ? $"· {highlight}Kort{reset}"
                     : "  Kort");
             }
 
-            // Draw menu once
-            DrawPaymentMenu();
+            // Write header ONCE
+            Console.WriteLine("\nBetalningsmetod:\n");
+            Console.WriteLine();
+            // Save the row where the menu begins
+            int menuStartRow = Console.CursorTop;
 
-            // Menu navigation
-            while (true)
+            // Draw menu first time
+            DrawPaymentMenu(menuStartRow);
+
+            // Navigation loop
+            bool paymentChosen = false;
+
+            while (!paymentChosen)
             {
                 var key = Console.ReadKey(true);
 
-                if (key.Key == ConsoleKey.DownArrow) selectedOption++;
-                if (key.Key == ConsoleKey.UpArrow) selectedOption--;
+                switch (key.Key)
+                {
+                    case ConsoleKey.DownArrow:
+                        selectedOption = selectedOption == 2 ? 1 : selectedOption + 1;
+                        break;
 
-                if (selectedOption < 1) selectedOption = 2;
-                if (selectedOption > 2) selectedOption = 1;
+                    case ConsoleKey.UpArrow:
+                        selectedOption = selectedOption == 1 ? 2 : selectedOption - 1;
+                        break;
 
-                Console.SetCursorPosition(0, menuTopRow);
-                DrawPaymentMenu();
+                    case ConsoleKey.Enter:
+                        paymentChosen = true;
+                        continue;
+                }
 
-                if (key.Key == ConsoleKey.Enter)
-                    break;
+                DrawPaymentMenu(menuStartRow);
             }
 
+
+            // Determine payment method
             string paymentMethod = selectedOption == 1 ? "Kontant" : "Kort";
 
             // Read cash amount only for cash payments
@@ -79,7 +102,9 @@ namespace CashRegisterSystem.Core.CheckoutService
             // Calculate total to pay
             decimal totalToPay = 0;
             foreach (var item in cart.CartItems)
+            {
                 totalToPay += item.TotalPrice - item.DiscountAmount;
+            }
 
             // If customer pays too little, ask again until enough
             if (paymentMethod == "Kontant")
@@ -94,7 +119,7 @@ namespace CashRegisterSystem.Core.CheckoutService
                     Console.ResetColor();
 
                     Console.Write("Mottaget belopp: ");
-                    string input = Console.ReadLine() ?? "";
+                    string input = Console.ReadLine() ?? string.Empty;
 
                     if (decimal.TryParse(input, out decimal extra) && extra >= 0)
                     {
@@ -109,7 +134,7 @@ namespace CashRegisterSystem.Core.CheckoutService
                 }
             }
 
-            // Receipt number
+            // Receipt number handling
             int receiptNumber = ReceiptNumberService.GetNext();
             ReceiptNumberService.Save(receiptNumber);
 
@@ -126,7 +151,9 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived
             );
 
+            // Clear screen before showing receipt
             Console.Clear();
+            BannerUI.ShowLogo();
             Console.WriteLine(receiptText);
 
             // Save receipt folder
@@ -142,20 +169,13 @@ namespace CashRegisterSystem.Core.CheckoutService
 
             File.WriteAllText(txtPath, receiptText);
 
-            // Save as .pdf (text-based)
-            string pdfPath = Path.Combine(
-                receiptFolder,
-                $"RECEIPT_{DateTime.Now:yyyyMMdd}.pdf");
-
-            File.WriteAllText(pdfPath, receiptText);
-
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Återgå till meny..");
             Console.ResetColor();
             Console.ReadKey(true);
 
-            return false; // Always return a bool
+            return false;
         }
 
         /// <summary>
@@ -166,10 +186,12 @@ namespace CashRegisterSystem.Core.CheckoutService
             while (true)
             {
                 Console.Write("\nMottaget belopp: ");
-                string input = Console.ReadLine() ?? "";
+                string input = Console.ReadLine() ?? string.Empty;
 
                 if (decimal.TryParse(input, out decimal amount) && amount >= 0)
+                {
                     return amount;
+                }
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Ogiltigt belopp. Försök igen.\n");

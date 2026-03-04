@@ -20,16 +20,18 @@ namespace CashRegisterSystem.UI
 
         /// <summary>
         /// Asks the user to enter a PLU code.
+        /// Returns null if ESC is pressed.
         /// </summary>
-        public static string AskForPlu()
+        public static string? AskForPlu()
         {
-            return InputService.ReadString("Ange PLU: ");
+            return InputService.ReadString("\nPLU: ");
         }
 
         /// <summary>
         /// Asks the user to enter a product name.
+        /// Returns null if ESC is pressed.
         /// </summary>
-        public static string AskForProductName()
+        public static string? AskForProductName()
         {
             return InputService.ReadString("Produktnamn: ");
         }
@@ -37,23 +39,27 @@ namespace CashRegisterSystem.UI
         /// <summary>
         /// Asks the user to enter the base price.
         /// NOTE: Price is entered as a whole number (no decimals).
+        /// Returns null if ESC is pressed.
         /// </summary>
-        public static decimal AskForBasePrice()
+        public static decimal? AskForBasePrice()
         {
             return InputService.ReadDecimal("Grundpris: ");
         }
 
         /// <summary>
         /// Lets the user choose whether the product is sold per kilo or per piece.
+        /// Returns null if ESC is pressed.
         /// </summary>
-        public static PriceUnit AskForPriceUnit()
+        public static PriceUnit? AskForPriceUnit()
         {
             Console.WriteLine("1. Per kilo (kg)");
             Console.WriteLine("2. Per styck (st)");
 
-            int choice = InputService.ReadInt("Välj enhet: ");
+            int? choice = InputService.ReadInt("Välj enhet: ");
+            if (choice == null)
+                return null; // ESC → tillbaka
 
-            return choice == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
+            return choice.Value == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
         }
 
         /// <summary>
@@ -85,8 +91,9 @@ namespace CashRegisterSystem.UI
 
         /// <summary>
         /// Asks the user to enter a campaign label if needed.
+        /// Returns null if ESC is pressed.
         /// </summary>
-        public static string AskForCampaignLabel()
+        public static string? AskForCampaignLabel()
         {
             return InputService.ReadString("Kampanjnamn (t.ex. 'Äpplen 3 för 20'): ");
         }

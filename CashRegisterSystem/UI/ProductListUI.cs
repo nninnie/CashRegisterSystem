@@ -12,11 +12,10 @@ namespace CashRegisterSystem.UI
         /// Standard product list for admin and main menu.
         /// Displays one row per product in a table layout.
         /// </summary>
-        public static void ShowProductList(List<Product> products)
+        public static void ShowProductList(List<Product> products, bool showReturnMessage = true)
         {
             Console.Clear();
             BannerUI.ShowLogo();
-
             BannerUI.PrintHeader("PRODUKTLISTA");
 
             // Column widths for clear table layout
@@ -45,7 +44,6 @@ namespace CashRegisterSystem.UI
                 string unit = p.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
                 string ordPrice = $"{p.Price:0.00}".PadRight(colPrice);
 
-                // Added: campaign value + campaign type
                 string kampValue;
                 string kampType;
 
@@ -86,12 +84,17 @@ namespace CashRegisterSystem.UI
                 );
             }
 
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Tryck valfri tangent för att återgå..");
-            Console.ResetColor();
-            Console.ReadKey();
+            // Only show return message when used as a standalone menu
+            if (showReturnMessage)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("Tryck valfri tangent för att återgå..");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
         }
+
 
         /// <summary>
         /// Compact three-column cashier list with campaign rows.

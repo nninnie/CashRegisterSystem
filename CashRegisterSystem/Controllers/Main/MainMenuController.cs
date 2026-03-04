@@ -37,7 +37,7 @@ namespace CashRegisterSystem.Controllers.Main
 
                         case 2:
                             Console.Clear();
-                            ProductListUI.ShowProductList(products);
+                            ProductListUI.ShowProductList(products, true);
                             break;
 
                         case 3:
@@ -59,7 +59,7 @@ namespace CashRegisterSystem.Controllers.Main
                             break;
 
                         case 2:
-                            ProductListUI.ShowProductList(products);
+                            ProductListUI.ShowProductList(products, true);
                             break;
 
                         case 3:

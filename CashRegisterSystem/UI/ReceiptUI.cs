@@ -75,7 +75,7 @@ public static class ReceiptUI
         int receiptNumber)
     {
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
-        receiptBuilder.AppendLine(CenterText("Frukt Marknaden"));
+        receiptBuilder.AppendLine(CenterText("Frukt Marknad"));
         receiptBuilder.AppendLine(CenterText("Öppet 08:00 - 23:00"));
         receiptBuilder.AppendLine(CenterText("Tel: 073-570 43 68"));
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));

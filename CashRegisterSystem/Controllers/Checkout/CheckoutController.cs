@@ -38,8 +38,8 @@ namespace CashRegisterSystem.Controllers
 
                 while (parsed == null)
                 {
-                    string input = InputService.ReadString("PLU och antal/vikt: ");
-                    string trimmed = input.Trim().ToUpper();
+                    string? input = InputService.ReadString("PLU och antal/vikt: ");
+                    string? trimmed = input.Trim().ToUpper();
 
                     // PAY
                     if (_commandParser.IsPayCommand(trimmed))

@@ -53,7 +53,7 @@ public static class AdminMenuController
                     {
                         case 1:
                             Console.Clear();
-                            ProductListUI.ShowProductList(products);
+                            ProductListUI.ShowProductList(products, true);
                             break;
 
                         case 2:

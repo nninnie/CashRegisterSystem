@@ -11,14 +11,17 @@ namespace CashRegisterSystem.Core.Services
     /// </summary>
     public static class ProductService
     {
-        // Creates a new product from user input.
+        /// <summary>
+        /// Creates a new product from user input.
+        /// Returns null if ESC is pressed or invalid data is entered.
+        /// </summary>
         public static Product? AddProduct(List<Product> products)
         {
             if (products == null)
                 return null;
 
-            string plu = ProductInputUI.AskForPlu();
-            if (string.IsNullOrWhiteSpace(plu))
+            string? plu = ProductInputUI.AskForPlu();
+            if (plu == null || string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return null;
@@ -30,28 +33,30 @@ namespace CashRegisterSystem.Core.Services
                 return null;
             }
 
-            string name = ProductInputUI.AskForProductName();
-            if (string.IsNullOrWhiteSpace(name))
+            string? name = ProductInputUI.AskForProductName();
+            if (name == null || string.IsNullOrWhiteSpace(name))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return null;
             }
 
-            decimal price = ProductInputUI.AskForBasePrice();
-            if (price <= 0)
+            decimal? price = ProductInputUI.AskForBasePrice();
+            if (price == null || price <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return null;
             }
 
-            PriceUnit unit = ProductInputUI.AskForPriceUnit();
+            PriceUnit? unit = ProductInputUI.AskForPriceUnit();
+            if (unit == null)
+                return null; // ESC → back
 
             return new Product
             {
                 PLU = plu,
                 Name = name,
-                Price = price,
-                PriceUnit = unit,
+                Price = price.Value,
+                PriceUnit = unit.Value,
 
                 // Reset campaign fields
                 CampaignPercent = 0,
@@ -64,13 +69,16 @@ namespace CashRegisterSystem.Core.Services
             };
         }
 
-        // Deletes a product by PLU.
-        public static bool DeleteProduct(List<Product> products, string plu)
+        /// <summary>
+        /// Deletes a product by PLU.
+        /// Returns false if ESC is pressed or product is not found.
+        /// </summary>
+        public static bool DeleteProduct(List<Product> products, string? plu)
         {
             if (products == null)
                 return false;
 
-            if (string.IsNullOrWhiteSpace(plu))
+            if (plu == null || string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
@@ -87,13 +95,16 @@ namespace CashRegisterSystem.Core.Services
             return true;
         }
 
-        // Edits an existing product.
-        public static bool EditProduct(List<Product> products, string plu)
+        /// <summary>
+        /// Edits an existing product.
+        /// Returns false if ESC is pressed or invalid data is entered.
+        /// </summary>
+        public static bool EditProduct(List<Product> products, string? plu)
         {
             if (products == null)
                 return false;
 
-            if (string.IsNullOrWhiteSpace(plu))
+            if (plu == null || string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
@@ -106,26 +117,28 @@ namespace CashRegisterSystem.Core.Services
                 return false;
             }
 
-            string newName = ProductInputUI.AskForProductName();
-            if (string.IsNullOrWhiteSpace(newName))
+            string? newName = ProductInputUI.AskForProductName();
+            if (newName == null || string.IsNullOrWhiteSpace(newName))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return false;
             }
 
-            decimal newPrice = ProductInputUI.AskForBasePrice();
-            if (newPrice <= 0)
+            decimal? newPrice = ProductInputUI.AskForBasePrice();
+            if (newPrice == null || newPrice <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return false;
             }
 
-            PriceUnit newUnit = ProductInputUI.AskForPriceUnit();
+            PriceUnit? newUnit = ProductInputUI.AskForPriceUnit();
+            if (newUnit == null)
+                return false;
 
             // Update product
             product.Name = newName;
-            product.Price = newPrice;
-            product.PriceUnit = newUnit;
+            product.Price = newPrice.Value;
+            product.PriceUnit = newUnit.Value;
 
             // Reset campaign data
             product.CampaignPercent = 0;

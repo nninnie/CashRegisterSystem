@@ -14,7 +14,7 @@
 4863;Potatis mjölig;12,90;PerKilo
 3220;Päron;19,90;PerKilo
 93220;Päron Eko;26,90;PerKilo
-4521;Sparris;46,90;Each
+4521;Sparris;39,90;Each
 4061;Sallad isberg;24,40;PerKilo
 4800;Selleri;16,90;Each
 4806;Tomat kvist;26,90;PerKilo

@@ -26,8 +26,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
-            // Show compact PLU list before creating a new product (same style as other admin views)
-            ProductListUI.ShowProductList(products);
+            // Show compact PLU list before creating a new product 
+            ProductListUI.ShowProductList(products, false);
 
             var newProduct = ProductService.AddProduct(products);
 
@@ -59,7 +59,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             // Show compact PLU list before asking for PLU
             ProductListUI.ShowProductList(products);
 
-            string plu = ProductInputUI.AskForPlu();
+            string? plu = ProductInputUI.AskForPlu();
+            if (plu == null)
+                return; // ESC → back to previous menu
 
             bool removed = ProductService.DeleteProduct(products, plu);
 
@@ -86,10 +88,12 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             // Show compact PLU list before asking for PLU
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowProductList(products, false);
 
+            string? plu = ProductInputUI.AskForPlu();
+            if (plu == null)
+                return; // ESC → back to previous menu
 
-            string plu = InputService.ReadString("PLU: ");
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)
@@ -113,25 +117,47 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             Console.WriteLine("4. Enhet (kg/st)");
             Console.WriteLine("5. Tillbaka");
 
-            int choice = InputService.ReadInt("Val: ");
+            int? choice = InputService.ReadInt("Val: ");
+            if (choice == null)
+                return; // ESC → back to previous menu
 
-            switch (choice)
+            switch (choice.Value)
             {
                 case 1:
-                    product.PLU = InputService.ReadString("\nNytt PLU: ");
-                    break;
+                    {
+                        string? newPlu = InputService.ReadString("\nNytt PLU: ");
+                        if (newPlu == null)
+                            return; // ESC → back
+                        product.PLU = newPlu;
+                        break;
+                    }
 
                 case 2:
-                    product.Name = InputService.ReadString("\nNytt namn: ");
-                    break;
+                    {
+                        string? newName = InputService.ReadString("\nNytt namn: ");
+                        if (newName == null)
+                            return; // ESC → back
+                        product.Name = newName;
+                        break;
+                    }
 
                 case 3:
-                    product.Price = InputService.ReadDecimal("\nNytt pris: ");
-                    break;
+                    {
+                        decimal? newPrice = InputService.ReadDecimal("\nNytt pris: ");
+                        if (newPrice == null)
+                            return; // ESC → back
+                        product.Price = newPrice.Value;
+                        break;
+                    }
 
                 case 4:
-                    product.PriceUnit = InputService.ReadUnit("\nNy enhet (kg/st): ");
-                    break;
+                    {
+                        PriceUnit? newUnit = InputService.ReadUnit("\nNy enhet (kg/st): ");
+                        if (newUnit == null)
+                            return; // ESC → back
+                        product.PriceUnit = newUnit.Value;
+                        break;
+                    }
 
                 case 5:
                     return;
@@ -170,7 +196,5 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
             Console.WriteLine("--------------------------------------------------");
         }
-
-       
     }
 }

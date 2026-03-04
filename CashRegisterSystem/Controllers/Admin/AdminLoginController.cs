@@ -1,7 +1,5 @@
-﻿using CashRegisterSystem.UI;
-using CashRegisterSystem.Core.Services;
-using System;
-using System.Threading;
+﻿using CashRegisterSystem.Core.Services;
+using CashRegisterSystem.UI;
 
 namespace CashRegisterSystem.Controllers.Admin
 {
@@ -19,7 +17,7 @@ namespace CashRegisterSystem.Controllers.Admin
                 BannerUI.ShowLogo();
                 BannerUI.PrintHeader("ADMIN LOGIN");
 
-                string adminId = InputService.ReadStringAllowEmpty("Admin ID: ");
+                string? adminId = InputService.ReadStringAllowEmpty("Admin ID: ");
 
                 if (string.IsNullOrWhiteSpace(adminId))
                 {
@@ -27,7 +25,7 @@ namespace CashRegisterSystem.Controllers.Admin
                     continue;
                 }
 
-                string adminPass = InputService.ReadStringAllowEmpty("Lösenord: ");
+                string? adminPass = InputService.ReadStringAllowEmpty("Lösenord: ");
 
                 // Temporär inloggning
                 if (string.Equals(adminPass, "admin", StringComparison.OrdinalIgnoreCase) ||

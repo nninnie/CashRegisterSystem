@@ -10,12 +10,12 @@ namespace CashRegisterSystem.Controllers.Admin
 {
     /// <summary>
     /// Handles creation, viewing and ending of product campaigns.
-    /// Responsible only for campaign logic
+    /// Responsible only for campaign logic.
     /// </summary>
     public static class CampaignAdminController
     {
         /// <summary>
-        /// Displays all active campaigns in a 70-char receipt layout.
+        /// Displays all active campaigns in a receipt-style layout.
         /// </summary>
         public static void ViewAllCampaigns()
         {
@@ -35,7 +35,6 @@ namespace CashRegisterSystem.Controllers.Admin
                 return;
             }
 
-            // Visa standard-PLU-listan (70 tecken, samma som överallt)
             ProductListUI.ShowProductList(products);
 
             Console.WriteLine();
@@ -53,9 +52,12 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowProductList(products, false);
 
-            string plu = InputService.ReadString("PLU: ");
+            string? plu = InputService.ReadString("PLU: ");
+            if (plu == null)
+                return; // ESC → tillbaka
+
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)
@@ -74,8 +76,12 @@ namespace CashRegisterSystem.Controllers.Admin
             Console.WriteLine("3. Multiköp");
             Console.WriteLine("4. Avbryt");
 
-            int choice = InputService.ReadInt("Val: ");
+            int? choice = InputService.ReadInt("Val: ");
+            if (choice == null)
+                return; // ESC → tillbaka
 
+
+            // Reset any existing campaign before starting a new one.
             ResetCampaign(product);
 
             switch (choice)
@@ -93,6 +99,7 @@ namespace CashRegisterSystem.Controllers.Admin
                     break;
 
                 case 4:
+                    // User chose to cancel.
                     return;
 
                 default:
@@ -118,9 +125,12 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowProductList(products, false);
 
-            string plu = InputService.ReadString("PLU: ");
+            string? plu = InputService.ReadString("PLU: ");
+            if (plu == null)
+                return; // ESC → tillbaka
+
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
             if (product == null)
@@ -142,29 +152,48 @@ namespace CashRegisterSystem.Controllers.Admin
         // Campaign type implementations
         // -----------------------------
 
+        /// <summary>
+        /// Starts a percentage discount campaign for the given product.
+        /// </summary>
         private static void StartPercentCampaign(Product product)
         {
-            decimal percent = InputService.ReadDecimal("Rabatt i procent: ");
-            product.CampaignPercent = percent;
+            decimal? percent = InputService.ReadDecimal("Rabatt i procent: ");
+            if (percent == null)
+                return; // ESC → tillbaka
+            product.CampaignPercent = percent.Value;
             product.CampaignName = "Procentkampanj";
             product.CampaignIsActive = true;
         }
 
+        /// <summary>
+        /// Starts a fixed price campaign for the given product.
+        /// </summary>
         private static void StartFixedPriceCampaign(Product product)
         {
-            decimal price = InputService.ReadDecimal("Kampanjpris: ");
-            product.CampaignPrice = price;
+            decimal? price = InputService.ReadDecimal("Kampanjpris: ");
+            if (price == null)
+                return;
+            product.CampaignPrice = price.Value;
             product.CampaignName = "Fast kampanjpris";
             product.CampaignIsActive = true;
         }
 
+        /// <summary>
+        /// Starts a multi-buy campaign for the given product.
+        /// </summary>
         private static void StartMultiBuyCampaign(Product product)
         {
-            int qty = InputService.ReadInt("Antal: ");
-            decimal price = InputService.ReadDecimal("Pris för alla: ");
+            int? quantity = InputService.ReadInt("Antal: ");
+            if (quantity == null)
+                return;
 
-            product.MultiBuyQuantity = qty;
-            product.MultiBuyPrice = price;
+            decimal? price = InputService.ReadDecimal("Pris för alla: ");
+            if (price == null)
+                return;
+
+            product.MultiBuyQuantity = quantity.Value;
+            product.MultiBuyPrice = price.Value;
+
             product.CampaignName = "Multiköp";
             product.CampaignIsActive = true;
         }
@@ -172,54 +201,14 @@ namespace CashRegisterSystem.Controllers.Admin
         /// <summary>
         /// Resets all campaign fields for a product.
         /// </summary>
-        private static void ResetCampaign(Product p)
+        private static void ResetCampaign(Product product)
         {
-            p.CampaignPercent = 0;
-            p.CampaignPrice = 0;
-            p.MultiBuyQuantity = 0;
-            p.MultiBuyPrice = 0;
-            p.CampaignIsActive = false;
-            p.CampaignName = null;
-        }
-
-        // -----------------------------
-        // Layout helpers (70-char)
-        // -----------------------------
-
-        private static string Truncate(string text, int max)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return "";
-            return text.Length <= max ? text : text.Substring(0, max - 1) + "…";
-        }
-
-        /// <summary>
-        /// Builds a 70-character campaign line in receipt layout.
-        /// </summary>
-        private static string BuildCampaignLine(Product p)
-        {
-            // Kolumnbredder
-            string plu = p.PLU.PadRight(6);
-
-            string nameRaw = Truncate(p.Name, 14).PadRight(14);
-            string name = nameRaw; // ingen färg här
-
-            string typeRaw =
-                p.CampaignPercent > 0 ? $"Procent {p.CampaignPercent}%"
-                : p.CampaignPrice > 0 ? "Fast pris"
-                : p.MultiBuyQuantity > 0 ? $"{p.MultiBuyQuantity} för {p.MultiBuyPrice:0}"
-                : "Kampanj";
-
-            string typePadded = Truncate(typeRaw, 12).PadRight(12);
-            string type = $"\u001b[92m{typePadded}\u001b[0m";
-
-            string ordRaw = $"Ord: {p.Price:0.00}".PadRight(14);
-            string ord = $"\u001b[90m{ordRaw}\u001b[0m";
-
-            string kampRaw = $"Kamp: {CampaignService.GetPrice(p):0.00}".PadRight(14);
-            string kamp = $"\u001b[92m{kampRaw}\u001b[0m";
-
-            return $"{plu}| {name}| {type}| {ord}| {kamp}";
+            product.CampaignPercent = 0;
+            product.CampaignPrice = 0;
+            product.MultiBuyQuantity = 0;
+            product.MultiBuyPrice = 0;
+            product.CampaignIsActive = false;
+            product.CampaignName = null;
         }
     }
-    }
+}
