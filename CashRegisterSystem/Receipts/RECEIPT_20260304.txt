@@ -3,29 +3,25 @@
           Öppet 08:00 - 23:00
            Tel: 073-570 43 68
 ========================================
-Säljare: 139       Kassa: 1   Kvitto: 42
-Datum: 2026-03-04             Tid: 14:58
+Säljare: 1         Kassa: 1   Kvitto: 52
+Datum: 2026-03-04             Tid: 21:21
 ----------------------------------------
-Bananer        2,00 kg          59,80 kr
-Äpple          0,13 kg           3,15 kr
-                        Rabatt: -1,00 kr
-Apelsin        0,07 kg           0,99 kr
-                        Rabatt: -0,32 kr
-Jordgubbar        3 st         107,70 kr
+Apelsin        2,00 kg          30,00 kr
+                        Rabatt: -9,80 kr
 ----------------------------------------
-TOTALT:                        170,32 kr
+TOTALT:                         20,20 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-12% moms:                       18,25 kr
-Exkl. moms:                    152,07 kr
+12% moms:                        2,16 kr
+Exkl. moms:                     18,04 kr
 ----------------------------------------
 
 Betalt med kort
 Term: 1710025506
 DEBIT MASTERCARD ************5271
 Butik: 13403
-Datum: 2026-03-04 14:58
+Datum: 2026-03-04 21:21
 TVR: 0000008001
 Ref: 002550692064 130 Rsp:00 120440 K/1 7
 Personlig kod / Contactless

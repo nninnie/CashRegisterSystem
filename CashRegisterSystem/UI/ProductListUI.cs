@@ -95,10 +95,10 @@ namespace CashRegisterSystem.UI
             if (showReturnMessage)
             {
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nÅtergå till meny..");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine("\nTryck ENTER eller ESC för att fortsätta.");
                 Console.ResetColor();
-                Console.ReadKey();
+                Console.ReadKey(true);
             }
         }
 
@@ -111,7 +111,7 @@ namespace CashRegisterSystem.UI
         {
             var sorted = products.OrderBy(p => p.Name).ToList();
 
-            int colWidth = 23;          // 23 * 3 = 69 (nära 70)
+            int colWidth = 23;          
             int itemsPerRow = 3;
             int rowCount = (int)Math.Ceiling(sorted.Count / (double)itemsPerRow);
 

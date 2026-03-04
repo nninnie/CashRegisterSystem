@@ -19,11 +19,12 @@ public static class AdminMenuController
         const string highlight = "\u001b[32m";
         const string reset = "\u001b[0m";
 
+        var products = ProductFileRepository.GetAll();
+
         while (true)
         {
-            var products = ProductFileRepository.GetAll();
-
             Console.Clear();
+            
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ADMIN MENY");
 
@@ -52,29 +53,28 @@ public static class AdminMenuController
                     switch (adminMenuOption)
                     {
                         case 1:
-                            Console.Clear();
                             ProductListUI.ShowProductList(products, true);
-                            break;
+                            return;
 
                         case 2:
                             Console.Clear();
                             ProductAdminController.EditProduct();
-                            break;
+                            return;
 
                         case 3:
                             Console.Clear();
                             ProductAdminController.AddProduct();
-                            break;
+                            return;
 
                         case 4:
                             Console.Clear();
                             ProductAdminController.DeleteProduct();
-                            break;
+                            return;
 
                         case 5:
                             Console.Clear();
                             CampaignMenuController.ShowCampaignMenu();
-                            break;
+                            return;
 
                         case 6:
                             return;

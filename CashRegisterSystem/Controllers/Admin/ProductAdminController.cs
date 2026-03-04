@@ -22,11 +22,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
-            Console.Clear();
-            BannerUI.ShowLogo();
+Console.Clear();
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
-            // Show compact PLU list before creating a new product 
             ProductListUI.ShowProductList(products, false);
 
             var newProduct = ProductService.AddProduct(products);
@@ -43,7 +41,10 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     $"Pris: {newProduct.Price:0.00} kr"
                 );
             }
+
+            Console.Clear();
         }
+
 
         /// <summary>
         /// Removes a product based on PLU input and saves the updated list.
@@ -56,12 +57,9 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("TA BORT PRODUKT");
 
-            // Show compact PLU list before asking for PLU
-            ProductListUI.ShowProductList(products);
-
             string? plu = ProductInputUI.AskForPlu();
             if (plu == null)
-                return; // ESC → back to previous menu
+                return; 
 
             bool removed = ProductService.DeleteProduct(products, plu);
 
@@ -74,6 +72,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     $"PLU: {plu}"
                 );
             }
+
+            Console.Clear();
         }
 
         /// <summary>
@@ -82,17 +82,15 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         public static void EditProduct()
         {
             Console.Clear();
-            BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
-            // Show compact PLU list before asking for PLU
             ProductListUI.ShowProductList(products, false);
 
             string? plu = ProductInputUI.AskForPlu();
             if (plu == null)
-                return; // ESC → back to previous menu
+                return; 
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
@@ -103,10 +101,11 @@ namespace CashRegisterSystem.Controllers.Admin.Products
             }
 
             Console.Clear();
+            Console.SetCursorPosition(0, 0);
+
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
-            // Reuse common product info layout (DRY)
             ShowProductInfo(product);
 
             Console.WriteLine();
@@ -119,7 +118,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 
             int? choice = InputService.ReadInt("Val: ");
             if (choice == null)
-                return; // ESC → back to previous menu
+                return; 
 
             switch (choice.Value)
             {
@@ -127,7 +126,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     {
                         string? newPlu = InputService.ReadString("\nNytt PLU: ");
                         if (newPlu == null)
-                            return; // ESC → back
+                            return; 
                         product.PLU = newPlu;
                         break;
                     }
@@ -136,7 +135,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     {
                         string? newName = InputService.ReadString("\nNytt namn: ");
                         if (newName == null)
-                            return; // ESC → back
+                            return; 
                         product.Name = newName;
                         break;
                     }
@@ -145,7 +144,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     {
                         decimal? newPrice = InputService.ReadDecimal("\nNytt pris: ");
                         if (newPrice == null)
-                            return; // ESC → back
+                            return; 
                         product.Price = newPrice.Value;
                         break;
                     }
@@ -154,7 +153,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                     {
                         PriceUnit? newUnit = InputService.ReadUnit("\nNy enhet (kg/st): ");
                         if (newUnit == null)
-                            return; // ESC → back
+                            return; 
                         product.PriceUnit = newUnit.Value;
                         break;
                     }
@@ -173,6 +172,8 @@ namespace CashRegisterSystem.Controllers.Admin.Products
                 "Produkten uppdaterad!",
                 product.Name
             );
+
+            Console.Clear();
         }
 
         /// <summary>

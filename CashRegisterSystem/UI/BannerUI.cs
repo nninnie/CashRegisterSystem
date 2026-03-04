@@ -47,7 +47,7 @@ namespace CashRegisterSystem.UI
             string logo = "🍎🍌🍇🍉 𝗙 𝗥 U K T   M A R K N A D 🍓🍍🍒🍑";
             string paddedLogo = new string(' ', 16) + logo; 
 
-            Console.WriteLine(paddedLogo);
+            Console.Write(paddedLogo);
 
             Console.ResetColor();
             Console.WriteLine();

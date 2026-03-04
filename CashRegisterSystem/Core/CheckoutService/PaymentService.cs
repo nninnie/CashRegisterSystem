@@ -151,18 +151,15 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived
             );
 
-            // Clear screen before showing receipt
+            // Rensa skärmen – precis innan kvittot visas
             Console.Clear();
-            BannerUI.ShowLogo();
             Console.WriteLine(receiptText);
 
-            // Save receipt folder
             string receiptFolder = Path.Combine(
                 AppContext.BaseDirectory, "..", "..", "..", "Receipts");
 
             Directory.CreateDirectory(receiptFolder);
 
-            // Save as .txt
             string txtPath = Path.Combine(
                 receiptFolder,
                 $"RECEIPT_{DateTime.Now:yyyyMMdd}.txt");
@@ -170,8 +167,8 @@ namespace CashRegisterSystem.Core.CheckoutService
             File.WriteAllText(txtPath, receiptText);
 
             Console.WriteLine("\nKvitto utskrivet till kund ✔️\n");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine("Återgå till meny..");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("ENTER för nästa kund || ESC för att gå till menyn");
             Console.ResetColor();
             Console.ReadKey(true);
 

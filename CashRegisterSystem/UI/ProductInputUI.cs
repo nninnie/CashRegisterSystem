@@ -33,7 +33,7 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static string? AskForProductName()
         {
-            return InputService.ReadString("Produktnamn: ");
+            return InputService.ReadString("Namn: ");
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static decimal? AskForBasePrice()
         {
-            return InputService.ReadDecimal("Grundpris: ");
+            return InputService.ReadDecimal("Pris: ");
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace CashRegisterSystem.UI
 
             int? choice = InputService.ReadInt("Välj enhet: ");
             if (choice == null)
-                return null; // ESC → tillbaka
+                return null; 
 
             return choice.Value == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
         }
@@ -67,27 +67,33 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static void ShowConfirmation(string title, string details)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\n{title}");
-            Console.ResetColor();
-
+            Console.Clear();
             Console.WriteLine(details);
-            Console.WriteLine("\nÅtergå till meny...");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("\nTryck ENTER eller ESC för att fortsätta.");
+            Console.ResetColor();
             Console.ReadKey();
+            Console.Clear();
         }
+
 
         /// <summary>
         /// Shows an error message in red text.
         /// </summary>
         public static void ShowError(string message)
         {
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
             Console.ResetColor();
 
-            Console.WriteLine("\nTryck valfri tangent för att fortsätta...");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("\nTryck ENTER eller ESC för att fortsätta.");
+            Console.ResetColor();
             Console.ReadKey();
+            Console.Clear();
         }
+
 
         /// <summary>
         /// Asks the user to enter a campaign label if needed.

@@ -49,7 +49,7 @@ namespace CashRegisterSystem.Core.Services
 
             PriceUnit? unit = ProductInputUI.AskForPriceUnit();
             if (unit == null)
-                return null; // ESC → back
+                return null; 
 
             return new Product
             {

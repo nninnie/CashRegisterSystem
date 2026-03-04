@@ -34,58 +34,53 @@ namespace CashRegisterSystem.Controllers
                 CartUI.ShowCart(cart);
                 CartUI.ShowPluInputPrompt();
 
-                (Product product, decimal quantity)? parsed = null;
+                string? input = InputService.ReadString("PLU och antal/vikt: ");
+                if (input == null)
+                    return;   // ESC
 
-                while (parsed == null)
+                string trimmed = input.Trim().ToUpper();
+
+                // PAY – rätt placerad i yttre loopen
+                if (_commandParser.IsPayCommand(trimmed))
                 {
-                    string? input = InputService.ReadString("PLU och antal/vikt: ");
-                    if (input == null)
-                        return;   // ESC - gå tillbaka
+                    bool continueShopping = _paymentService.CompletePayment(cart);
 
-                    string trimmed = input.Trim().ToUpper();
+                    if (!continueShopping)
+                        return;   // Avslutar hela checkout korrekt
 
-
-                    // PAY
-                    if (_commandParser.IsPayCommand(trimmed))
-                    {
-                        bool continueShopping = _paymentService.CompletePayment(cart);
-
-                        if (!continueShopping)
-                            return;
-
-                        _cartService.Clear(cart);
-                        Console.Clear();
-                        ShowCheckoutPluList(products);
-                        break;
-                    }
-
-                    // CANCEL
-                    if (_commandParser.IsCancelCommand(trimmed))
-                    {
-                        Console.WriteLine("Transaktionen avbröts");
-                        return;
-                    }
-
-                    // DELETE
-                    if (_commandParser.IsDeleteCommand(trimmed))
-                    {
-                        HandleDeleteCommand(trimmed, cart, products);
-                        break;
-                    }
-
-                    // Försök tolka PLU + antal/vikt
-                    parsed = _inputParser.Parse(input, products);
-
-                    if (parsed == null)
-                        ShowError("Fel format. Skriv: PLU [mellanslag] antal/vikt");
+                    _cartService.Clear(cart);
+                    Console.Clear();
+                    
+                    //ShowCheckoutPluList(products);
+                    continue;
                 }
 
-                if (parsed == null)
+                // CANCEL
+                if (_commandParser.IsCancelCommand(trimmed))
+                {
+                    Console.WriteLine("Transaktionen avbröts");
+                    return;
+                }
+
+                // DELETE
+                if (_commandParser.IsDeleteCommand(trimmed))
+                {
+                    HandleDeleteCommand(trimmed, cart, products);
                     continue;
+                }
+
+                // Försök tolka PLU + antal/vikt
+                var parsed = _inputParser.Parse(input, products);
+
+                if (parsed == null)
+                {
+                    ShowError("Fel format. Skriv: PLU [mellanslag] antal/vikt");
+                    continue;
+                }
 
                 var (product, quantity) = parsed.Value;
 
-                // Validering av antal/vikt
+                // Validering
                 if (!ValidateQuantity(product, quantity))
                     continue;
 
@@ -103,7 +98,7 @@ namespace CashRegisterSystem.Controllers
                     Console.ResetColor();
                 }
 
-                Thread.Sleep(1200);
+                Thread.Sleep(1000);
                 Console.Clear();
                 ShowCheckoutPluList(products);
             }

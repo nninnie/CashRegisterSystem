@@ -24,6 +24,9 @@ namespace CashRegisterSystem.App
             // Start main menu with loaded products
             MainMenuController.Start();
 
+            
+
+
         }
     }
 }

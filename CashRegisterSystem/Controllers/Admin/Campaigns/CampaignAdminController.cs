@@ -38,7 +38,7 @@ namespace CashRegisterSystem.Controllers.Admin
             ProductListUI.ShowProductList(products);
 
             Console.WriteLine();
-            Console.WriteLine("Tryck valfri tangent för att återgå...");
+            Console.WriteLine("Tryck ENTER eller ESC för att fortsätta.");
             Console.ReadKey();
         }
 
