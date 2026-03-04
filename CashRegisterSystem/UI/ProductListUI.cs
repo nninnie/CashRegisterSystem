@@ -19,14 +19,15 @@ namespace CashRegisterSystem.UI
             BannerUI.PrintHeader("PRODUKTLISTA");
 
             // Column widths for clear table layout
-            int colPLU = 6;
-            int colName = 15;
-            int colUnit = 6;
+            int colPLU = 5;
+            int colName = 14;
+            int colUnit = 5;
             int colPrice = 10;
             int colCampaign = 12;
             int colType = 8;
 
             // Header row
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine(
                 "PLU".PadRight(colPLU) + " | " +
                 "Produkt".PadRight(colName) + " | " +
@@ -35,6 +36,7 @@ namespace CashRegisterSystem.UI
                 "Kampanj".PadRight(colCampaign) + " | " +
                 "Typ".PadRight(colType)
             );
+            Console.ResetColor();
 
             Console.WriteLine(new string('-', 70));
 
@@ -74,6 +76,8 @@ namespace CashRegisterSystem.UI
                     kampType = "-".PadRight(colType);
                 }
 
+                Console.ForegroundColor = p.CampaignIsActive ? ConsoleColor.DarkGray : ConsoleColor.DarkGray;
+
                 Console.WriteLine(
                     p.PLU.PadRight(colPLU) + " | " +
                     p.Name.PadRight(colName) + " | " +
@@ -82,14 +86,17 @@ namespace CashRegisterSystem.UI
                     kampValue + " | " +
                     kampType
                 );
+
+                Console.ResetColor();
             }
+
 
             // Only show return message when used as a standalone menu
             if (showReturnMessage)
             {
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("Tryck valfri tangent för att återgå..");
+                Console.WriteLine("\nÅtergå till meny..");
                 Console.ResetColor();
                 Console.ReadKey();
             }
@@ -123,8 +130,9 @@ namespace CashRegisterSystem.UI
 
                     string plu = p.PLU.PadRight(5);
                     string name = (p.Name ?? "").PadRight(colWidth - 6);
-
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.Write($"{plu} {name}");
+                    Console.ResetColor();
                 }
 
                 Console.WriteLine();

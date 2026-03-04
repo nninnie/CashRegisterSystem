@@ -1,4 +1,5 @@
 ﻿using CashRegisterSystem.Controllers.Admin;
+using CashRegisterSystem.Data;
 using CashRegisterSystem.Models;
 using CashRegisterSystem.UI;
 using System;
@@ -12,10 +13,9 @@ namespace CashRegisterSystem.Controllers.Main
     /// </summary>
     public static class MainMenuController
     {
-        public static void Start(List<Product> products)
+        public static void Start()
         {
-            if (products == null)
-                products = new List<Product>();
+            var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
             bool isLoggedIn = false;
 

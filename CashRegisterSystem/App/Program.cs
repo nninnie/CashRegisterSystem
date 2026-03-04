@@ -22,7 +22,8 @@ namespace CashRegisterSystem.App
             List<Product> products = ProductFileLoader.GetProducts() ?? new List<Product>();
 
             // Start main menu with loaded products
-            MainMenuController.Start(products);
+            MainMenuController.Start();
+
         }
     }
 }
