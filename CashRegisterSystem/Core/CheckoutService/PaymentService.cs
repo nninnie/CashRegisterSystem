@@ -17,55 +17,46 @@ namespace CashRegisterSystem.Core.CheckoutService
         /// </summary>
         public bool CompletePayment(Cart cart)
         {
-            // Guard clause: empty or null cart
             if (cart == null || cart.CartItems.Count == 0)
             {
                 Console.WriteLine("Kundvagnen är tom.");
                 return true;
             }
 
-            // Payment selection
             int selectedOption = 1;
             const string highlight = "\u001b[32m";
             const string reset = "\u001b[0m";
 
             void DrawPaymentMenu(int startRow)
             {
-                // Safety: keep inside buffer
+                // Make sure this value stays within the allowed range so it doesn’t overflow or break the layout.
                 if (startRow < 0) startRow = 0;
                 if (startRow >= Console.BufferHeight - 2) startRow = Console.BufferHeight - 3;
 
-                // --- CLEAR ROW 1 ---
                 Console.SetCursorPosition(0, startRow);
                 Console.Write(new string(' ', Console.WindowWidth));
 
-                // --- CLEAR ROW 2 ---
                 Console.SetCursorPosition(0, startRow + 1);
                 Console.Write(new string(' ', Console.WindowWidth));
 
-                // --- DRAW ROW 1 ---
                 Console.SetCursorPosition(0, startRow);
                 Console.WriteLine(selectedOption == 1
                     ? $"· {highlight}Kontant{reset}"
                     : "  Kontant");
 
-                // --- DRAW ROW 2 ---
                 Console.SetCursorPosition(0, startRow + 1);
                 Console.WriteLine(selectedOption == 2
                     ? $"· {highlight}Kort{reset}"
                     : "  Kort");
             }
 
-            // Write header ONCE
             Console.WriteLine("\nBetalningsmetod:\n");
             Console.WriteLine();
-            // Save the row where the menu begins
+
             int menuStartRow = Console.CursorTop;
 
-            // Draw menu first time
             DrawPaymentMenu(menuStartRow);
 
-            // Navigation loop
             bool paymentChosen = false;
 
             while (!paymentChosen)
@@ -91,22 +82,18 @@ namespace CashRegisterSystem.Core.CheckoutService
             }
 
 
-            // Determine payment method
             string paymentMethod = selectedOption == 1 ? "Kontant" : "Kort";
 
-            // Read cash amount only for cash payments
             decimal amountReceived = paymentMethod == "Kontant"
                 ? ReadCashAmount()
                 : 0;
 
-            // Calculate total to pay
             decimal totalToPay = 0;
             foreach (var item in cart.CartItems)
             {
                 totalToPay += item.TotalPrice - item.DiscountAmount;
             }
 
-            // If customer pays too little, ask again until enough
             if (paymentMethod == "Kontant")
             {
                 while (amountReceived < totalToPay)
@@ -134,14 +121,12 @@ namespace CashRegisterSystem.Core.CheckoutService
                 }
             }
 
-            // Receipt number handling
             int receiptNumber = ReceiptNumberService.GetNext();
-            ReceiptNumberService.Save(receiptNumber);
+            ReceiptNumberService.SaveCurrentReceiptNumber(receiptNumber);
 
             string cashierName = LoginService.CurrentUserName;
             int registerNumber = RegisterService.CurrentRegister;
 
-            // Build receipt text
             string receiptText = ReceiptUI.FormatReceipt(
                 receiptNumber,
                 cart.CartItems,
@@ -151,7 +136,6 @@ namespace CashRegisterSystem.Core.CheckoutService
                 amountReceived
             );
 
-            // Rensa skärmen – precis innan kvittot visas
             Console.Clear();
             Console.WriteLine(receiptText);
 

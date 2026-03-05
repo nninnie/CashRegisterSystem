@@ -56,7 +56,7 @@ namespace CashRegisterSystem.Controllers.Admin
 
             string? plu = InputService.ReadString("PLU: ");
             if (plu == null)
-                return; // ESC → tillbaka
+                return; 
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
@@ -78,10 +78,8 @@ namespace CashRegisterSystem.Controllers.Admin
 
             int? choice = InputService.ReadInt("Val: ");
             if (choice == null)
-                return; // ESC → tillbaka
+                return; 
 
-
-            // Reset any existing campaign before starting a new one.
             ResetCampaign(product);
 
             switch (choice)
@@ -99,7 +97,6 @@ namespace CashRegisterSystem.Controllers.Admin
                     break;
 
                 case 4:
-                    // User chose to cancel.
                     return;
 
                 default:
@@ -129,7 +126,7 @@ namespace CashRegisterSystem.Controllers.Admin
 
             string? plu = InputService.ReadString("PLU: ");
             if (plu == null)
-                return; // ESC → tillbaka
+                return; 
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
@@ -148,10 +145,6 @@ namespace CashRegisterSystem.Controllers.Admin
             );
         }
 
-        // -----------------------------
-        // Campaign type implementations
-        // -----------------------------
-
         /// <summary>
         /// Starts a percentage discount campaign for the given product.
         /// </summary>
@@ -159,7 +152,7 @@ namespace CashRegisterSystem.Controllers.Admin
         {
             decimal? percent = InputService.ReadDecimal("Rabatt i procent: ");
             if (percent == null)
-                return; // ESC → tillbaka
+                return; 
             product.CampaignPercent = percent.Value;
             product.CampaignName = "Procentkampanj";
             product.CampaignIsActive = true;

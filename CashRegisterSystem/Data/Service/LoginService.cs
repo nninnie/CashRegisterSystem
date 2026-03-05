@@ -15,7 +15,6 @@ namespace CashRegisterSystem.Data.Service
             get => _currentUserName;
             set
             {
-                // Prevents null, empty or whitespace-only names
                 if (string.IsNullOrWhiteSpace(value))
                     _currentUserName = "Okänd";
                 else

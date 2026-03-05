@@ -18,7 +18,6 @@ namespace CashRegisterSystem.UI
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("PRODUKTLISTA");
 
-            // Column widths for clear table layout
             int colPLU = 5;
             int colName = 14;
             int colUnit = 5;
@@ -26,7 +25,6 @@ namespace CashRegisterSystem.UI
             int colCampaign = 12;
             int colType = 8;
 
-            // Header row
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine(
                 "PLU".PadRight(colPLU) + " | " +
@@ -40,7 +38,6 @@ namespace CashRegisterSystem.UI
 
             Console.WriteLine(new string('-', 70));
 
-            // Product rows
             foreach (var p in products.OrderBy(p => p.Name))
             {
                 string unit = p.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
@@ -90,8 +87,6 @@ namespace CashRegisterSystem.UI
                 Console.ResetColor();
             }
 
-
-            // Only show return message when used as a standalone menu
             if (showReturnMessage)
             {
                 Console.WriteLine();

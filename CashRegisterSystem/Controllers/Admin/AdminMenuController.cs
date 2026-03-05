@@ -57,22 +57,18 @@ public static class AdminMenuController
                             return;
 
                         case 2:
-                            Console.Clear();
                             ProductAdminController.EditProduct();
                             return;
 
                         case 3:
-                            Console.Clear();
                             ProductAdminController.AddProduct();
                             return;
 
                         case 4:
-                            Console.Clear();
                             ProductAdminController.DeleteProduct();
                             return;
 
                         case 5:
-                            Console.Clear();
                             CampaignMenuController.ShowCampaignMenu();
                             return;
 

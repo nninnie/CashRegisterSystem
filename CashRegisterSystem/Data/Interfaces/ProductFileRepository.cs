@@ -18,7 +18,6 @@ namespace CashRegisterSystem.Data
         {
             var products = ProductFileLoader.GetProducts() ?? new List<Product>();
 
-            // Load campaign data into the products
             products = CampaignFileLoader.LoadCampaignsIntoProducts(products);
 
             return products;
@@ -34,7 +33,6 @@ namespace CashRegisterSystem.Data
 
             ProductFileLoader.SaveProducts(products);
 
-            // Also save campaign data
             CampaignFileLoader.SaveCampaignsFromProducts(products);
         }
     }

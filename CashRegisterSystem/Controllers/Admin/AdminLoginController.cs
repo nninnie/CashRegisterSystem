@@ -27,7 +27,6 @@ namespace CashRegisterSystem.Controllers.Admin
 
                 string? adminPass = InputService.ReadStringAllowEmpty("Lösenord: ");
 
-                // Temporär inloggning
                 if (string.Equals(adminPass, "admin", StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrWhiteSpace(adminPass))
                 {

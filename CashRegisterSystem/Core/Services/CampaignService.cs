@@ -9,32 +9,26 @@ namespace CashRegisterSystem.Core.Services
     /// </summary>
     public static class CampaignService
     {
-        // Returns the correct unit price based on active campaign.
         public static decimal GetPrice(Product p)
         {
             if (p == null)
                 return 0;
 
-            // Multibuy handled in CartService (per quantity)
             if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
                 return p.Price;
 
-            // Fixed campaign price
             if (p.CampaignPrice > 0)
                 return p.CampaignPrice;
 
-            // Percent discount
             if (p.CampaignPercent > 0)
             {
                 decimal discounted = p.Price * (1 - p.CampaignPercent / 100m);
                 return Math.Round(discounted, 2);
             }
 
-            // No campaign
             return p.Price;
         }
 
-        // Calculates total price for multibuy campaigns.
         public static decimal GetMultiBuyTotal(Product p, decimal quantity)
         {
             if (p == null || quantity <= 0)
@@ -52,7 +46,6 @@ namespace CashRegisterSystem.Core.Services
             return packTotal + restTotal;
         }
 
-        // Calculates the discount amount for a given quantity.
         public static decimal GetDiscount(Product p, decimal quantity)
         {
             if (p == null || quantity <= 0)
@@ -60,21 +53,18 @@ namespace CashRegisterSystem.Core.Services
 
             decimal original = p.Price * quantity;
 
-            // Multibuy
             if (p.MultiBuyQuantity > 0 && p.MultiBuyPrice > 0)
             {
                 decimal multiTotal = GetMultiBuyTotal(p, quantity);
                 return original - multiTotal;
             }
 
-            // Fixed campaign price
             if (p.CampaignPrice > 0)
             {
                 decimal discounted = p.CampaignPrice * quantity;
                 return original - discounted;
             }
 
-            // Percent campaign
             if (p.CampaignPercent > 0)
             {
                 decimal discounted = GetPrice(p) * quantity;
@@ -84,7 +74,6 @@ namespace CashRegisterSystem.Core.Services
             return 0;
         }
 
-        // Generates a readable campaign name.
         public static string GetCampaignName(Product p)
         {
             if (p == null)

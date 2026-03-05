@@ -12,7 +12,6 @@ namespace CashRegisterSystem.Data.Service
         private static readonly string CounterFile =
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Receipts", "receipt_counter.txt");
 
-        // Returns the next receipt number.
         public static int GetNext()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(CounterFile)!);
@@ -27,8 +26,7 @@ namespace CashRegisterSystem.Data.Service
                 : 1; // Prevents crashes from corrupted files
         }
 
-        // Saves the current receipt number.
-        public static void Save(int number)
+        public static void SaveCurrentReceiptNumber(int number)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(CounterFile)!);
 

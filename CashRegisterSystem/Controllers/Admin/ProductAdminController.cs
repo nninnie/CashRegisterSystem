@@ -11,7 +11,7 @@ namespace CashRegisterSystem.Controllers.Admin.Products
 {
     /// <summary>
     /// Handles admin actions for adding, editing and deleting products.
-    /// Responsible only for product administration (no campaign logic).
+    /// Responsible only for product administration 
     /// </summary>
     public static class ProductAdminController
     {

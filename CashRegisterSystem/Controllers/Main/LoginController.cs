@@ -28,7 +28,6 @@ public static class LoginController
             Console.Write("Lösenord: ");
             string code = Console.ReadLine() ?? "";
 
-            // Temporary login logic
             if (string.Equals(code, "bajskorv", StringComparison.OrdinalIgnoreCase) ||
                 string.IsNullOrWhiteSpace(code))
             {

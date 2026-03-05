@@ -15,7 +15,6 @@ namespace CashRegisterSystem.Data
         private static readonly string CampaignFilePath = Path.Combine(
             AppContext.BaseDirectory, "..", "..", "..", "Campaigns", "campaigns.txt");
 
-        // Loads campaign data and applies it to the product list.
         public static List<Product> LoadCampaignsIntoProducts(List<Product> products)
         {
             if (products == null)
@@ -40,7 +39,6 @@ namespace CashRegisterSystem.Data
 
                 string plu = parts[0];
 
-                // Safe parsing
                 string campaignName = parts[1];
 
                 if (!decimal.TryParse(parts[2], out decimal percent))
@@ -72,8 +70,6 @@ namespace CashRegisterSystem.Data
 
             return products;
         }
-
-        // Saves campaign data from products to file.
         public static void SaveCampaignsFromProducts(List<Product> products)
         {
             if (products == null)

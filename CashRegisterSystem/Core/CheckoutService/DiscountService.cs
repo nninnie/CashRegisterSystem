@@ -17,7 +17,6 @@ namespace CashRegisterSystem.Core.CheckoutService
             if (!product.CampaignIsActive)
                 return 0;
 
-            // Check campaign date range
             if (product.CampaignStartDate.HasValue && product.CampaignStartDate > DateTime.Today)
                 return 0;
 
@@ -26,21 +25,18 @@ namespace CashRegisterSystem.Core.CheckoutService
 
             decimal originalTotal = product.Price * quantity;
 
-            // Percent discount
             if (product.CampaignPercent > 0)
             {
                 decimal discount = originalTotal * (product.CampaignPercent / 100m);
                 return Math.Round(discount, 2);
             }
 
-            // Fixed campaign price
             if (product.CampaignPrice > 0)
             {
                 decimal campaignTotal = product.CampaignPrice * quantity;
                 return originalTotal - campaignTotal;
             }
 
-            // Multibuy (e.g., 3 for 20 kr)
             if (product.MultiBuyQuantity > 0 && product.MultiBuyPrice > 0)
             {
                 int fullSets = (int)(quantity / product.MultiBuyQuantity);

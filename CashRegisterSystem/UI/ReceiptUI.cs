@@ -2,22 +2,19 @@
 using System.Text;
 
 /// <summary>
-/// Builds and formats the printed receipt using a fixed-width layout.
-/// Responsible only for text formatting, not business logic.
+/// Builds the printed receipt using a fixed-width layout (40 characters).
+/// The class focuses only on text formatting: it assembles the header,
+/// product lines, totals, VAT, and payment details into a complete receipt.
+/// Each line is added with AppendLine, which writes the text and moves to
+/// the next line, allowing the receipt to be built step by step.
 /// </summary>
 public static class ReceiptUI
 {
-    // ---------------------------------------------------------
-    // 1. CONSTANTS
-    // ---------------------------------------------------------
 
     private const int ReceiptLineWidth = 40;
     private const int ProductNameColumnWidth = 14;
     private const int QuantityColumnWidth = 5;
 
-    // ---------------------------------------------------------
-    // 2. MAIN METHOD (TOP → BOTTOM)
-    // ---------------------------------------------------------
 
     /// <summary>
     /// Creates the full receipt text in the same order it is printed.
@@ -49,7 +46,7 @@ public static class ReceiptUI
         }
 
         BuildTotalSection(receiptBuilder, totalReceiptAmount);
-        BuildVatSection(receiptBuilder, totalReceiptAmount);
+        BuildVatSection(receiptBuilder, cartItems);
         BuildPaymentSection(receiptBuilder, paymentMethod, amountReceived, totalReceiptAmount);
 
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
@@ -61,9 +58,6 @@ public static class ReceiptUI
         return receiptBuilder.ToString();
     }
 
-    // ---------------------------------------------------------
-    // 3. HEADER SECTION
-    // ---------------------------------------------------------
 
     /// <summary>
     /// Writes store header, cashier info, date and time.
@@ -75,7 +69,7 @@ public static class ReceiptUI
         int receiptNumber)
     {
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
-        receiptBuilder.AppendLine(CenterText("Frukt Marknad"));
+        receiptBuilder.AppendLine(CenterText("Frukt Marknaden"));
         receiptBuilder.AppendLine(CenterText("Öppet 08:00 - 23:00"));
         receiptBuilder.AppendLine(CenterText("Tel: 073-570 43 68"));
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
@@ -94,9 +88,6 @@ public static class ReceiptUI
         receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
     }
 
-    // ---------------------------------------------------------
-    // 4. PRODUCT LINE SECTION
-    // ---------------------------------------------------------
 
     /// <summary>
     /// Builds a single product line with quantity, unit and total.
@@ -135,9 +126,6 @@ public static class ReceiptUI
         return leftSideText + new string(' ', spacing) + totalPriceText;
     }
 
-    // ---------------------------------------------------------
-    // 5. TOTALS SECTION
-    // ---------------------------------------------------------
 
     /// <summary>
     /// Writes the total amount section.
@@ -149,30 +137,34 @@ public static class ReceiptUI
         receiptBuilder.AppendLine();
     }
 
-    // ---------------------------------------------------------
-    // 6. VAT SECTION
-    // ---------------------------------------------------------
-
     /// <summary>
     /// Writes VAT breakdown (12%).
     /// </summary>
-    private static void BuildVatSection(StringBuilder receiptBuilder, decimal totalAmount)
+    private static void BuildVatSection(StringBuilder receiptBuilder, List<CartItem> cartItems)
     {
-        const decimal VatRate = 0.12m;
-        decimal vatAmount = totalAmount * VatRate / (1 + VatRate);
-        decimal amountExcludingVat = totalAmount - vatAmount;
+        decimal totalVat = 0;
+        decimal totalExVat = 0;
+
+        foreach (var item in cartItems)
+        {
+            decimal vatRate = item.Product.VatRate;
+            decimal lineTotal = item.TotalPrice - item.DiscountAmount;
+
+            decimal vatAmount = lineTotal * vatRate / (1 + vatRate);
+            decimal exVat = lineTotal - vatAmount;
+
+            totalVat += vatAmount;
+            totalExVat += exVat;
+        }
 
         receiptBuilder.AppendLine("MOMSREDOVISNING");
         receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
-        receiptBuilder.AppendLine(AlignLabelAndValueRight("12% moms:", $"{vatAmount:0.00} kr"));
-        receiptBuilder.AppendLine(AlignLabelAndValueRight("Exkl. moms:", $"{amountExcludingVat:0.00} kr"));
+        receiptBuilder.AppendLine(AlignLabelAndValueRight("Moms:", $"{totalVat:0.00} kr"));
+        receiptBuilder.AppendLine(AlignLabelAndValueRight("Exkl. moms:", $"{totalExVat:0.00} kr"));
         receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
         receiptBuilder.AppendLine();
     }
 
-    // ---------------------------------------------------------
-    // 7. PAYMENT SECTION
-    // ---------------------------------------------------------
 
     /// <summary>
     /// Writes payment details depending on payment method.
@@ -199,9 +191,7 @@ public static class ReceiptUI
         }
     }
 
-    // ---------------------------------------------------------
-    // 8. HELPER METHODS
-    // ---------------------------------------------------------
+    // HELPER METHODS
 
     private static string AlignLabelAndValueRight(string leftLabel, string rightValue)
     {

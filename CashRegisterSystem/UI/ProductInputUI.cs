@@ -4,9 +4,11 @@ using CashRegisterSystem.Models;
 namespace CashRegisterSystem.UI
 {
     /// <summary>
-    /// Handles all user input related to products.
-    /// Provides simple and safe input methods for PLU, names, prices and units.
-    /// All console text is in Swedish, while code and comments are in English.
+    /// Provides all user input functions related to products.
+    /// Each method asks for one specific value (PLU, name, price, unit, etc.)
+    /// and safely returns null if the user presses ESC. 
+    /// The class focuses only on collecting input and showing simple
+    /// confirmation or error messages in the console.
     /// </summary>
     public static class ProductInputUI
     {
@@ -37,8 +39,7 @@ namespace CashRegisterSystem.UI
         }
 
         /// <summary>
-        /// Asks the user to enter the base price.
-        /// NOTE: Price is entered as a whole number (no decimals).
+        /// Asks the user to enter the base price as a decimal number.
         /// Returns null if ESC is pressed.
         /// </summary>
         public static decimal? AskForBasePrice()

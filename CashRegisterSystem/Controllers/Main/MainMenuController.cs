@@ -23,7 +23,6 @@ namespace CashRegisterSystem.Controllers.Main
             {
                 int choice = MenuUI.ShowMainMenu(isLoggedIn);
 
-                // Clear input buffer so ENTER doesn't auto-trigger next action
                 while (Console.KeyAvailable)
                     Console.ReadKey(true);
 

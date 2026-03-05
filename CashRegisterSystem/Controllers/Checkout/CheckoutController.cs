@@ -36,40 +36,35 @@ namespace CashRegisterSystem.Controllers
 
                 string? input = InputService.ReadString("PLU och antal/vikt: ");
                 if (input == null)
-                    return;   // ESC
+                    return;  
 
                 string trimmed = input.Trim().ToUpper();
 
-                // PAY – rätt placerad i yttre loopen
                 if (_commandParser.IsPayCommand(trimmed))
                 {
                     bool continueShopping = _paymentService.CompletePayment(cart);
 
                     if (!continueShopping)
-                        return;   // Avslutar hela checkout korrekt
+                        return;   
 
                     _cartService.Clear(cart);
                     Console.Clear();
                     
-                    //ShowCheckoutPluList(products);
                     continue;
                 }
 
-                // CANCEL
                 if (_commandParser.IsCancelCommand(trimmed))
                 {
                     Console.WriteLine("Transaktionen avbröts");
                     return;
                 }
 
-                // DELETE
                 if (_commandParser.IsDeleteCommand(trimmed))
                 {
                     HandleDeleteCommand(trimmed, cart, products);
                     continue;
                 }
 
-                // Försök tolka PLU + antal/vikt
                 var parsed = _inputParser.Parse(input, products);
 
                 if (parsed == null)
@@ -80,17 +75,13 @@ namespace CashRegisterSystem.Controllers
 
                 var (product, quantity) = parsed.Value;
 
-                // Validering
                 if (!ValidateQuantity(product, quantity))
                     continue;
 
-                // Rabatt
                 decimal discountAmount = _discountService.CalculateDiscount(product, quantity);
 
-                // Lägg till vara
                 AddItemToCart(cart, product, quantity, discountAmount);
 
-                // Rabattmeddelande
                 if (discountAmount > 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;

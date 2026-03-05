@@ -11,10 +11,7 @@ namespace CashRegisterSystem.Models
     /// </summary>
     public class Cart
     {
-        // All items currently in the cart.
         public List<CartItem> CartItems { get; } = new();
-
-        // Adds a quantity-based product (pieces).
         public void AddItem(Product product, int quantity, decimal discountAmount, decimal unitPrice)
         {
             if (product == null)
@@ -44,8 +41,6 @@ namespace CashRegisterSystem.Models
                 UnitPrice = unitPrice
             });
         }
-
-        // Adds a weight-based product (kilograms).
         public void AddItemByWeight(Product product, decimal weight, decimal discountAmount, decimal unitPrice)
         {
             if (product == null)
@@ -76,19 +71,15 @@ namespace CashRegisterSystem.Models
             });
         }
 
-        // Fallback for simple quantity-based adding.
         public void AddItem(Product product, int quantity)
         {
             AddItem(product, quantity, 0, product.Price);
         }
 
-        // Calculates the total price of all items.
         public decimal TotalPrice => CartItems.Sum(item => item.TotalPrice);
 
-        // Removes all items.
         public void Clear() => CartItems.Clear();
 
-        // Removes a specific item by PLU.
         public bool RemoveItem(string plu)
         {
             if (string.IsNullOrWhiteSpace(plu))

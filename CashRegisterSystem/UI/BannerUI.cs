@@ -8,7 +8,6 @@ namespace CashRegisterSystem.UI
     /// </summary>
     public static class BannerUI
     {
-        // Fixed width used for all banners to match checkout layout
         private const int BannerWidth = 70;
 
         /// <summary>
@@ -20,14 +19,11 @@ namespace CashRegisterSystem.UI
 
             string line = new string('=', BannerWidth);
 
-            // Full-width top border
             Console.WriteLine(line);
 
-            // Centered title
             int padding = (BannerWidth - title.Length) / 2;
             Console.WriteLine(new string(' ', padding) + title.ToUpper());
 
-            // Full-width bottom border
             Console.WriteLine(line);
 
             Console.WriteLine();
@@ -43,8 +39,7 @@ namespace CashRegisterSystem.UI
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkCyan;
 
-            // Exact visual centering for Unicode/emoji logo
-            string logo = "🍎🍌🍇🍉 𝗙 𝗥 U K T   M A R K N A D 🍓🍍🍒🍑";
+            string logo = "🍎🍌🍇🍉 𝗙 𝗥 U K T   M A R K N A D E N 🍓🍍🍒🍑";
             string paddedLogo = new string(' ', 16) + logo; 
 
             Console.Write(paddedLogo);
@@ -52,16 +47,6 @@ namespace CashRegisterSystem.UI
             Console.ResetColor();
             Console.WriteLine();
             
-        }
-
-
-        /// <summary>
-        /// Writes a single line of text centered within the banner width.
-        /// </summary>
-        private static void WriteCentered(string text)
-        {
-            int padding = Math.Max(0, (BannerWidth - text.Length) / 2);
-            Console.WriteLine(new string(' ', padding) + text);
         }
     }
 }

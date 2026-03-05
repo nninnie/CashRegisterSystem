@@ -13,7 +13,6 @@ namespace CashRegisterSystem.Data.Interfaces
     /// </summary>
     public class ReceiptFileWriter : IReceiptWriter
     {
-        // Returns the next available receipt number based on existing files.
         private int GetNextReceiptNumber()
         {
             string receiptFolder = Path.Combine(
@@ -38,7 +37,6 @@ namespace CashRegisterSystem.Data.Interfaces
             return maxNumber + 1;
         }
 
-        // Writes the receipt to a file and prints it to the console.
         public void WriteReceipt(
             List<CartItem> cartItems,
             string cashierName,

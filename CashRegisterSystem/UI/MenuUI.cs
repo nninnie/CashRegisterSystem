@@ -19,11 +19,9 @@ namespace CashRegisterSystem.UI
             int selectedOption = 1;
             Console.CursorVisible = false;
 
-            // Green highlight color for selected menu item
             const string highlightColor = "\u001b[32m";
 
             Console.Clear();
-            Console.Write("\x1b[3J"); // Clears scrollback buffer
             Console.SetCursorPosition(0, 0);
 
             while (true)
@@ -31,7 +29,6 @@ namespace CashRegisterSystem.UI
                 Console.Clear();
                 BannerUI.ShowLogo();
 
-                // Menu for users who are NOT logged in
                 if (!isLoggedIn)
                 {
                     Console.WriteLine($"{(selectedOption == 1 ? "·" + highlightColor : "")} Logga in\u001b[0m");
@@ -39,7 +36,7 @@ namespace CashRegisterSystem.UI
                     Console.WriteLine($"{(selectedOption == 3 ? "·" + highlightColor : "")} Admin\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 4 ? "·" + highlightColor : "")} Avsluta\u001b[0m");
                 }
-                else // Menu for logged-in users
+                else 
                 {
                     Console.WriteLine($"{(selectedOption == 1 ? "·" + highlightColor : "")} Ny kund\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 2 ? "·" + highlightColor : "")} PLU\u001b[0m");
@@ -48,15 +45,12 @@ namespace CashRegisterSystem.UI
 
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
-                // Move selection down
                 if (key.Key == ConsoleKey.DownArrow)
                     selectedOption++;
 
-                // Move selection up
                 if (key.Key == ConsoleKey.UpArrow)
                     selectedOption--;
 
-                // Wrap menu options depending on login state
                 if (!isLoggedIn)
                 {
                     if (selectedOption < 1) selectedOption = 4;
@@ -68,10 +62,8 @@ namespace CashRegisterSystem.UI
                     if (selectedOption > 3) selectedOption = 1;
                 }
 
-                // Confirm selection
                 if (key.Key == ConsoleKey.Enter)
                 {
-                    // Clear any buffered key presses
                     while (Console.KeyAvailable)
                         Console.ReadKey(true);
 

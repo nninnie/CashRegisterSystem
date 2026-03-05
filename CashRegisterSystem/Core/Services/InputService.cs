@@ -24,8 +24,7 @@ namespace CashRegisterSystem.Core.Services
 
                 if (keyInfo.Key == ConsoleKey.Escape)
                 {
-                    // User pressed ESC → cancel input
-                    Console.WriteLine(); // move to next line for clean UI
+                    Console.WriteLine(); 
                     return null;
                 }
 
@@ -62,7 +61,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; // ESC
+                    return null; 
 
                 input = input.Trim();
 
@@ -82,7 +81,7 @@ namespace CashRegisterSystem.Core.Services
 
             string? input = ReadLineWithEsc();
             if (input == null)
-                return null; // ESC
+                return null; 
 
             return input;
         }
@@ -98,7 +97,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; // ESC
+                    return null;
 
                 if (int.TryParse(input, out int value))
                     return value;
@@ -118,7 +117,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; // ESC
+                    return null; 
 
                 if (decimal.TryParse(input, out decimal value))
                     return value;
@@ -138,7 +137,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; // ESC
+                    return null; 
 
                 if (DateTime.TryParse(input, out DateTime date))
                     return date;
@@ -158,7 +157,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; // ESC
+                    return null; 
 
                 input = input.Trim().ToLower();
 

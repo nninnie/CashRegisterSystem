@@ -17,7 +17,6 @@ namespace CashRegisterSystem.Data.FileLoader
         private static readonly string filePath =
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Products", "products.txt");
 
-        // Default products used when file does not exist.
         private static readonly List<Product> DefaultProducts = new()
         {
             new Product { PLU = "3174", Name = "Apelsin", Price = 19, PriceUnit = PriceUnit.PerKilo },
@@ -43,7 +42,6 @@ namespace CashRegisterSystem.Data.FileLoader
             new Product { PLU = "3211", Name = "Vitkål", Price = 19, PriceUnit = PriceUnit.Each },
         };
 
-        // Loads all products from file or creates defaults.
         public static List<Product> GetProducts()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
@@ -77,7 +75,6 @@ namespace CashRegisterSystem.Data.FileLoader
                 });
             }
 
-            // Apply campaign price to all products.
             foreach (var p in products)
             {
                 p.CampaignPrice = CampaignService.GetPrice(p);
@@ -85,8 +82,6 @@ namespace CashRegisterSystem.Data.FileLoader
 
             return products;
         }
-
-        // Saves all products to file.
         public static void SaveProducts(List<Product> products)
         {
             if (products == null)
