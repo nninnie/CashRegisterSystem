@@ -46,7 +46,8 @@ namespace CashRegisterSystem.UI
 
             Console.ResetColor();
             Console.WriteLine();
-            
+            Console.WriteLine();
+
         }
     }
 }

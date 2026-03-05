@@ -17,6 +17,7 @@ namespace CashRegisterSystem.Core.CheckoutService
         /// </summary>
         public bool CompletePayment(Cart cart)
         {
+
             if (cart == null || cart.CartItems.Count == 0)
             {
                 Console.WriteLine("Kundvagnen är tom.");
@@ -75,6 +76,7 @@ namespace CashRegisterSystem.Core.CheckoutService
 
                     case ConsoleKey.Enter:
                         paymentChosen = true;
+                        Console.Clear();
                         continue;
                 }
 

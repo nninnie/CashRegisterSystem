@@ -32,16 +32,16 @@ namespace CashRegisterSystem.Controllers.Main
                     {
                         case 1:
                             LoginController.Login(ref isLoggedIn);
-                            break;
+                            continue;
 
                         case 2:
                             Console.Clear();
                             ProductListUI.ShowProductList(products, true);
-                            break;
+                            continue;
 
                         case 3:
                             AdminLoginController.Login();
-                            break;
+                            continue;
 
                         case 4:
                             Console.WriteLine("\n\n\n\t     Tack för idag! Ha en fin dag ❤️\n");
@@ -55,11 +55,11 @@ namespace CashRegisterSystem.Controllers.Main
                     {
                         case 1:
                             new CheckoutController().StartNewCustomer(products);
-                            break;
+                            continue;
 
                         case 2:
                             ProductListUI.ShowProductList(products, true);
-                            break;
+                            continue;
 
                         case 3:
                             isLoggedIn = false;

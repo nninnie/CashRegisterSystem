@@ -91,6 +91,7 @@ namespace CashRegisterSystem.Controllers
 
                 Thread.Sleep(1000);
                 Console.Clear();
+                BannerUI.ShowLogo();
                 ShowCheckoutPluList(products);
             }
         }

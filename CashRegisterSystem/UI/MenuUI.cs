@@ -22,7 +22,6 @@ namespace CashRegisterSystem.UI
             const string highlightColor = "\u001b[32m";
 
             Console.Clear();
-            Console.SetCursorPosition(0, 0);
 
             while (true)
             {
@@ -31,13 +30,17 @@ namespace CashRegisterSystem.UI
 
                 if (!isLoggedIn)
                 {
+                    BannerUI.PrintHeader("HUVUDMENY");
+
                     Console.WriteLine($"{(selectedOption == 1 ? "·" + highlightColor : "")} Logga in\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 2 ? "·" + highlightColor : "")} PLU\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 3 ? "·" + highlightColor : "")} Admin\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 4 ? "·" + highlightColor : "")} Avsluta\u001b[0m");
                 }
-                else 
+                else
                 {
+                    BannerUI.PrintHeader("KASSÖRINLOGGNING");
+
                     Console.WriteLine($"{(selectedOption == 1 ? "·" + highlightColor : "")} Ny kund\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 2 ? "·" + highlightColor : "")} PLU\u001b[0m");
                     Console.WriteLine($"{(selectedOption == 3 ? "·" + highlightColor : "")} Logga ut\u001b[0m");

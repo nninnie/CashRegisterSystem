@@ -71,6 +71,7 @@ namespace CashRegisterSystem.UI
             return $"{nameCol}{qtyCol}{priceCol}";
         }
 
+
         /// <summary>
         /// Shows the PLU input prompt used during checkout.
         /// </summary>
