@@ -47,6 +47,15 @@ public static class ReceiptUI
 
         BuildTotalSection(receiptBuilder, totalReceiptAmount);
         BuildVatSection(receiptBuilder, cartItems);
+
+        decimal totalDiscount = cartItems.Sum(i => i.DiscountAmount);
+
+        receiptBuilder.AppendLine(
+            AlignLabelAndValueRight("Erhållen rabatt:", $"{totalDiscount:0.00} kr")
+        );
+        receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
+        receiptBuilder.AppendLine();
+
         BuildPaymentSection(receiptBuilder, paymentMethod, amountReceived, totalReceiptAmount);
 
         receiptBuilder.AppendLine(new string('=', ReceiptLineWidth));
@@ -163,6 +172,7 @@ public static class ReceiptUI
         receiptBuilder.AppendLine(AlignLabelAndValueRight("Exkl. moms:", $"{totalExVat:0.00} kr"));
         receiptBuilder.AppendLine(new string('-', ReceiptLineWidth));
         receiptBuilder.AppendLine();
+
     }
 
 

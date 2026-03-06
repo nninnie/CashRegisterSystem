@@ -3,21 +3,24 @@
           Öppet 08:00 - 23:00
            Tel: 073-570 43 68
 ========================================
-Säljare: 4011      Kassa: 1   Kvitto: 65
-Datum: 2026-03-06             Tid: 13:13
+Säljare: 40        Kassa: 1   Kvitto: 68
+Datum: 2026-03-06             Tid: 17:20
 ----------------------------------------
-Bananer        2,00 kg          59,80 kr
+Bananer       22,00 kg         657,80 kr
 ----------------------------------------
-TOTALT:                         59,80 kr
+TOTALT:                        657,80 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-Moms:                            6,41 kr
-Exkl. moms:                     53,39 kr
+Moms:                           70,48 kr
+Exkl. moms:                    587,32 kr
 ----------------------------------------
 
-Mottaget kontant:              100,00 kr
-Åter kontant:                   40,20 kr
+Erhållen rabatt:                -0,00 kr
+----------------------------------------
+
+Mottaget kontant:              700,00 kr
+Åter kontant:                   42,20 kr
 ========================================
              SPARA KVITTOT
            TACK FÖR BESÖKET!
