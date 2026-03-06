@@ -49,7 +49,7 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowProductList(products);
+            ProductListUI.ShowCampaignPLUList(products);
 
             string? plu = InputService.ReadString("\nAnge PLU för ny kampanj: ");
             if (plu == null)

@@ -54,23 +54,23 @@ public static class AdminMenuController
                     {
                         case 1:
                             ProductListUI.ShowProductList(products, true);
-                            return;
+                            break;
 
                         case 2:
                             ProductAdminController.EditProduct();
-                            return;
+                            break;
 
                         case 3:
                             ProductAdminController.AddProduct();
-                            return;
+                            break;
 
                         case 4:
                             ProductAdminController.DeleteProduct();
-                            return;
+                            break;
 
                         case 5:
                             CampaignMenuController.ShowCampaignMenu();
-                            return;
+                            break;
 
                         case 6:
                             return;
