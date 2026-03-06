@@ -10,9 +10,9 @@ namespace CashRegisterSystem.UI
     public static class ProductListUI
     {
         /// <summary>
-        /// Displays the standard administrative product list in a
-        /// table-style layout, showing one row per product with full
-        /// pricing and campaign details.
+        /// Displays a paginated administrative product list in a table layout,
+        /// including full price and campaign information. The user can navigate
+        /// between pages and return to the previous menu.
         /// </summary>
 
         public static void ShowProductList(List<Product> products, bool showReturnMessage = true)
@@ -119,7 +119,7 @@ namespace CashRegisterSystem.UI
                         if (i == selected)
                         {
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine($"> {menuItems[i]}");
+                            Console.WriteLine($"· {menuItems[i]}");
                             Console.ResetColor();
                         }
                         else
@@ -153,6 +153,153 @@ namespace CashRegisterSystem.UI
 
                 else if (selected == 2)
                     return;         
+
+            }
+        }
+        /// <summary>
+        /// Displays a static overview of all active campaigns without pagination.
+        /// The list is printed in a table layout and the method returns immediately
+        /// to the previous menu when finished.
+        /// </summary>
+
+        public static void ShowCampaignPLUList(List<Product> products)
+        {
+            const int pageSize = 10;
+            int currentPage = 0;
+
+            var sorted = products.OrderBy(p => p.Name).ToList();
+            int totalPages = (int)Math.Ceiling(sorted.Count / (double)pageSize);
+
+            while (true)
+            {
+                Console.Clear();
+                BannerUI.ShowLogo();
+                BannerUI.PrintHeader("KAMPANJ PRODUKTLISTA");
+
+                Console.WriteLine($"Sida {currentPage + 1}/{totalPages}\n");
+
+                int colPLU = 5;
+                int colName = 14;
+                int colUnit = 5;
+                int colPrice = 10;
+                int colCampaign = 12;
+                int colType = 8;
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine(
+                    "PLU".PadRight(colPLU) + " | " +
+                    "Produkt".PadRight(colName) + " | " +
+                    "Enhet".PadRight(colUnit) + " | " +
+                    "Ord.pris".PadRight(colPrice) + " | " +
+                    "Kampanj".PadRight(colCampaign) + " | " +
+                    "Typ".PadRight(colType)
+                );
+                Console.ResetColor();
+
+                Console.WriteLine(new string('-', 70));
+
+                var pageItems = sorted
+                    .Skip(currentPage * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                foreach (var p in pageItems)
+                {
+                    string unit = p.PriceUnit == PriceUnit.PerKilo ? "kg" : "st";
+                    string ordPrice = $"{p.Price:0.00}".PadRight(colPrice);
+
+                    string kampValue;
+                    string kampType;
+
+                    if (!p.CampaignIsActive)
+                    {
+                        kampValue = "-".PadRight(colCampaign);
+                        kampType = "-".PadRight(colType);
+                    }
+                    else if (p.CampaignPrice > 0)
+                    {
+                        kampValue = $"{p.CampaignPrice:0.00}".PadRight(colCampaign);
+                        kampType = "Fast pris".PadRight(colType);
+                    }
+                    else if (p.CampaignPercent > 0)
+                    {
+                        decimal newPrice = p.Price * (1 - (p.CampaignPercent / 100m));
+                        kampValue = $"{newPrice:0.00}".PadRight(colCampaign);
+                        kampType = "Rabatt %".PadRight(colType);
+                    }
+                    else if (p.MultiBuyQuantity > 0)
+                    {
+                        kampValue = $"{p.MultiBuyQuantity} för {p.MultiBuyPrice:0.00}".PadRight(colCampaign);
+                        kampType = "Multiköp".PadRight(colType);
+                    }
+                    else
+                    {
+                        kampValue = "-".PadRight(colCampaign);
+                        kampType = "-".PadRight(colType);
+                    }
+
+                    Console.ForegroundColor = p.CampaignIsActive ? ConsoleColor.DarkGray : ConsoleColor.DarkGray;
+
+                    Console.WriteLine(
+                        p.PLU.PadRight(colPLU) + " | " +
+                        p.Name.PadRight(colName) + " | " +
+                        unit.PadRight(colUnit) + " | " +
+                        ordPrice + " | " +
+                        kampValue + " | " +
+                        kampType
+                    );
+
+                    Console.ResetColor();
+                }
+
+                Console.WriteLine();
+
+                string[] menuItems = { "Nästa sida", "Föregående sida", "Fortsätt" };
+                int selected = 0;
+
+                while (true)
+                {
+                    Console.WriteLine();
+
+                    for (int i = 0; i < menuItems.Length; i++)
+                    {
+                        if (i == selected)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine($"· {menuItems[i]}");
+                            Console.ResetColor();
+                        }
+                        else
+                        {
+                            Console.WriteLine($"  {menuItems[i]}");
+                        }
+                    }
+
+                    var key = Console.ReadKey(true).Key;
+
+                    if (key == ConsoleKey.Escape)
+                        return;
+
+                    if (key == ConsoleKey.UpArrow && selected > 0)
+                        selected--;
+
+                    if (key == ConsoleKey.DownArrow && selected < menuItems.Length - 1)
+                        selected++;
+
+                    if (key == ConsoleKey.Enter)
+                        break;
+
+                    Console.SetCursorPosition(0, Console.CursorTop - menuItems.Length - 1);
+                }
+
+                if (selected == 0 && currentPage < totalPages - 1)
+                    currentPage++;
+
+                else if (selected == 1 && currentPage > 0)
+                    currentPage--;
+
+                else if (selected == 2)
+                    return;
 
             }
         }

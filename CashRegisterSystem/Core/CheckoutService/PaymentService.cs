@@ -76,7 +76,6 @@ namespace CashRegisterSystem.Core.CheckoutService
 
                     case ConsoleKey.Enter:
                         paymentChosen = true;
-                        Console.Clear();
                         continue;
                 }
 
@@ -156,9 +155,16 @@ namespace CashRegisterSystem.Core.CheckoutService
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("ENTER för nästa kund || ESC för att gå till menyn");
             Console.ResetColor();
-            Console.ReadKey(true);
+            var keys = Console.ReadKey(true);
 
-            return false;
+            if (keys.Key == ConsoleKey.Enter)
+                return false;  
+
+            if (keys.Key == ConsoleKey.Escape)
+                return true;    
+
+            return false;      
+
         }
 
         /// <summary>

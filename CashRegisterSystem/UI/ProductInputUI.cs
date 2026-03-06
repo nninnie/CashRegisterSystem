@@ -68,14 +68,21 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static void ShowConfirmation(string title, string details)
         {
-            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(title);
+            Console.ResetColor();
+
+            Console.WriteLine();
             Console.WriteLine(details);
+
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("\nTryck ENTER eller ESC för att fortsätta.");
             Console.ResetColor();
-            Console.ReadKey();
+
+            Console.ReadKey(true);
             Console.Clear();
         }
+
 
 
         /// <summary>

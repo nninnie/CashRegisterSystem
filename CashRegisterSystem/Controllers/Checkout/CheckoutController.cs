@@ -31,6 +31,10 @@ namespace CashRegisterSystem.Controllers
 
             while (true)
             {
+                Console.Clear();
+                BannerUI.ShowLogo();
+                BannerUI.PrintHeader("KASSA");
+                ProductListUI.ShowCompactPLU(products);
                 CartUI.ShowCart(cart);
                 CartUI.ShowPluInputPrompt();
 
@@ -42,15 +46,16 @@ namespace CashRegisterSystem.Controllers
 
                 if (_commandParser.IsPayCommand(trimmed))
                 {
-                    bool continueShopping = _paymentService.CompletePayment(cart);
+                    bool goToMenu = _paymentService.CompletePayment(cart);
 
-                    if (!continueShopping)
-                        return;   
+                    if (goToMenu)
+                        return;  
+
 
                     _cartService.Clear(cart);
                     Console.Clear();
-                    
                     continue;
+
                 }
 
                 if (_commandParser.IsCancelCommand(trimmed))
@@ -162,6 +167,7 @@ namespace CashRegisterSystem.Controllers
             Console.WriteLine("\n" + message);
             Console.ResetColor();
             Thread.Sleep(1200);
+            Console.Clear();
         }
 
         private void ShowCheckoutPluList(List<Product> products)

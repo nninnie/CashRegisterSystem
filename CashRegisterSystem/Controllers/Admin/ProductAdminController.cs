@@ -22,10 +22,11 @@ namespace CashRegisterSystem.Controllers.Admin.Products
         {
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
-Console.Clear();
+            Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("LÄGG TILL PRODUKT");
 
-            ProductListUI.ShowProductList(products, false);
+            ProductListUI.ShowCompactPLU(products);
 
             var newProduct = ProductService.AddProduct(products);
 
@@ -35,14 +36,12 @@ Console.Clear();
                 ProductFileRepository.SaveAll(products);
 
                 ProductInputUI.ShowConfirmation(
-                    "Produkt skapad!",
+                    "\nProdukt skapad!",
                     $"PLU: {newProduct.PLU}\n" +
                     $"Namn: {newProduct.Name}\n" +
                     $"Pris: {newProduct.Price:0.00} kr"
                 );
             }
-
-            Console.Clear();
         }
 
 
@@ -57,9 +56,11 @@ Console.Clear();
             BannerUI.ShowLogo();
             BannerUI.PrintHeader("TA BORT PRODUKT");
 
+            ProductListUI.ShowCompactPLU(products);
+
             string? plu = ProductInputUI.AskForPlu();
             if (plu == null)
-                return; 
+                return;
 
             bool removed = ProductService.DeleteProduct(products, plu);
 
@@ -68,7 +69,7 @@ Console.Clear();
                 ProductFileRepository.SaveAll(products);
 
                 ProductInputUI.ShowConfirmation(
-                    "Produkt borttagen!",
+                    "\nProdukt borttagen!",
                     $"PLU: {plu}"
                 );
             }
@@ -82,15 +83,16 @@ Console.Clear();
         public static void EditProduct()
         {
             Console.Clear();
+            BannerUI.ShowLogo();
             BannerUI.PrintHeader("ÄNDRA PRODUKT");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
 
-            ProductListUI.ShowProductList(products, false);
+            ProductListUI.ShowCompactPLU(products);
 
             string? plu = ProductInputUI.AskForPlu();
             if (plu == null)
-                return; 
+                return;
 
             var product = products.FirstOrDefault(p => p.PLU == plu);
 
@@ -118,7 +120,7 @@ Console.Clear();
 
             int? choice = InputService.ReadInt("Val: ");
             if (choice == null)
-                return; 
+                return;
 
             switch (choice.Value)
             {
@@ -126,7 +128,7 @@ Console.Clear();
                     {
                         string? newPlu = InputService.ReadString("\nNytt PLU: ");
                         if (newPlu == null)
-                            return; 
+                            return;
                         product.PLU = newPlu;
                         break;
                     }
@@ -135,7 +137,7 @@ Console.Clear();
                     {
                         string? newName = InputService.ReadString("\nNytt namn: ");
                         if (newName == null)
-                            return; 
+                            return;
                         product.Name = newName;
                         break;
                     }
@@ -144,7 +146,7 @@ Console.Clear();
                     {
                         decimal? newPrice = InputService.ReadDecimal("\nNytt pris: ");
                         if (newPrice == null)
-                            return; 
+                            return;
                         product.Price = newPrice.Value;
                         break;
                     }
@@ -153,7 +155,7 @@ Console.Clear();
                     {
                         PriceUnit? newUnit = InputService.ReadUnit("\nNy enhet (kg/st): ");
                         if (newUnit == null)
-                            return; 
+                            return;
                         product.PriceUnit = newUnit.Value;
                         break;
                     }
@@ -169,7 +171,7 @@ Console.Clear();
             ProductFileRepository.SaveAll(products);
 
             ProductInputUI.ShowConfirmation(
-                "Produkten uppdaterad!",
+                "\nProdukten uppdaterad!",
                 product.Name
             );
 

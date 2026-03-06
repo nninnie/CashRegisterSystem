@@ -27,3 +27,4 @@
 4645;Champinjoner;16,90;Each
 93214;Äpple Eko;36,90;PerKilo
 94806;Tomater Eko;32,90;PerKilo
+94593;Gurka Eko;24,90;Each

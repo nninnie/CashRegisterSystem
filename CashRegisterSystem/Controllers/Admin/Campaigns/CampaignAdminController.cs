@@ -37,9 +37,6 @@ namespace CashRegisterSystem.Controllers.Admin
 
             ProductListUI.ShowProductList(products);
 
-            Console.WriteLine();
-            Console.WriteLine("Tryck ENTER eller ESC för att fortsätta.");
-            Console.ReadKey();
         }
 
         /// <summary>
@@ -52,9 +49,9 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("STARTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowProductList(products, false);
+            ProductListUI.ShowProductList(products);
 
-            string? plu = InputService.ReadString("PLU: ");
+            string? plu = InputService.ReadString("\nAnge PLU för ny kampanj: ");
             if (plu == null)
                 return; 
 
@@ -122,9 +119,9 @@ namespace CashRegisterSystem.Controllers.Admin
             BannerUI.PrintHeader("AVSLUTA KAMPANJ");
 
             var products = ProductFileRepository.GetAll() ?? new List<Product>();
-            ProductListUI.ShowProductList(products, false);
+            ProductListUI.ShowCampaignPLUList(products);
 
-            string? plu = InputService.ReadString("PLU: ");
+            string? plu = InputService.ReadString("\nAnge PLU på den kampanj du vill ta bort: ");
             if (plu == null)
                 return; 
 
