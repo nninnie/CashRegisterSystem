@@ -12,7 +12,7 @@ namespace CashRegisterSystem.Core.Services
             if (products == null)
                 return null;
 
-            string? plu = ProductInputUI.AskForPlu();
+            string? plu = ProductInputUI.AskForPlu(); 
 
             if (plu == null)
                 return null;
