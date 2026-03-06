@@ -24,8 +24,8 @@ namespace CashRegisterSystem.Core.Services
 
                 if (keyInfo.Key == ConsoleKey.Escape)
                 {
-                    Console.WriteLine(); 
-                    return null;
+                    Console.WriteLine();
+                    return null; 
                 }
 
                 if (keyInfo.Key == ConsoleKey.Enter)
@@ -97,7 +97,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null;
+                    return null; 
 
                 if (int.TryParse(input, out int value))
                     return value;
@@ -137,7 +137,7 @@ namespace CashRegisterSystem.Core.Services
 
                 string? input = ReadLineWithEsc();
                 if (input == null)
-                    return null; 
+                    return null;
 
                 if (DateTime.TryParse(input, out DateTime date))
                     return date;

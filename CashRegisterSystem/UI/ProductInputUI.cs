@@ -28,8 +28,8 @@ namespace CashRegisterSystem.UI
         {
             string? result = InputService.ReadString("\nPLU: ");
 
-            if (result == "__ESC__")
-                return "__ESC__"; 
+            if (result == null)
+                return null; 
 
             return result;
         }
@@ -43,8 +43,8 @@ namespace CashRegisterSystem.UI
         {
             string? result = InputService.ReadString("Namn: ");
 
-            if (result == "__ESC__")
-                return "__ESC__";
+            if (result == null)
+                return null; 
 
             return result;
         }
@@ -58,7 +58,7 @@ namespace CashRegisterSystem.UI
         {
             var result = InputService.ReadDecimal("Pris: ");
 
-            if (result == null) // ESC
+            if (result == null) 
                 return null;
 
             return result;

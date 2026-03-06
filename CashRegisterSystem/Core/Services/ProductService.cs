@@ -5,16 +5,8 @@ using System.Linq;
 
 namespace CashRegisterSystem.Core.Services
 {
-    /// <summary>
-    /// Handles creation, editing and deletion of products.
-    /// Ensures safe input and prevents invalid product data.
-    /// </summary>
     public static class ProductService
     {
-        /// <summary>
-        /// Creates a new product from user input.
-        /// Returns null if ESC is pressed or invalid data is entered.
-        /// </summary>
         public static Product? AddProduct(List<Product> products)
         {
             if (products == null)
@@ -22,7 +14,7 @@ namespace CashRegisterSystem.Core.Services
 
             string? plu = ProductInputUI.AskForPlu();
 
-            if (plu == "__ESC__")
+            if (plu == null)
                 return null;
 
             if (string.IsNullOrWhiteSpace(plu))
@@ -38,7 +30,8 @@ namespace CashRegisterSystem.Core.Services
             }
 
             string? name = ProductInputUI.AskForProductName();
-            if (name == "__ESC__")
+
+            if (name == null)
                 return null;
 
             if (string.IsNullOrWhiteSpace(name))
@@ -48,7 +41,8 @@ namespace CashRegisterSystem.Core.Services
             }
 
             decimal? price = ProductInputUI.AskForBasePrice();
-            if (price == null) 
+
+            if (price == null)
                 return null;
 
             if (price <= 0)
@@ -58,9 +52,9 @@ namespace CashRegisterSystem.Core.Services
             }
 
             PriceUnit? unit = ProductInputUI.AskForPriceUnit();
-            if (unit == null) 
-                return null;
 
+            if (unit == null)
+                return null;
 
             return new Product
             {
@@ -68,8 +62,6 @@ namespace CashRegisterSystem.Core.Services
                 Name = name,
                 Price = price.Value,
                 PriceUnit = unit.Value,
-
-                // Reset campaign fields
                 CampaignPercent = 0,
                 CampaignPrice = 0,
                 MultiBuyQuantity = 0,
@@ -80,13 +72,9 @@ namespace CashRegisterSystem.Core.Services
             };
         }
 
-        /// <summary>
-        /// Deletes a product by PLU.
-        /// Returns false if ESC is pressed or product is not found.
-        /// </summary>
         public static bool DeleteProduct(List<Product> products, string? plu)
         {
-            if (plu == "__ESC__")
+            if (plu == null)
                 return false;
 
             if (string.IsNullOrWhiteSpace(plu))
@@ -106,19 +94,15 @@ namespace CashRegisterSystem.Core.Services
             return true;
         }
 
-        /// <summary>
-        /// Edits an existing product.
-        /// Returns false if ESC is pressed or invalid data is entered.
-        /// </summary>
         public static bool EditProduct(List<Product> products, string? plu)
         {
             if (products == null)
                 return false;
 
-            if (plu == "__ESC__")
+            if (plu == null)
                 return false;
 
-            if (plu == null || string.IsNullOrWhiteSpace(plu))
+            if (string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
@@ -132,29 +116,36 @@ namespace CashRegisterSystem.Core.Services
             }
 
             string? newName = ProductInputUI.AskForProductName();
-            if (newName == null || string.IsNullOrWhiteSpace(newName))
+
+            if (newName == null)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(newName))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return false;
             }
 
             decimal? newPrice = ProductInputUI.AskForBasePrice();
-            if (newPrice == null || newPrice <= 0)
+
+            if (newPrice == null)
+                return false;
+
+            if (newPrice <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return false;
             }
 
             PriceUnit? newUnit = ProductInputUI.AskForPriceUnit();
+
             if (newUnit == null)
                 return false;
 
-            // Update product
             product.Name = newName;
             product.Price = newPrice.Value;
             product.PriceUnit = newUnit.Value;
 
-            // Reset campaign data
             product.CampaignPercent = 0;
             product.CampaignPrice = 0;
             product.MultiBuyQuantity = 0;
