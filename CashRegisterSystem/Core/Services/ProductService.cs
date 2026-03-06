@@ -21,7 +21,11 @@ namespace CashRegisterSystem.Core.Services
                 return null;
 
             string? plu = ProductInputUI.AskForPlu();
-            if (plu == null || string.IsNullOrWhiteSpace(plu))
+
+            if (plu == "__ESC__")
+                return null;
+
+            if (string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return null;
@@ -34,22 +38,29 @@ namespace CashRegisterSystem.Core.Services
             }
 
             string? name = ProductInputUI.AskForProductName();
-            if (name == null || string.IsNullOrWhiteSpace(name))
+            if (name == "__ESC__")
+                return null;
+
+            if (string.IsNullOrWhiteSpace(name))
             {
                 ProductInputUI.ShowError("Namn får inte vara tomt.");
                 return null;
             }
 
             decimal? price = ProductInputUI.AskForBasePrice();
-            if (price == null || price <= 0)
+            if (price == null) 
+                return null;
+
+            if (price <= 0)
             {
                 ProductInputUI.ShowError("Pris måste vara större än 0.");
                 return null;
             }
 
             PriceUnit? unit = ProductInputUI.AskForPriceUnit();
-            if (unit == null)
-                return null; 
+            if (unit == null) 
+                return null;
+
 
             return new Product
             {
@@ -75,10 +86,10 @@ namespace CashRegisterSystem.Core.Services
         /// </summary>
         public static bool DeleteProduct(List<Product> products, string? plu)
         {
-            if (products == null)
+            if (plu == "__ESC__")
                 return false;
 
-            if (plu == null || string.IsNullOrWhiteSpace(plu))
+            if (string.IsNullOrWhiteSpace(plu))
             {
                 ProductInputUI.ShowError("PLU får inte vara tomt.");
                 return false;
@@ -102,6 +113,9 @@ namespace CashRegisterSystem.Core.Services
         public static bool EditProduct(List<Product> products, string? plu)
         {
             if (products == null)
+                return false;
+
+            if (plu == "__ESC__")
                 return false;
 
             if (plu == null || string.IsNullOrWhiteSpace(plu))

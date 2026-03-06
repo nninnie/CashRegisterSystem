@@ -174,7 +174,7 @@ namespace CashRegisterSystem.Core.CheckoutService
         {
             while (true)
             {
-                Console.Write("\nMottaget belopp: ");
+                Console.Write("Mottaget belopp: ");
                 string input = Console.ReadLine() ?? string.Empty;
 
                 if (decimal.TryParse(input, out decimal amount) && amount >= 0)

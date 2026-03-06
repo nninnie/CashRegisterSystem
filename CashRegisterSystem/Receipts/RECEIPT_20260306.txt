@@ -3,24 +3,33 @@
           Öppet 08:00 - 23:00
            Tel: 073-570 43 68
 ========================================
-Säljare: 40        Kassa: 1   Kvitto: 68
-Datum: 2026-03-06             Tid: 17:20
+Säljare: 139       Kassa: 1   Kvitto: 74
+Datum: 2026-03-06             Tid: 18:20
 ----------------------------------------
-Bananer       22,00 kg         657,80 kr
+Apelsin        2,00 kg          30,00 kr
+                        Rabatt: -9,80 kr
 ----------------------------------------
-TOTALT:                        657,80 kr
+TOTALT:                         20,20 kr
 
 MOMSREDOVISNING
 ----------------------------------------
-Moms:                           70,48 kr
-Exkl. moms:                    587,32 kr
+Moms:                            2,16 kr
+Exkl. moms:                     18,04 kr
 ----------------------------------------
 
-Erhållen rabatt:                -0,00 kr
+Erhållen rabatt:                 9,80 kr
 ----------------------------------------
 
-Mottaget kontant:              700,00 kr
-Åter kontant:                   42,20 kr
+Betalt med kort
+Term: 1710025506
+DEBIT MASTERCARD ************5271
+Butik: 13403
+Datum: 2026-03-06 18:20
+TVR: 0000008001
+Ref: 002550692064 130 Rsp:00 120440 K/1 7
+Personlig kod / Contactless
+Spara kvittot
+
 ========================================
              SPARA KVITTOT
            TACK FÖR BESÖKET!

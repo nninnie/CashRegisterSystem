@@ -26,8 +26,14 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static string? AskForPlu()
         {
-            return InputService.ReadString("\nPLU: ");
+            string? result = InputService.ReadString("\nPLU: ");
+
+            if (result == "__ESC__")
+                return "__ESC__"; 
+
+            return result;
         }
+
 
         /// <summary>
         /// Asks the user to enter a product name.
@@ -35,8 +41,14 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static string? AskForProductName()
         {
-            return InputService.ReadString("Namn: ");
+            string? result = InputService.ReadString("Namn: ");
+
+            if (result == "__ESC__")
+                return "__ESC__";
+
+            return result;
         }
+
 
         /// <summary>
         /// Asks the user to enter the base price as a decimal number.
@@ -44,8 +56,14 @@ namespace CashRegisterSystem.UI
         /// </summary>
         public static decimal? AskForBasePrice()
         {
-            return InputService.ReadDecimal("Pris: ");
+            var result = InputService.ReadDecimal("Pris: ");
+
+            if (result == null) // ESC
+                return null;
+
+            return result;
         }
+
 
         /// <summary>
         /// Lets the user choose whether the product is sold per kilo or per piece.
@@ -57,10 +75,11 @@ namespace CashRegisterSystem.UI
             Console.WriteLine("2. Per styck (st)");
 
             int? choice = InputService.ReadInt("Välj enhet: ");
-            if (choice == null)
-                return null; 
 
-            return choice.Value == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
+            if (choice == null) 
+                return null;
+
+            return choice == 1 ? PriceUnit.PerKilo : PriceUnit.Each;
         }
 
         /// <summary>
