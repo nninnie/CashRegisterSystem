@@ -1,6 +1,5 @@
 ﻿using CashRegisterSystem.Controllers.Main;
 using CashRegisterSystem.Data.FileLoader;
-using CashRegisterSystem.Models;
 
 namespace CashRegisterSystem.App
 {
@@ -14,7 +13,8 @@ namespace CashRegisterSystem.App
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            List<Product> products = ProductFileLoader.GetProducts() ?? new List<Product>();
+            // Skapar products.txt med standardprodukter om filen saknas
+            ProductFileLoader.GetProducts();
 
             MainMenuController.Start();
         }
