@@ -363,3 +363,9 @@ MigrationBackup/
 FodyWeavers.xsd
 # Kvitton skapas när programmet körs (data, inte källkod)
 CashRegisterSystem/Receipts/
+
+# Egna dokument, kursmaterial och backupfiler från draw.io
+\!Documents/
+*.docx
+*.bkp
+*.dtmp
